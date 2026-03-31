@@ -1,4 +1,3 @@
-
 import { Home, Map, AlertTriangle, BookOpen } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
