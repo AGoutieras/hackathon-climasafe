@@ -135,7 +135,7 @@ export function MapScreen() {
           </Card>
         ) : (
           <div>
-            <h2 className="text-xl mb-4 text-slate-900">Refuges disponibles ({coolSpots.length})</h2>
+            <h2 className="text-xl mb-4 text-slate-900">Zones de rafraîchissement ({coolSpots.length})</h2>
             <div className="space-y-3">
               {coolSpots.map((spot) => {
                 const Icon = getSpotIcon(spot.type);
