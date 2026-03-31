@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Map, { Marker, Popup } from "react-map-gl/maplibre";
+import Map, { Marker, Source, Layer } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Trees, Building2, Umbrella, Navigation, Clock, ThermometerSnowflake } from "lucide-react";
 import { Card } from "./ui/card.jsx";
@@ -32,6 +32,9 @@ const getSpotIcon = (type) => {
 
 export function MapScreen() {
   const [selectedSpot, setSelectedSpot] = useState(null);
+
+  const [route, setRoute] = useState(null);
+  const [userPos] = useState({ longitude: -0.5792, latitude: 44.8378 });
 
   return (
     <div className="min-h-full bg-slate-50">
@@ -123,14 +126,11 @@ export function MapScreen() {
               </div>
             </div>
             <Button
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 text-lg rounded-xl shadow-md"
-              onClick={() => window.open(
-                `https://www.google.com/maps/dir/?api=1&destination=${selectedSpot.latitude},${selectedSpot.longitude}&travelmode=walking`,
-                "_blank"
-              )}
+              className="w-full"
+              onClick={() => fetchRoute(selectedSpot)}
             >
               <Navigation size={20} className="mr-2" />
-              Lancer l'itinéraire
+              Voir l’itinéraire
             </Button>
           </Card>
         ) : (
