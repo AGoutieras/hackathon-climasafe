@@ -1,0 +1,802 @@
+[
+  {
+    "id": 1,
+    "name": "Grande emprise bâtie 1",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.08,
+    "areaM2": 29722,
+    "lat": 44.837797,
+    "lng": -0.57813
+  },
+  {
+    "id": 2,
+    "name": "Grande emprise bâtie 2",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.2,
+    "areaM2": 31394,
+    "lat": 44.835996,
+    "lng": -0.579621
+  },
+  {
+    "id": 3,
+    "name": "Grande emprise bâtie 3",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.44,
+    "areaM2": 29179,
+    "lat": 44.83867,
+    "lng": -0.58457
+  },
+  {
+    "id": 4,
+    "name": "Grande emprise bâtie 4",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.44,
+    "areaM2": 28117,
+    "lat": 44.833802,
+    "lng": -0.579078
+  },
+  {
+    "id": 5,
+    "name": "Zone chaude ouverte 5",
+    "sourceClass": "5",
+    "risk": "high",
+    "distanceToCenterKm": 0.24,
+    "areaM2": 11020,
+    "lat": 44.837292,
+    "lng": -0.582126
+  },
+  {
+    "id": 6,
+    "name": "Zone chaude ouverte 6",
+    "sourceClass": "4",
+    "risk": "high",
+    "distanceToCenterKm": 0.65,
+    "areaM2": 30646,
+    "lat": 44.838504,
+    "lng": -0.587295
+  },
+  {
+    "id": 7,
+    "name": "Zone très chaude dense 7",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.44,
+    "areaM2": 13229,
+    "lat": 44.834104,
+    "lng": -0.581046
+  },
+  {
+    "id": 8,
+    "name": "Zone très chaude dense 8",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.54,
+    "areaM2": 17694,
+    "lat": 44.835925,
+    "lng": -0.585431
+  },
+  {
+    "id": 9,
+    "name": "Zone très chaude dense 9",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.16,
+    "areaM2": 7524,
+    "lat": 44.839145,
+    "lng": -0.578437
+  },
+  {
+    "id": 10,
+    "name": "Zone très chaude dense 10",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.41,
+    "areaM2": 11379,
+    "lat": 44.839974,
+    "lng": -0.57502
+  },
+  {
+    "id": 11,
+    "name": "Zone très chaude dense 11",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.17,
+    "areaM2": 7315,
+    "lat": 44.83654,
+    "lng": -0.577975
+  },
+  {
+    "id": 12,
+    "name": "Zone très chaude dense 12",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.46,
+    "areaM2": 12268,
+    "lat": 44.834209,
+    "lng": -0.576282
+  },
+  {
+    "id": 13,
+    "name": "Zone chaude compacte 13",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.71,
+    "areaM2": 30862,
+    "lat": 44.831408,
+    "lng": -0.579747
+  },
+  {
+    "id": 14,
+    "name": "Zone très chaude dense 14",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.3,
+    "areaM2": 8656,
+    "lat": 44.835687,
+    "lng": -0.581615
+  },
+  {
+    "id": 15,
+    "name": "Zone très chaude dense 15",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.51,
+    "areaM2": 12511,
+    "lat": 44.84225,
+    "lng": -0.580529
+  },
+  {
+    "id": 16,
+    "name": "Zone très chaude dense 16",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.42,
+    "areaM2": 10182,
+    "lat": 44.834186,
+    "lng": -0.577687
+  },
+  {
+    "id": 17,
+    "name": "Zone très chaude dense 17",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.19,
+    "areaM2": 6873,
+    "lat": 44.839497,
+    "lng": -0.579563
+  },
+  {
+    "id": 18,
+    "name": "Zone très chaude dense 18",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.73,
+    "areaM2": 25734,
+    "lat": 44.833526,
+    "lng": -0.572207
+  },
+  {
+    "id": 19,
+    "name": "Zone très chaude dense 19",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.44,
+    "areaM2": 10022,
+    "lat": 44.837801,
+    "lng": -0.584707
+  },
+  {
+    "id": 20,
+    "name": "Zone très chaude dense 20",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.22,
+    "areaM2": 6916,
+    "lat": 44.839763,
+    "lng": -0.579186
+  },
+  {
+    "id": 21,
+    "name": "Zone très chaude dense 21",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.53,
+    "areaM2": 12111,
+    "lat": 44.842094,
+    "lng": -0.582069
+  },
+  {
+    "id": 22,
+    "name": "Zone très chaude dense 22",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.65,
+    "areaM2": 17022,
+    "lat": 44.843219,
+    "lng": -0.582383
+  },
+  {
+    "id": 23,
+    "name": "Zone très chaude dense 23",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.37,
+    "areaM2": 8414,
+    "lat": 44.837143,
+    "lng": -0.574618
+  },
+  {
+    "id": 24,
+    "name": "Zone très chaude dense 24",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.38,
+    "areaM2": 8440,
+    "lat": 44.841195,
+    "lng": -0.579075
+  },
+  {
+    "id": 25,
+    "name": "Zone très chaude dense 25",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.09,
+    "areaM2": 5636,
+    "lat": 44.83708,
+    "lng": -0.579846
+  },
+  {
+    "id": 26,
+    "name": "Zone très chaude dense 26",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.72,
+    "areaM2": 19061,
+    "lat": 44.835315,
+    "lng": -0.587626
+  },
+  {
+    "id": 27,
+    "name": "Zone très chaude dense 27",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.34,
+    "areaM2": 7665,
+    "lat": 44.835322,
+    "lng": -0.576659
+  },
+  {
+    "id": 28,
+    "name": "Zone très chaude dense 28",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.45,
+    "areaM2": 9146,
+    "lat": 44.841448,
+    "lng": -0.576695
+  },
+  {
+    "id": 29,
+    "name": "Zone très chaude dense 29",
+    "sourceClass": "1",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.48,
+    "areaM2": 9677,
+    "lat": 44.83678,
+    "lng": -0.585112
+  },
+  {
+    "id": 30,
+    "name": "Zone très chaude dense 30",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.24,
+    "areaM2": 6546,
+    "lat": 44.839336,
+    "lng": -0.577045
+  },
+  {
+    "id": 31,
+    "name": "Zone très chaude dense 31",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.2,
+    "areaM2": 6216,
+    "lat": 44.838969,
+    "lng": -0.581098
+  },
+  {
+    "id": 32,
+    "name": "Zone très chaude dense 32",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.3,
+    "areaM2": 7130,
+    "lat": 44.835796,
+    "lng": -0.576532
+  },
+  {
+    "id": 33,
+    "name": "Zone très chaude dense 33",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.53,
+    "areaM2": 10463,
+    "lat": 44.83849,
+    "lng": -0.572517
+  },
+  {
+    "id": 34,
+    "name": "Zone très chaude dense 34",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.69,
+    "areaM2": 14405,
+    "lat": 44.841776,
+    "lng": -0.58586
+  },
+  {
+    "id": 35,
+    "name": "Zone très chaude dense 35",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.36,
+    "areaM2": 7333,
+    "lat": 44.840475,
+    "lng": -0.576544
+  },
+  {
+    "id": 36,
+    "name": "Zone chaude compacte 36",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.7,
+    "areaM2": 14124,
+    "lat": 44.840537,
+    "lng": -0.587147
+  },
+  {
+    "id": 37,
+    "name": "Zone très chaude dense 37",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.45,
+    "areaM2": 8278,
+    "lat": 44.836204,
+    "lng": -0.573927
+  },
+  {
+    "id": 38,
+    "name": "Grande emprise bâtie 38",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.68,
+    "areaM2": 13175,
+    "lat": 44.833767,
+    "lng": -0.585705
+  },
+  {
+    "id": 39,
+    "name": "Zone très chaude dense 39",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.44,
+    "areaM2": 7883,
+    "lat": 44.835552,
+    "lng": -0.574633
+  },
+  {
+    "id": 40,
+    "name": "Zone très chaude dense 40",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.83,
+    "areaM2": 20565,
+    "lat": 44.845157,
+    "lng": -0.580942
+  },
+  {
+    "id": 41,
+    "name": "Zone chaude compacte 41",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.56,
+    "areaM2": 9676,
+    "lat": 44.840666,
+    "lng": -0.584988
+  },
+  {
+    "id": 42,
+    "name": "Zone très chaude dense 42",
+    "sourceClass": "1",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.44,
+    "areaM2": 7804,
+    "lat": 44.839678,
+    "lng": -0.584027
+  },
+  {
+    "id": 43,
+    "name": "Zone chaude compacte 43",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.84,
+    "areaM2": 20624,
+    "lat": 44.831469,
+    "lng": -0.584959
+  },
+  {
+    "id": 44,
+    "name": "Zone chaude ouverte 44",
+    "sourceClass": "5",
+    "risk": "high",
+    "distanceToCenterKm": 0.87,
+    "areaM2": 23182,
+    "lat": 44.842525,
+    "lng": -0.587905
+  },
+  {
+    "id": 45,
+    "name": "Grande emprise bâtie 45",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.54,
+    "areaM2": 9171,
+    "lat": 44.835104,
+    "lng": -0.584928
+  },
+  {
+    "id": 46,
+    "name": "Zone urbaine exposée 46",
+    "sourceClass": "6",
+    "risk": "medium",
+    "distanceToCenterKm": 0.9,
+    "areaM2": 24582,
+    "lat": 44.82972,
+    "lng": -0.579745
+  },
+  {
+    "id": 47,
+    "name": "Surface minérale chaude 47",
+    "sourceClass": "E",
+    "risk": "very_high",
+    "distanceToCenterKm": 1.0,
+    "areaM2": 48704,
+    "lat": 44.845579,
+    "lng": -0.572876
+  },
+  {
+    "id": 48,
+    "name": "Zone très chaude dense 48",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.29,
+    "areaM2": 6152,
+    "lat": 44.839358,
+    "lng": -0.576186
+  },
+  {
+    "id": 49,
+    "name": "Zone très chaude dense 49",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.58,
+    "areaM2": 9540,
+    "lat": 44.842052,
+    "lng": -0.583514
+  },
+  {
+    "id": 50,
+    "name": "Zone urbaine exposée 50",
+    "sourceClass": "6",
+    "risk": "medium",
+    "distanceToCenterKm": 0.84,
+    "areaM2": 18286,
+    "lat": 44.830716,
+    "lng": -0.582832
+  },
+  {
+    "id": 51,
+    "name": "Zone très chaude dense 51",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.7,
+    "areaM2": 12129,
+    "lat": 44.844113,
+    "lng": -0.579171
+  },
+  {
+    "id": 52,
+    "name": "Zone très chaude dense 52",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.69,
+    "areaM2": 11690,
+    "lat": 44.843916,
+    "lng": -0.580766
+  },
+  {
+    "id": 53,
+    "name": "Grande emprise bâtie 53",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.7,
+    "areaM2": 11796,
+    "lat": 44.843115,
+    "lng": -0.583819
+  },
+  {
+    "id": 54,
+    "name": "Grande emprise bâtie 54",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.13,
+    "areaM2": 2621,
+    "lat": 44.83745,
+    "lng": -0.580708
+  },
+  {
+    "id": 55,
+    "name": "Zone très chaude dense 55",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.54,
+    "areaM2": 8394,
+    "lat": 44.839538,
+    "lng": -0.585506
+  },
+  {
+    "id": 56,
+    "name": "Grande emprise bâtie 56",
+    "sourceClass": "8",
+    "risk": "medium",
+    "distanceToCenterKm": 0.13,
+    "areaM2": 2588,
+    "lat": 44.838141,
+    "lng": -0.580776
+  },
+  {
+    "id": 57,
+    "name": "Zone très chaude dense 57",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.48,
+    "areaM2": 7594,
+    "lat": 44.839538,
+    "lng": -0.573635
+  },
+  {
+    "id": 58,
+    "name": "Zone très chaude dense 58",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.41,
+    "areaM2": 6703,
+    "lat": 44.841073,
+    "lng": -0.581498
+  },
+  {
+    "id": 59,
+    "name": "Zone chaude compacte 59",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.86,
+    "areaM2": 16737,
+    "lat": 44.832132,
+    "lng": -0.586546
+  },
+  {
+    "id": 60,
+    "name": "Surface minérale chaude 60",
+    "sourceClass": "E",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.73,
+    "areaM2": 11527,
+    "lat": 44.843927,
+    "lng": -0.575914
+  },
+  {
+    "id": 61,
+    "name": "Zone chaude compacte 61",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.66,
+    "areaM2": 9900,
+    "lat": 44.832576,
+    "lng": -0.583232
+  },
+  {
+    "id": 62,
+    "name": "Zone très chaude dense 62",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.82,
+    "areaM2": 14253,
+    "lat": 44.841762,
+    "lng": -0.587895
+  },
+  {
+    "id": 63,
+    "name": "Zone très chaude dense 63",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.85,
+    "areaM2": 15510,
+    "lat": 44.845438,
+    "lng": -0.57946
+  },
+  {
+    "id": 64,
+    "name": "Zone très chaude dense 64",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.23,
+    "areaM2": 5310,
+    "lat": 44.836596,
+    "lng": -0.576786
+  },
+  {
+    "id": 65,
+    "name": "Zone chaude ouverte 65",
+    "sourceClass": "5",
+    "risk": "high",
+    "distanceToCenterKm": 0.99,
+    "areaM2": 26797,
+    "lat": 44.834415,
+    "lng": -0.590771
+  },
+  {
+    "id": 66,
+    "name": "Zone très chaude dense 66",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.25,
+    "areaM2": 5364,
+    "lat": 44.836869,
+    "lng": -0.576357
+  },
+  {
+    "id": 67,
+    "name": "Zone très chaude dense 67",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.59,
+    "areaM2": 8431,
+    "lat": 44.843008,
+    "lng": -0.580501
+  },
+  {
+    "id": 68,
+    "name": "Zone chaude compacte 68",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.77,
+    "areaM2": 11889,
+    "lat": 44.839377,
+    "lng": -0.588605
+  },
+  {
+    "id": 69,
+    "name": "Zone très chaude dense 69",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.78,
+    "areaM2": 12113,
+    "lat": 44.83468,
+    "lng": -0.570341
+  },
+  {
+    "id": 70,
+    "name": "Zone très chaude dense 70",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.2,
+    "areaM2": 2706,
+    "lat": 44.838464,
+    "lng": -0.576841
+  },
+  {
+    "id": 71,
+    "name": "Zone chaude compacte 71",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.86,
+    "areaM2": 14471,
+    "lat": 44.830148,
+    "lng": -0.577457
+  },
+  {
+    "id": 72,
+    "name": "Zone très chaude dense 72",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.73,
+    "areaM2": 10476,
+    "lat": 44.842209,
+    "lng": -0.572364
+  },
+  {
+    "id": 73,
+    "name": "Zone chaude compacte 73",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.95,
+    "areaM2": 18878,
+    "lat": 44.839936,
+    "lng": -0.590754
+  },
+  {
+    "id": 74,
+    "name": "Zone urbaine exposée 74",
+    "sourceClass": "6",
+    "risk": "medium",
+    "distanceToCenterKm": 0.93,
+    "areaM2": 17806,
+    "lat": 44.829915,
+    "lng": -0.583241
+  },
+  {
+    "id": 75,
+    "name": "Zone très chaude dense 75",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 1.01,
+    "areaM2": 23100,
+    "lat": 44.84642,
+    "lng": -0.583116
+  },
+  {
+    "id": 76,
+    "name": "Surface minérale chaude 76",
+    "sourceClass": "E",
+    "risk": "very_high",
+    "distanceToCenterKm": 1.21,
+    "areaM2": 264949,
+    "lat": 44.835627,
+    "lng": -0.594128
+  },
+  {
+    "id": 77,
+    "name": "Zone très chaude dense 77",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.74,
+    "areaM2": 10265,
+    "lat": 44.836819,
+    "lng": -0.569927
+  },
+  {
+    "id": 78,
+    "name": "Zone très chaude dense 78",
+    "sourceClass": "2",
+    "risk": "very_high",
+    "distanceToCenterKm": 0.84,
+    "areaM2": 12700,
+    "lat": 44.8337,
+    "lng": -0.570312
+  },
+  {
+    "id": 79,
+    "name": "Zone chaude compacte 79",
+    "sourceClass": "3",
+    "risk": "high",
+    "distanceToCenterKm": 0.49,
+    "areaM2": 6719,
+    "lat": 44.840623,
+    "lng": -0.583891
+  },
+  {
+    "id": 80,
+    "name": "Zone chaude ouverte 80",
+    "sourceClass": "5",
+    "risk": "high",
+    "distanceToCenterKm": 0.82,
+    "areaM2": 12172,
+    "lat": 44.844265,
+    "lng": -0.584263
+  }
+]
