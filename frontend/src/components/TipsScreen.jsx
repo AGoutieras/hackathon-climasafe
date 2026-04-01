@@ -137,17 +137,17 @@ export function TipsScreen() {
   ];
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-blue-50 to-slate-50 p-4">
+    <div className="min-h-full bg-gradient-to-b from-blue-50 to-slate-50 p-4 sm:p-6">
       {/* Header */}
       <div className="pt-4 pb-6">
-        <h1 className="text-3xl mb-2 text-slate-900">Conseils de prévention</h1>
-        <p className="text-slate-600 text-lg">
+        <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">Conseils de prévention</h1>
+        <p className="text-slate-600 text-base sm:text-lg">
           Protégez-vous de la chaleur
         </p>
       </div>
 
       {/* Warning Card */}
-      <Card className="p-5 mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg">
+      <Card className="p-4 sm:p-5 mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg">
         <div className="flex items-start gap-3">
           <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
             <Sun size={24} />
@@ -168,12 +168,12 @@ export function TipsScreen() {
           const Icon = category.icon;
           
           return (
-            <Card key={category.id} className="p-5 shadow-sm border-slate-200">
+            <Card key={category.id} className="p-4 sm:p-5 shadow-sm border-slate-200">
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-12 h-12 ${category.iconBg} rounded-xl flex items-center justify-center text-white`}>
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 ${category.iconBg} rounded-xl flex items-center justify-center text-white`}>
                   <Icon size={24} />
                 </div>
-                <h2 className="text-xl text-slate-900">{category.category}</h2>
+                <h2 className="text-lg sm:text-xl text-slate-900">{category.category}</h2>
               </div>
               
               <ul className="space-y-2.5">

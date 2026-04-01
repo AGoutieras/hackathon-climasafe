@@ -146,7 +146,7 @@ function NavPanel({ route, dest, onCancel }) {
   const mins = Math.round(route.duration / 60);
   const km = (route.distance / 1000).toFixed(2);
   return (
-    <div className="fixed bottom-20 left-0 right-0 max-w-md mx-auto px-3 z-50">
+    <div className="fixed bottom-20 left-0 right-0 w-full max-w-2xl mx-auto px-3 z-50 md:bottom-24">
       <Card className="shadow-2xl border-0 overflow-hidden">
         {/* top bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-sky-600 text-white">
@@ -535,7 +535,7 @@ export function MapScreen() {
           <Droplets size={13} /> Fontaines
         </button>
         <button onClick={startGps} disabled={gpsLoading}
-          className={`ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
+          className={`w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
             userPos ? "bg-green-100 border-green-300 text-green-700" :
             gpsLoading ? "bg-slate-100 border-slate-200 text-slate-400" :
             "bg-white border-slate-300 text-slate-600 hover:bg-slate-50"}`}>
@@ -553,7 +553,7 @@ export function MapScreen() {
       )}
 
       {/* Map */}
-      <div style={{ height: "420px", position: "relative" }}>
+      <div style={{ height: "min(62vh, 560px)", position: "relative" }}>
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
             <Loader2 className="animate-spin text-slate-500" size={32} />

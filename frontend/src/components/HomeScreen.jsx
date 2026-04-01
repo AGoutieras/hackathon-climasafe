@@ -133,11 +133,11 @@ export function HomeScreen() {
   }, [coolSpots, waterStations, currentPos]);
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-orange-50 to-slate-50 p-4">
+    <div className="min-h-full bg-gradient-to-b from-orange-50 to-slate-50 p-4 sm:p-6">
       {/* Header */}
       <div className="pt-4 pb-6">
-        <h1 className="text-3xl mb-2 text-slate-900">ClimaSafe</h1>
-        <p className="text-slate-600 text-lg">Votre assistant canicule</p>
+        <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">ClimaSafe</h1>
+        <p className="text-slate-600 text-base sm:text-lg">Votre assistant canicule</p>
       </div>
 
       {/* Alert Banner */}
@@ -155,9 +155,9 @@ export function HomeScreen() {
       <RiskIndicator level={riskLevel} score={riskScore} />
 
       {/* Current Conditions */}
-      <Card className="p-5 mb-6 shadow-sm border-slate-200">
+      <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
         <h2 className="text-xl mb-4 text-slate-900">Conditions actuelles</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
               <ThermometerSun className="text-orange-600" size={24} />
@@ -180,7 +180,7 @@ export function HomeScreen() {
       </Card>
 
       {/* Nearest Refuge */}
-      <Card className="p-5 mb-6 bg-blue-50 border-blue-200 shadow-sm">
+      <Card className="p-4 sm:p-5 mb-6 bg-blue-50 border-blue-200 shadow-sm">
         <div className="flex items-center gap-3 mb-3">
           <MapPin className="text-blue-600" size={24} />
           <div className="flex-1">
@@ -197,14 +197,14 @@ export function HomeScreen() {
           </p>
         </div>
         <Link to="/carte">
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 text-lg rounded-xl shadow-md">
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 sm:h-14 text-base sm:text-lg rounded-xl shadow-md">
             Trouver un refuge
           </Button>
         </Link>
       </Card>
 
       {/* Quick Tips */}
-      <Card className="p-5 shadow-sm border-slate-200">
+      <Card className="p-4 sm:p-5 shadow-sm border-slate-200">
         <h2 className="text-xl mb-3 text-slate-900">Conseils rapides</h2>
         <ul className="space-y-2 text-slate-700">
           <li className="flex items-start gap-2">
