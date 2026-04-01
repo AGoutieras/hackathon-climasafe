@@ -70,7 +70,7 @@ export function AlertScreen() {
   const activeAlerts = alerts.filter(a => a.isActive);
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-red-50 to-slate-50 p-4">
+    <div className="min-h-full bg-gradient-to-b from-red-50 to-slate-50 p-4 sm:p-6">
       {/* Header */}
       <div className="pt-4 pb-6">
         <div className="flex items-center gap-3 mb-2">
@@ -78,21 +78,21 @@ export function AlertScreen() {
             <Bell className="text-white" size={24} />
           </div>
           <div>
-            <h1 className="text-3xl text-slate-900">Alertes</h1>
+            <h1 className="text-3xl sm:text-4xl text-slate-900">Alertes</h1>
             <p className="text-slate-600">{activeAlerts.length} alertes actives</p>
           </div>
         </div>
       </div>
 
       {/* Current Alert Summary */}
-      <Card className="p-6 mb-6 bg-red-500 text-white border-0 shadow-xl">
+      <Card className="p-4 sm:p-6 mb-6 bg-red-500 text-white border-0 shadow-xl">
         <div className="flex items-start gap-4 mb-4">
           <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
             <AlertTriangle size={28} />
           </div>
           <div className="flex-1">
             <p className="text-sm text-red-100 mb-1">Alerte en cours</p>
-            <h2 className="text-2xl mb-2">Canicule exceptionnelle</h2>
+            <h2 className="text-xl sm:text-2xl mb-2">Canicule exceptionnelle</h2>
             <p className="text-red-100 text-sm">
               Niveau 3 • Zone Bordeaux Métropole
             </p>
@@ -100,14 +100,14 @@ export function AlertScreen() {
         </div>
         
         <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-red-100 mb-1">Température actuelle</p>
-              <p className="text-3xl">38°C</p>
+              <p className="text-2xl sm:text-3xl">38°C</p>
             </div>
             <div>
               <p className="text-sm text-red-100 mb-1">Pic attendu</p>
-              <p className="text-3xl">39°C</p>
+              <p className="text-2xl sm:text-3xl">39°C</p>
             </div>
           </div>
         </div>
