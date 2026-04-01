@@ -1,15 +1,136 @@
+import { useEffect, useMemo, useState } from "react";
 import { ThermometerSun, MapPin, TrendingUp, Droplets } from "lucide-react";
 import { Link } from "react-router-dom";
 import { RiskIndicator } from "./RiskIndicator.jsx";
 import { Button } from "./ui/button.jsx";
 import { Card } from "./ui/card.jsx";
 
+const API_BASE = "http://localhost:8000/api";
+const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
+
+function distanceMeters(from, to) {
+  const toRad = (value) => (value * Math.PI) / 180;
+  const earthRadiusMeters = 6371000;
+  const dLat = toRad(to.latitude - from.latitude);
+  const dLng = toRad(to.longitude - from.longitude);
+  const lat1 = toRad(from.latitude);
+  const lat2 = toRad(to.latitude);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+
+  return 2 * earthRadiusMeters * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function walkTimeFromDistance(distanceInMeters) {
+  const walkingSpeedMetersPerMinute = 80;
+  return Math.max(1, Math.ceil(distanceInMeters / walkingSpeedMetersPerMinute));
+}
+
 export function HomeScreen() {
   const riskLevel = "high"; // Could be "low", "medium", or "high"
   const riskScore = 82;
   const currentTemp = 38;
-  const nearestRefuge = "Jardin Public";
-  const distance = 450;
+  const [coolSpots, setCoolSpots] = useState([]);
+  const [waterStations, setWaterStations] = useState([]);
+  const [currentPos, setCurrentPos] = useState(BORDEAUX_CENTER);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const [coolRes, waterCountRes] = await Promise.all([
+          fetch(`${API_BASE}/cool-spots?limit=80`),
+          fetch(`${API_BASE}/water-stations/count`),
+        ]);
+
+        if (!coolRes.ok || !waterCountRes.ok) throw new Error("Erreur API");
+
+        const [coolData, waterCount] = await Promise.all([coolRes.json(), waterCountRes.json()]);
+        const totalWaterStations = waterCount.count ?? 0;
+        const pageSize = 250;
+        let offset = 0;
+        let allWaterStations = [];
+
+        while (!cancelled && offset < totalWaterStations) {
+          const waterRes = await fetch(`${API_BASE}/water-stations?limit=${pageSize}&offset=${offset}`);
+          if (!waterRes.ok) throw new Error("Erreur API");
+          const batch = await waterRes.json();
+          if (!Array.isArray(batch) || batch.length === 0) break;
+          allWaterStations = [...allWaterStations, ...batch];
+          offset += batch.length;
+        }
+
+        if (!cancelled) {
+          setCoolSpots(Array.isArray(coolData) ? coolData : []);
+          setWaterStations(allWaterStations);
+        }
+      } catch {
+        if (!cancelled) {
+          setCoolSpots([]);
+          setWaterStations([]);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        setCurrentPos({
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+        });
+      },
+      () => {
+        setCurrentPos(BORDEAUX_CENTER);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
+
+  const nearestPlace = useMemo(() => {
+    const nearbyCoolSpots = coolSpots.map((spot) => {
+      const computedDistance = Math.round(
+        distanceMeters(currentPos, { latitude: spot.lat, longitude: spot.lng })
+      );
+      return {
+        id: `cool-${spot.id}`,
+        kind: "cool",
+        name: spot.name,
+        computedDistance,
+        computedWalkTime: walkTimeFromDistance(computedDistance),
+      };
+    });
+
+    const nearbyWaterStations = waterStations
+      .filter((station) => Number.isFinite(station.lat) && Number.isFinite(station.lng))
+      .map((station) => {
+        const computedDistance = Math.round(
+          distanceMeters(currentPos, { latitude: station.lat, longitude: station.lng })
+        );
+        return {
+          id: `water-${station.id}`,
+          kind: "water",
+          name: station.nom_fontaine,
+          computedDistance,
+          computedWalkTime: walkTimeFromDistance(computedDistance),
+        };
+      });
+
+    return [...nearbyCoolSpots, ...nearbyWaterStations]
+      .sort((a, b) => a.computedDistance - b.computedDistance)[0] ?? null;
+  }, [coolSpots, waterStations, currentPos]);
 
   return (
     <div className="min-h-full bg-gradient-to-b from-orange-50 to-slate-50 p-4">
@@ -63,13 +184,17 @@ export function HomeScreen() {
         <div className="flex items-center gap-3 mb-3">
           <MapPin className="text-blue-600" size={24} />
           <div className="flex-1">
-            <p className="text-sm text-slate-600">Refuge le plus proche</p>
-            <p className="text-xl text-slate-900">{nearestRefuge}</p>
+            <p className="text-sm text-slate-600">Refuge / fontaine la plus proche</p>
+            <p className="text-xl text-slate-900">{nearestPlace?.name ?? "Chargement..."}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-slate-600 mb-4">
           <TrendingUp size={18} />
-          <p className="text-sm">{distance} mètres • 6 min à pied</p>
+          <p className="text-sm">
+            {nearestPlace
+              ? `${nearestPlace.computedDistance} mètres • ${nearestPlace.computedWalkTime} min à pied`
+              : "Distance indisponible"}
+          </p>
         </div>
         <Link to="/carte">
           <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 text-lg rounded-xl shadow-md">
