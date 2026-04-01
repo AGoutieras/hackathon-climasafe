@@ -10,7 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / 'data'
-BORDEAUX_CENTER = {"name": "Bordeaux Centre", "lat": 44.837789, "lng": -0.57918}
+BORDEAUX_CENTER = {"name": "Bordeaux Centre",
+                   "lat": 44.837789, "lng": -0.57918}
 
 app = FastAPI(title="Refuge API", version="2.0.0")
 
@@ -21,6 +22,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 def load_json(name: str):
     return json.loads((DATA_DIR / name).read_text(encoding='utf-8'))
@@ -36,11 +38,22 @@ def get_heat_zones():
     return load_json('heat_zones.json')
 
 
+@lru_cache(maxsize=1)
+def get_water_stations():
+    data = load_json('water_stations.json')
+    # Normalize geom field to lat/lng
+    return [
+        {**item, 'lat': item['geom']['lat'], 'lng': item['geom']['lon']}
+        for item in data
+    ]
+
+
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     r = 6371.0
     dlat = radians(lat2 - lat1)
     dlon = radians(lon2 - lon1)
-    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * \
+        cos(radians(lat2)) * sin(dlon / 2) ** 2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
     return r * c
 
@@ -48,7 +61,8 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 def with_live_distance(items: list[dict], user_lat: float, user_lng: float) -> list[dict]:
     enriched = []
     for item in items:
-        distance_km = haversine_km(user_lat, user_lng, item['lat'], item['lng'])
+        distance_km = haversine_km(
+            user_lat, user_lng, item['lat'], item['lng'])
         distance_m = int(round(distance_km * 1000))
         clone = dict(item)
         clone['distance'] = distance_m
@@ -146,6 +160,22 @@ def heat_zones(
     limit: int = Query(20, ge=1, le=100),
 ):
     return with_live_distance(get_heat_zones(), lat, lng)[:limit]
+
+
+@app.get('/api/water-stations')
+def water_stations(
+    lat: float = Query(BORDEAUX_CENTER['lat']),
+    lng: float = Query(BORDEAUX_CENTER['lng']),
+    offset: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=1000),
+):
+    stations = with_live_distance(get_water_stations(), lat, lng)
+    return stations[offset: offset + limit]
+
+
+@app.get('/api/water-stations/count')
+def water_stations_count():
+    return {'count': len(get_water_stations())}
 
 
 @app.get('/api/alerts')
