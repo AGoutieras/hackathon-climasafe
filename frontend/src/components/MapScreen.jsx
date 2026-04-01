@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Map, { Marker, Source, Layer, NavigationControl } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
@@ -26,6 +26,39 @@ const riskLabel = (r) =>
 
 const spotTypeLabel = (t) =>
   ({ park: "Zone boisée", water: "Plan d'eau", green: "Espace vert" }[t] ?? "Zone fraîche");
+
+function distanceMeters(from, to) {
+  const toRad = (value) => (value * Math.PI) / 180;
+  const earthRadiusMeters = 6371000;
+  const dLat = toRad(to.latitude - from.latitude);
+  const dLng = toRad(to.longitude - from.longitude);
+  const lat1 = toRad(from.latitude);
+  const lat2 = toRad(to.latitude);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+
+  return 2 * earthRadiusMeters * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function walkTimeFromDistance(distanceInMeters) {
+  const walkingSpeedMetersPerMinute = 80;
+  return Math.max(1, Math.ceil(distanceInMeters / walkingSpeedMetersPerMinute));
+}
+
+// ─── helper to get offset position behind user ─────────────────────────────
+
+function getOffsetPosBehindUser(pos, heading) {
+  const offsetMeters = 40;
+  const offsetDegrees = offsetMeters / 111000; // ~111km per degree
+  const behindHeading = (heading + 180) % 360; // opposite direction
+  const rad = (behindHeading * Math.PI) / 180;
+  return {
+    lng: pos.longitude - offsetDegrees * Math.sin(rad),
+    lat: pos.latitude - offsetDegrees * Math.cos(rad),
+  };
+}
 
 // ─── OSRM routing ──────────────────────────────────────────────────────────
 
@@ -84,6 +117,24 @@ function HeatMarker({ zone, selected, onClick }) {
         transition: "all .15s", transform: "rotate(45deg)",
       }}>
         <Flame size={selected ? 16 : 11} color="white" style={{ transform: "rotate(-45deg)" }} />
+      </div>
+    </Marker>
+  );
+}
+
+function WaterMarker({ station, selected, onClick }) {
+  return (
+    <Marker longitude={station.lng} latitude={station.lat}
+      onClick={(e) => { e.originalEvent.stopPropagation(); onClick(station); }}>
+      <div style={{
+        width: selected ? 36 : 24, height: selected ? 36 : 24,
+        borderRadius: "50%", background: "#06b6d4",
+        border: selected ? "3px solid white" : "2px solid rgba(255,255,255,.7)",
+        boxShadow: selected ? "0 0 0 3px #06b6d480,0 4px 12px rgba(0,0,0,.3)" : "0 2px 6px rgba(0,0,0,.3)",
+        display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+        transition: "all .15s",
+      }}>
+        <Droplets size={selected ? 18 : 13} color="white" />
       </div>
     </Marker>
   );
@@ -242,12 +293,15 @@ const routeOutlineLayer = {
 export function MapScreen() {
   const [coolSpots, setCoolSpots] = useState([]);
   const [heatZones, setHeatZones] = useState([]);
+  const [waterStations, setWaterStations] = useState([]);
+  const [waterStationsCount, setWaterStationsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(null);
 
   // GPS
   const [userPos, setUserPos] = useState(null);
+  const [userHeading, setUserHeading] = useState(0);
   const [gpsError, setGpsError] = useState(null);
   const [gpsLoading, setGpsLoading] = useState(false);
   const watchId = useRef(null);
@@ -257,32 +311,60 @@ export function MapScreen() {
   const [routeDest, setRouteDest] = useState(null);   // spot being navigated to
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState(null);
+  const [activeNavigation, setActiveNavigation] = useState(false);
 
   // Layers
   const [showCool, setShowCool] = useState(true);
   const [showHeat, setShowHeat] = useState(true);
+  const [showWater, setShowWater] = useState(true);
 
   const mapRef = useRef(null);
 
   // ── load backend data ──────────────────────────────────────────────────
   useEffect(() => {
+    let cancelled = false;
+
+    const loadWaterStationsProgressively = async (totalCount) => {
+      const pageSize = 250;
+      let offset = 0;
+      let accumulated = [];
+
+      while (!cancelled && offset < totalCount) {
+        const wr = await fetch(`${API_BASE}/water-stations?limit=${pageSize}&offset=${offset}`);
+        if (!wr.ok) throw new Error("Erreur API");
+        const batch = await wr.json();
+        if (!Array.isArray(batch) || batch.length === 0) break;
+
+        accumulated = [...accumulated, ...batch];
+        if (!cancelled) setWaterStations(accumulated);
+        offset += batch.length;
+      }
+    };
+
     (async () => {
       try {
-        const [cr, hr] = await Promise.all([
+        const [cr, hr, wcr] = await Promise.all([
           fetch(`${API_BASE}/cool-spots?limit=80`),
           fetch(`${API_BASE}/heat-zones?limit=80`),
+          fetch(`${API_BASE}/water-stations/count`),
         ]);
-        if (!cr.ok || !hr.ok) throw new Error("Erreur API");
-        const [cd, hd] = await Promise.all([cr.json(), hr.json()]);
+        if (!cr.ok || !hr.ok || !wcr.ok) throw new Error("Erreur API");
+        const [cd, hd, wc] = await Promise.all([cr.json(), hr.json(), wcr.json()]);
         setCoolSpots(cd);
         setHeatZones(hd);
+        const totalCount = wc.count ?? 0;
+        setWaterStationsCount(totalCount);
+        await loadWaterStationsProgressively(totalCount);
       } catch (e) {
-        setError(e.message);
+        if (!cancelled) setError(e.message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
-    return () => { if (watchId.current) navigator.geolocation.clearWatch(watchId.current); };
+    return () => {
+      cancelled = true;
+      if (watchId.current) navigator.geolocation.clearWatch(watchId.current);
+    };
   }, []);
 
   // ── GPS ───────────────────────────────────────────────────────────────
@@ -293,7 +375,11 @@ export function MapScreen() {
     watchId.current = navigator.geolocation.watchPosition(
       (pos) => {
         const p = { longitude: pos.coords.longitude, latitude: pos.coords.latitude };
+        const heading = Number.isFinite(pos.coords.heading) && pos.coords.heading >= 0
+          ? pos.coords.heading
+          : null;
         setUserPos(p);
+        if (heading !== null) setUserHeading(heading);
         setGpsLoading(false);
         mapRef.current?.flyTo({ center: [p.longitude, p.latitude], zoom: 15, duration: 800 });
       },
@@ -304,31 +390,116 @@ export function MapScreen() {
 
   const effectivePos = userPos ?? BORDEAUX_CENTER;
 
+  const nearbyCoolSpots = useMemo(() => {
+    return [...coolSpots]
+      .map((spot) => {
+        const computedDistance = Math.round(
+          distanceMeters(effectivePos, { latitude: spot.lat, longitude: spot.lng })
+        );
+        return {
+          ...spot,
+          computedDistance,
+          computedWalkTime: walkTimeFromDistance(computedDistance),
+        };
+      })
+      .sort((a, b) => a.computedDistance - b.computedDistance);
+  }, [coolSpots, effectivePos]);
+
+  const nearbyWaterStations = useMemo(() => {
+    return [...waterStations]
+      .filter((station) => Number.isFinite(station.lat) && Number.isFinite(station.lng))
+      .map((station) => {
+        const computedDistance = Math.round(
+          distanceMeters(effectivePos, { latitude: station.lat, longitude: station.lng })
+        );
+        return {
+          ...station,
+          computedDistance,
+          computedWalkTime: walkTimeFromDistance(computedDistance),
+        };
+      })
+      .sort((a, b) => a.computedDistance - b.computedDistance);
+  }, [waterStations, effectivePos]);
+
+  const nearbyHeatZones = useMemo(() => {
+    return [...heatZones]
+      .map((zone) => {
+        const computedDistance = Math.round(
+          distanceMeters(effectivePos, { latitude: zone.lat, longitude: zone.lng })
+        );
+        return {
+          ...zone,
+          computedDistance,
+        };
+      })
+      .sort((a, b) => a.computedDistance - b.computedDistance);
+  }, [heatZones, effectivePos]);
+
+  const nearbyPlaces = useMemo(() => {
+    const coolPlaces = nearbyCoolSpots.map((spot) => ({
+      id: `cool-${spot.id}`,
+      kind: "cool",
+      data: spot,
+      computedDistance: spot.computedDistance,
+      computedWalkTime: spot.computedWalkTime,
+    }));
+
+    const waterPlaces = nearbyWaterStations.map((station) => ({
+      id: `water-${station.id}`,
+      kind: "water",
+      data: station,
+      computedDistance: station.computedDistance,
+      computedWalkTime: station.computedWalkTime,
+    }));
+
+    return [...coolPlaces, ...waterPlaces]
+      .sort((a, b) => a.computedDistance - b.computedDistance);
+  }, [nearbyCoolSpots, nearbyWaterStations]);
+
   // ── navigate to spot ──────────────────────────────────────────────────
   const handleNavigate = useCallback(async (spot) => {
     setRouteLoading(true);
     setRouteError(null);
     setRoute(null);
+    setActiveNavigation(false);
     try {
       const r = await fetchRoute(effectivePos, spot);
       setRoute(r);
       setRouteDest(spot);
-      // fit map to route bbox
-      const coords = r.geojson.coordinates;
-      const lngs = coords.map((c) => c[0]);
-      const lats = coords.map((c) => c[1]);
-      mapRef.current?.fitBounds(
-        [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
-        { padding: 60, duration: 700 }
-      );
+      setActiveNavigation(true);
+      
+      // Position camera behind user with high pitch (Google Maps style)
+      if (userPos) {
+        const offset = getOffsetPosBehindUser(userPos, userHeading);
+        mapRef.current?.flyTo({
+          center: [offset.lng, offset.lat],
+          zoom: 17.5,
+          pitch: 70,
+          bearing: userHeading,
+          duration: 1000,
+          essential: true,
+        });
+      }
     } catch {
       setRouteError("Impossible de calculer l'itinéraire.");
     } finally {
       setRouteLoading(false);
     }
-  }, [effectivePos]);
+  }, [effectivePos, userPos, userHeading]);
 
-  const cancelNav = () => { setRoute(null); setRouteDest(null); };
+  const cancelNav = () => {
+    setRoute(null);
+    setRouteDest(null);
+    setActiveNavigation(false);
+    // Reset camera to normal view
+    mapRef.current?.flyTo({
+      center: [effectivePos.longitude, effectivePos.latitude],
+      zoom: 15,
+      pitch: 0,
+      bearing: 0,
+      duration: 700,
+    });
+  };
 
   // ── route GeoJSON source ──────────────────────────────────────────────
   const routeSource = route ? {
@@ -342,7 +513,7 @@ export function MapScreen() {
       <div className="bg-white border-b border-slate-200 p-4 shadow-sm">
         <h1 className="text-2xl text-slate-900">Carte thermique</h1>
         <p className="text-slate-500 text-sm mt-0.5">
-          {loading ? "Chargement…" : `${coolSpots.length} zones fraîches · ${heatZones.length} zones chaudes`}
+          {loading ? "Chargement…" : `${coolSpots.length} zones fraîches · ${heatZones.length} zones chaudes · ${waterStationsCount} fontaines`}
         </p>
       </div>
 
@@ -357,6 +528,11 @@ export function MapScreen() {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
             showHeat ? "bg-red-100 border-red-300 text-red-700" : "bg-slate-100 border-slate-200 text-slate-500"}`}>
           <Flame size={13} /> Zones chaudes
+        </button>
+        <button onClick={() => setShowWater((v) => !v)}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
+            showWater ? "bg-cyan-100 border-cyan-300 text-cyan-700" : "bg-slate-100 border-slate-200 text-slate-500"}`}>
+          <Droplets size={13} /> Fontaines
         </button>
         <button onClick={startGps} disabled={gpsLoading}
           className={`ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
@@ -414,11 +590,31 @@ export function MapScreen() {
 
           {/* User position */}
           <Marker longitude={effectivePos.longitude} latitude={effectivePos.latitude}>
-            <div style={{
-              width: 18, height: 18, background: userPos ? "#16a34a" : "#2563eb",
-              borderRadius: "50%", border: "3px solid white",
-              boxShadow: `0 0 0 4px ${userPos ? "#86efac" : "#93c5fd"}88`,
-            }} />
+            {activeNavigation && userPos ? (
+              <div style={{
+                width: 40,
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                background: "#dbeafe",
+                boxShadow: "0 0 0 4px #93c5fd77, 0 4px 12px rgba(2, 6, 23, 0.2)",
+              }}>
+                <div style={{ transform: `rotate(${userHeading}deg)` }}>
+                  <Navigation size={24} color="#2563eb" fill="#2563eb" strokeWidth={2.4} />
+                </div>
+              </div>
+            ) : (
+              <div style={{
+                width: 18,
+                height: 18,
+                background: userPos ? "#16a34a" : "#2563eb",
+                borderRadius: "50%",
+                border: "3px solid white",
+                boxShadow: `0 0 0 4px ${userPos ? "#86efac" : "#93c5fd"}88`,
+              }} />
+            )}
           </Marker>
 
           {/* Destination flag */}
@@ -443,6 +639,13 @@ export function MapScreen() {
               onClick={(z) => setSelected({ kind: "heat", data: z })} />
           ))}
 
+          {/* Water stations */}
+          {showWater && waterStations.map((w) => (
+            <WaterMarker key={`w-${w.id}`} station={w}
+              selected={selected?.kind === "water" && selected.data.id === w.id}
+              onClick={(w) => setSelected({ kind: "water", data: w })} />
+          ))}
+
           {/* Cool spots */}
           {showCool && coolSpots.map((s) => (
             <CoolMarker key={`c-${s.id}`} spot={s}
@@ -461,6 +664,7 @@ export function MapScreen() {
       <div className="px-4 py-2 bg-white border-b border-slate-100 flex flex-wrap gap-3 text-xs text-slate-500">
         <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full inline-block" style={{ background: "#0ea5e9" }} />Eau</span>
         <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full inline-block" style={{ background: "#22c55e" }} />Boisé</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full inline-block" style={{ background: "#06b6d4" }} />Fontaines</span>
         <span className="flex items-center gap-1"><span className="w-3 h-3 rotate-45 inline-block" style={{ background: "#ef4444" }} />Très chaud</span>
         <span className="flex items-center gap-1"><span className="w-3 h-3 rotate-45 inline-block" style={{ background: "#f97316" }} />Chaud</span>
         <span className="flex items-center gap-1"><span className="w-3 h-3 rotate-45 inline-block" style={{ background: "#facc15" }} />Modéré</span>
@@ -501,27 +705,77 @@ export function MapScreen() {
           </Card>
         )}
 
+        {selected?.kind === "water" && (
+          <Card className="p-5 shadow-xl border-2 mb-4" style={{ borderColor: "#06b6d4" }}>
+            <div className="flex items-start gap-4 mb-3">
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white flex-shrink-0"
+                style={{ background: "#06b6d4" }}>
+                <Droplets size={26} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-900 mb-1">{selected.data.nom_fontaine}</h3>
+                <p className="text-sm text-slate-500">{selected.data.adresse}</p>
+              </div>
+              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-slate-600 text-xl">✕</button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <div className="p-3 rounded-lg text-center bg-cyan-50">
+                <p className="text-xs text-slate-500">État</p>
+                <p className="text-sm font-semibold text-slate-900">{selected.data.etat}</p>
+              </div>
+              <div className="p-3 rounded-lg text-center bg-cyan-50">
+                <p className="text-xs text-slate-500">Robinets</p>
+                <p className="text-sm font-semibold text-slate-900">{selected.data.nombre_robinets}</p>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {selected?.kind === "water" && selected.data.lat && selected.data.lng && (
+          <button
+            onClick={() => handleNavigate(selected.data)}
+            disabled={routeLoading}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-semibold transition-all disabled:opacity-60 mb-4"
+            style={{ background: routeLoading ? "#94a3b8" : "#06b6d4" }}
+          >
+            {routeLoading ? <Loader2 size={18} className="animate-spin" /> : <Navigation size={18} />}
+            {routeLoading ? "Calcul de l'itinéraire…" : "M'y guider"}
+          </button>
+        )}
+
         {!selected && (
           <>
-            <h2 className="text-base font-semibold text-slate-900 mb-3">Zones fraîches les plus proches</h2>
+            <h2 className="text-base font-semibold text-slate-900 mb-3">Endroits les plus proches</h2>
             <div className="space-y-2 mb-6">
-              {coolSpots.slice(0, 5).map((s) => {
-                const c = coolColor(s.coolnessScore);
+              {nearbyPlaces.slice(0, 5).map((place) => {
+                const isCool = place.kind === "cool";
+                const item = place.data;
+                const iconColor = isCool ? coolColor(item.coolnessScore) : "#06b6d4";
                 return (
-                  <Card key={s.id} className="p-3 cursor-pointer hover:shadow-md transition-shadow border-slate-200"
-                    onClick={() => setSelected({ kind: "cool", data: s })}>
+                  <Card key={place.id} className="p-3 cursor-pointer hover:shadow-md transition-shadow border-slate-200"
+                    onClick={() => setSelected({ kind: place.kind, data: item })}>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white flex-shrink-0"
-                        style={{ background: c }}>
-                        {s.type === "water" ? <Droplets size={18} /> : <Trees size={18} />}
+                        style={{ background: iconColor }}>
+                        {isCool ? <Trees size={18} /> : <Droplets size={18} />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-900 truncate">{s.name}</p>
-                        <p className="text-xs text-slate-500">{s.distance}m · {s.walkTime} min</p>
+                        <p className="text-sm font-medium text-slate-900 truncate">
+                          {isCool ? item.name : item.nom_fontaine}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {place.computedDistance}m · {place.computedWalkTime} min
+                        </p>
                       </div>
-                      <p className="text-sm font-semibold flex-shrink-0" style={{ color: c }}>
-                        {s.estimatedTemperature}°C
-                      </p>
+                      {isCool ? (
+                        <p className="text-sm font-semibold flex-shrink-0" style={{ color: iconColor }}>
+                          {item.estimatedTemperature}°C
+                        </p>
+                      ) : (
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-cyan-700 bg-cyan-100 flex-shrink-0">
+                          Fontaine
+                        </span>
+                      )}
                     </div>
                   </Card>
                 );
@@ -530,7 +784,7 @@ export function MapScreen() {
 
             <h2 className="text-base font-semibold text-slate-900 mb-3">Zones chaudes à éviter</h2>
             <div className="space-y-2">
-              {heatZones.slice(0, 5).map((z) => {
+              {nearbyHeatZones.slice(0, 5).map((z) => {
                 const c = heatColor(z.risk);
                 return (
                   <Card key={z.id} className="p-3 cursor-pointer hover:shadow-md transition-shadow border-slate-200"
@@ -542,7 +796,7 @@ export function MapScreen() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-slate-900 truncate">{z.name}</p>
-                        <p className="text-xs text-slate-500">{z.distance}m · Classe {z.sourceClass}</p>
+                        <p className="text-xs text-slate-500">{z.computedDistance}m · Classe {z.sourceClass}</p>
                       </div>
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white flex-shrink-0"
                         style={{ background: c }}>
