@@ -203,9 +203,9 @@ export function TipsScreen() {
             <Phone size={16} />
             <span>18 - Pompiers</span>
           </a>
-          <a href="tel:3975" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 p-2 hover:bg-blue-100 rounded-lg transition-colors">
+          <a href="tel:0800066666" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 p-2 hover:bg-blue-100 rounded-lg transition-colors">
             <Phone size={16} />
-            <span>39 75 - Canicule Info Service</span>
+            <span>0800 06 66 66 - Canicule Info Service</span>
           </a>
         </div>
       </Card>
