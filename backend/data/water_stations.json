@@ -1,12 +1,12 @@
 [
     {
         "id": 1,
-        "nom_fontaine": "J. Lewis Brown",
+        "nom_fontaine": "Fontaine J. Lewis Brown",
         "nombre_robinets": 1,
         "modele_fontaine": "BAYARD",
         "x": 1418687.2427895,
         "y": 4190985.3827378,
-        "adresse": "place John Lewis Brown, 33300 Bordeaux",
+        "adresse": "Place John Lewis Brown, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -18,67 +18,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 4,
-        "nom_fontaine": "Place Saint Michel",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418093.9831366,
-        "y": 4187797.1171791,
-        "adresse": "Place Meynard, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5665452083357112,
-            "lat": 44.8343402809431
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 5,
-        "nom_fontaine": "Place Saint Michel",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418096.4120676,
-        "y": 4187697.41602,
-        "adresse": "rue gaspard philippe, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5664590333341131,
-            "lat": 44.83344486927675
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 11,
-        "nom_fontaine": "Place de l’Eglise St Amand",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1414351.2952797,
-        "y": 4189944.4423268,
-        "adresse": "Place de l'église Saint Amand, 33200 Bordeaux Caudéran",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6150448649982171,
-            "lat": 44.85215358761391
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 16,
-        "nom_fontaine": "Place des Martyrs de la Résistance (proche basilique Saint Seurin)",
+        "nom_fontaine": "Place des Martyrs de la Résistance (proche basilique Saint-Seurin)",
         "nombre_robinets": 1,
         "modele_fontaine": "TANA",
         "x": 1416659.3695889,
         "y": 4188836.2377277,
-        "adresse": "Place des Martyrs de la Résistance, 60 rue Rodriguès-Peirere, 33000 Bordeaux",
+        "adresse": "Place des Martyrs de la Résistance, 60 rue Rodrigues-Péreire, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-06",
         "etat": "fonctionnelle",
         "hivernage": "non",
@@ -91,7 +37,7 @@
     },
     {
         "id": 22,
-        "nom_fontaine": "Cité Dasvin de Bois Marin",
+        "nom_fontaine": "Cité Dasvin de Boismarin",
         "nombre_robinets": 1,
         "modele_fontaine": "DELABIE",
         "x": 1419838.3207761,
@@ -108,26 +54,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 23,
-        "nom_fontaine": "Rue Lafonfaine",
-        "nombre_robinets": 1,
-        "modele_fontaine": "BAYARD",
-        "x": 1417656.2407312,
-        "y": 4187000.7255706,
-        "adresse": "15 rue Lafontaine, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-03",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5716323133331113,
-            "lat": 44.827006779279984
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 24,
-        "nom_fontaine": "Quai de Queyries (en face des pontons) chantier naval",
+        "nom_fontaine": "Quai de Queyries (en face des pontons) – Chantier naval",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418692.2884804,
@@ -168,7 +96,7 @@
         "modele_fontaine": "TANA",
         "x": 1417970.2533419,
         "y": 4188522.8382888,
-        "adresse": "Quai de la Douanne, 33000 Bordeaux (Sud du miroir d'eau)",
+        "adresse": "Quai de la Douane, 33000 Bordeaux (sud du miroir d'eau)",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -186,7 +114,7 @@
         "modele_fontaine": "TANA",
         "x": 1418219.5859517,
         "y": 4189899.3683626,
-        "adresse": "Quai des Chartrons, 33000 Bordeaux (proche Skate Park-rampe)",
+        "adresse": "Quai des Chartrons, 33000 Bordeaux (proche skate park – rampe)",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "non",
@@ -199,12 +127,12 @@
     },
     {
         "id": 37,
-        "nom_fontaine": "Jardin de l’hôtel de ville",
+        "nom_fontaine": "Jardin de l'Hôtel de Ville",
         "nombre_robinets": 1,
         "modele_fontaine": "WALLACE",
         "x": 1417043.7555656,
         "y": 4188266.8430914,
-        "adresse": "Jardin Hôtel de Ville, 20 cours d'Albret, 33000 Bordeaux",
+        "adresse": "Jardin de l'Hôtel de Ville, 20 cours d'Albret, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-03",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -235,7 +163,7 @@
     },
     {
         "id": 42,
-        "nom_fontaine": "Place du Général Sarrailh",
+        "nom_fontaine": "Place du Général Sarrail",
         "nombre_robinets": 1,
         "modele_fontaine": "WALLACE",
         "x": 1417588.9923917,
@@ -258,7 +186,7 @@
         "modele_fontaine": "PRESTO",
         "x": 1419423.4602297,
         "y": 4188715.5686666,
-        "adresse": "Place Calixte Camelle, 33100 Bordeaux (Nord de la place)",
+        "adresse": "Place Calixte Camelle, 33100 Bordeaux (nord de la place)",
         "date_dernier_controle": "2026-03-16",
         "etat": "hors service",
         "hivernage": "oui",
@@ -270,67 +198,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 45,
-        "nom_fontaine": "Place Ferdinand Buisson",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METLACO",
-        "x": 1419264.1699947,
-        "y": 4186594.6511227,
-        "adresse": "Place Ferdinand Buisson, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5510932277570527,
-            "lat": 44.82399172273586
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 48,
-        "nom_fontaine": "Parc Bordelais (proche entrée rue Carnot)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415324.8521272,
-        "y": 4189714.3630272,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6026108366651411,
-            "lat": 44.850475180947484
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 49,
-        "nom_fontaine": "Parc Bordelais (estrade croisement 6 chemins)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415284.5977603,
-        "y": 4189712.2955789,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "hors service",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6031184283310606,
-            "lat": 44.85044049094605
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 51,
         "nom_fontaine": "Parc Floral Bordeaux-Lac (proche roseraie)",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418521.0524094,
         "y": 4195656.6908468,
-        "adresse": "Réserve Ecologique des Barrails, avenue du Golf, 33300 Bordeaux",
+        "adresse": "Réserve écologique des Barrails, avenue du Golf, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-18",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -343,12 +217,12 @@
     },
     {
         "id": 52,
-        "nom_fontaine": "Parc Floral Bordeaux-Lac (milieu Parc floralies)",
+        "nom_fontaine": "Parc Floral Bordeaux-Lac (milieu parc floralies)",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418683.3401775,
         "y": 4195210.1255623,
-        "adresse": "Réserve Ecologique des Barrails, parking stade jules Ladoumègue, 33300 Bordeaux",
+        "adresse": "Réserve écologique des Barrails, parking stade Jules Ladoumègue, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-18",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -360,139 +234,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 97,
-        "nom_fontaine": "Cimetière Pins Francs n°3",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1413870.3012238,
-        "y": 4190822.4241135,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6216203316659779,
-            "lat": 44.85985369094694
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 98,
-        "nom_fontaine": "Cimetière Pins Francs n°4",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1413929.2170967,
-        "y": 4190835.8102325,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6208831766613115,
-            "lat": 44.859997724275665
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 101,
-        "nom_fontaine": "Cimetière Pins Francs n°7",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1414002.4689942,
-        "y": 4190677.8291805,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6198679649944455,
-            "lat": 44.85860687094346
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 144,
-        "nom_fontaine": "Parc Bordelais (proche animaux)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415235.0826609,
-        "y": 4189723.6136261,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6037505900050445,
-            "lat": 44.850522434271625
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 145,
-        "nom_fontaine": "Parc Bordelais (aire de jeux du parc Cerey  entrée)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415172.8920459,
-        "y": 4189823.7964625,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6045929499943546,
-            "lat": 44.851398230946
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 148,
-        "nom_fontaine": "Quai des Salinières (Grave)",
-        "nombre_robinets": 3,
-        "modele_fontaine": "FONTAINE MONUMENT PIERRE",
-        "x": 1418444.4641783,
-        "y": 4187799.966253,
-        "adresse": "Quai de la Monnaie, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5621183816728135,
-            "lat": 44.834504599275334
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 150,
-        "nom_fontaine": "Quai des salinieres",
-        "nombre_robinets": 3,
-        "modele_fontaine": "FONTAINE EN RANGEE",
-        "x": 1418519.3570088,
-        "y": 4187732.4819122,
-        "adresse": "Quai de la Monnaie, 33800 Bordeaux (rangée côté ring-hockey)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5611345900001954,
-            "lat": 44.833927489272675
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 155,
-        "nom_fontaine": "Place lafargue",
+        "nom_fontaine": "Place Lafargue",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1417689.6955329,
         "y": 4188122.1291847,
-        "adresse": "Place Fernand Lafargue, 33800 Bordeaux",
+        "adresse": "Place Fernand Lafargue, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-11",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -541,7 +289,7 @@
     },
     {
         "id": 166,
-        "nom_fontaine": "AUBIERS CITY STADE",
+        "nom_fontaine": "Aubiers – City Stade",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418004.7622114,
@@ -559,12 +307,12 @@
     },
     {
         "id": 173,
-        "nom_fontaine": "Cours du quebec face station des berges du lac",
+        "nom_fontaine": "Cours du Québec – face station des berges du lac",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417963.5635125,
         "y": 4192798.3501178,
-        "adresse": "35 cours du québec, 33300 Bordeaux",
+        "adresse": "35 cours du Québec, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -577,12 +325,12 @@
     },
     {
         "id": 176,
-        "nom_fontaine": "Place georges porto riche",
+        "nom_fontaine": "Place Georges Porto-Riche",
         "nombre_robinets": 1,
         "modele_fontaine": "WALLACE",
         "x": 1417676.6115935,
         "y": 4188655.3981117,
-        "adresse": "Place Georges Porto Riche, 22 rue du pont de la Mousque, 33000 Bordeaux",
+        "adresse": "Place Georges Porto-Riche, 22 rue du Pont de la Mousque, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-02",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -595,7 +343,7 @@
     },
     {
         "id": 177,
-        "nom_fontaine": "Place de la republique",
+        "nom_fontaine": "Place de la République",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1417123.6433655,
@@ -613,7 +361,7 @@
     },
     {
         "id": 183,
-        "nom_fontaine": "Face galerie des beaux arts (en pierre)",
+        "nom_fontaine": "Face galerie des Beaux-Arts (en pierre)",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1416896.3695079,
@@ -631,12 +379,12 @@
     },
     {
         "id": 185,
-        "nom_fontaine": "Parc Pincon, aire de jeux",
+        "nom_fontaine": "Parc Pinçon – Aire de jeux",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1419791.12,
         "y": 4188932.39,
-        "adresse": "9 rue Edouard Branly, 33100 Bordeaux",
+        "adresse": "9 rue Édouard Branly, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -644,42 +392,6 @@
         "geom": {
             "lon": -0.5457294187296334,
             "lat": 44.84521721864546
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 187,
-        "nom_fontaine": "Jardins des Barrières, aire de jeux",
-        "nombre_robinets": 1,
-        "modele_fontaine": "DELABIE",
-        "x": 1418014.06,
-        "y": 4185388.43,
-        "adresse": "13 impasse de la Fontaine de Guillot, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5662146804892807,
-            "lat": 44.81265305462075
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 193,
-        "nom_fontaine": "Square Bertrand de Goth, dans le parc",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1417155.17,
-        "y": 4186169.74,
-        "adresse": "107 rue Bertrand de Goth, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5774987759455112,
-            "lat": 44.819336872346874
         },
         "code_insee": "33063"
     },
@@ -703,7 +415,7 @@
     },
     {
         "id": 202,
-        "nom_fontaine": "Bd Brandenburg , local Boulistes",
+        "nom_fontaine": "Boulevard Brandenburg – Local boulistes",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1420141.46,
@@ -720,67 +432,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 203,
-        "nom_fontaine": "Place André Meunier 1",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1418361.39,
-        "y": 4187232.85,
-        "adresse": "Place André Meunier, 33800 Bordeaux (proche cabane)",
-        "date_dernier_controle": "2026-03-03",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5628527566347333,
-            "lat": 44.82937301029958
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 206,
-        "nom_fontaine": "Quai Sainte Croix - aire de jeux",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418564.94,
-        "y": 4187689.22,
-        "adresse": "Quai Sainte Croix, 33800 Bordeaux (dans aire de jeux)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5605346061657143,
-            "lat": 44.833556559258035
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 208,
-        "nom_fontaine": "Parc Bordelais (proche Manège)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415458.3504745,
-        "y": 4190091.3886212,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6011355350028714,
-            "lat": 44.85391818297133
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 210,
-        "nom_fontaine": "Stade Promis n1 (côté rue Buthaud)",
+        "nom_fontaine": "Stade Promis n°1 (côté rue Buthaud)",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1419093.28,
         "y": 4188169.45,
-        "adresse": "rue rené Buthaud, 33100 Bordeaux",
+        "adresse": "Rue René Buthaud, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-17",
         "etat": "hors service",
         "hivernage": "oui",
@@ -792,31 +450,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 213,
-        "nom_fontaine": "Parc de lussy (aire de jeux)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1414993.91,
-        "y": 4188586.38,
-        "adresse": "Parc de Lussy, Avenue de Bel Air, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6061585405781746,
-            "lat": 44.84020171697899
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 215,
         "nom_fontaine": "Jardin Public",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1417162.74,
         "y": 4189383.21,
-        "adresse": "Jardin Public, cours de verdun, 33000 Bordeaux (jeux enfants, proche musée)",
+        "adresse": "Jardin Public, cours de Verdun, 33000 Bordeaux (jeux enfants, proche musée)",
         "date_dernier_controle": "2026-03-09",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -828,49 +468,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 218,
-        "nom_fontaine": "109 rue Billaudel",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418328.8,
-        "y": 4186554.29,
-        "adresse": "109 rue Billaudel, 33000 Bortdeaux",
-        "date_dernier_controle": "2026-03-09",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5628872864840272,
-            "lat": 44.82325943694051
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 219,
-        "nom_fontaine": "Jardin de la porcelaine (aire de jeux)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1419235.52,
-        "y": 4186377.06,
-        "adresse": "rue Raymond Auguste Monvoisin, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5513346069292266,
-            "lat": 44.822024131970174
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 221,
-        "nom_fontaine": "Parc de la grenouillère",
+        "nom_fontaine": "Parc de la Grenouillère",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1417583.77,
         "y": 4190868.81,
-        "adresse": "163 avenue Emile Counord, 33300 Bordeaux",
+        "adresse": "163 avenue Émile Counord, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -882,31 +486,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 223,
-        "nom_fontaine": "Jardin des Barrières, aire des chiens",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO \n(+ abreuvoir)",
-        "x": 1417974.21,
-        "y": 4185478.37,
-        "adresse": "13 impasse de la Fontaine de Guillot, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5667680422599005,
-            "lat": 44.81344589119144
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 224,
-        "nom_fontaine": "Place des Martyrs de la résisitence",
+        "nom_fontaine": "Place des Martyrs de la Résistance",
         "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO \n(+ abreuvoir)",
+        "modele_fontaine": "PRESTO (+ abreuvoir)",
         "x": 1416656.07,
         "y": 4188809.56,
-        "adresse": "Place des Martyrs de la Résistance, 60 rue Rodriguès-Peirere, 33000 Bordeaux",
+        "adresse": "Place des Martyrs de la Résistance, 60 rue Rodrigues-Péreire, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-06",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -918,67 +504,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 225,
-        "nom_fontaine": "Square Honoré d'Etienne d'Orves",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1414408.49,
-        "y": 4190269.43,
-        "adresse": "190 avenue du Maréchal de Lattre de Tassigny, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6145053449345214,
-            "lat": 44.85509829304507
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 230,
-        "nom_fontaine": "Place Cardinal / Eglise Sacré Cœur",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418306.39,
-        "y": 4186452.69,
-        "adresse": "110 rue Pelleport, 33000 Bordeaux",
-        "date_dernier_controle": "2026-03-09",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5631139096976988,
-            "lat": 44.822337123230014
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 231,
-        "nom_fontaine": "Jardin de l'Ars",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1419835.86,
-        "y": 4186395.7,
-        "adresse": "10 Quai de Brienne, 33000 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5437610199053907,
-            "lat": 44.822428186559655
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 236,
         "nom_fontaine": "Square Vinet",
         "nombre_robinets": 1,
         "modele_fontaine": "BAYARD",
         "x": 1417732.54,
         "y": 4188382.1,
-        "adresse": "Square Vinet, Bordeaux",
+        "adresse": "Square Vinet, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-11",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -991,12 +523,12 @@
     },
     {
         "id": 242,
-        "nom_fontaine": "Parc Pincon, opposé de l'aire de jeux",
+        "nom_fontaine": "Parc Pinçon – Opposé de l'aire de jeux",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1419807.39,
         "y": 4188746.43,
-        "adresse": "5 rue Ferdinad Palau, Bordeaux",
+        "adresse": "5 rue Ferdinand Palau, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1008,31 +540,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 245,
-        "nom_fontaine": "Square des Jasmins",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1412650.06,
-        "y": 4190914.1,
-        "adresse": "48 rue des Violettes, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6370966092287849,
-            "lat": 44.8601861662304
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 247,
-        "nom_fontaine": "Placette Tivoli / Riviere",
+        "nom_fontaine": "Placette Tivoli / Rivière",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1416443.7,
         "y": 4190032.72,
-        "adresse": "angle rue Tivoli et Rue Riviere, Bordeaux",
+        "adresse": "Angle rue Tivoli et rue Rivière, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1040,42 +554,6 @@
         "geom": {
             "lon": -0.5886484991529938,
             "lat": 44.85378402008263
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 248,
-        "nom_fontaine": "rue Cazemajor",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1417826.89,
-        "y": 4186701.12,
-        "adresse": "52 rue Cazemajor, Bordeaux",
-        "date_dernier_controle": "2026-03-10",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5693095561383722,
-            "lat": 44.824380798756245
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 257,
-        "nom_fontaine": "Restaurant \"le terroir\"",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418503.63,
-        "y": 4186214.15,
-        "adresse": "51 rue de la compagnie du midi, Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.560489751605236,
-            "lat": 44.82027049886653
         },
         "code_insee": "33063"
     },
@@ -1099,12 +577,12 @@
     },
     {
         "id": 263,
-        "nom_fontaine": "jardin de ta sœur",
+        "nom_fontaine": "Jardin de ta Sœur",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418696.92,
         "y": 4190538.64,
-        "adresse": "rue Emile Peynaud, 33300 Bordeaux",
+        "adresse": "Rue Émile Peynaud, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1122,7 +600,7 @@
         "modele_fontaine": "PRESTO",
         "x": 1418768.76,
         "y": 4191295.47,
-        "adresse": "quai Lawton, 33300 Bordeaux",
+        "adresse": "Quai Lawton, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1134,26 +612,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 276,
-        "nom_fontaine": "Parc du Pont Roulant",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418988.44,
-        "y": 4186118.93,
-        "adresse": "Rue du Tri Postal, 33300 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5543127340900923,
-            "lat": 44.819605899805794
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 278,
-        "nom_fontaine": "Eglise Notre Dame (Mably)",
+        "nom_fontaine": "Église Notre-Dame (Mably)",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417366.85,
@@ -1171,12 +631,12 @@
     },
     {
         "id": 280,
-        "nom_fontaine": "Square du Grand Parc n°4 - Aire Chiens",
+        "nom_fontaine": "Square du Grand Parc n°4 – Aire chiens",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1416852.87,
         "y": 4190652.3,
-        "adresse": "80 rue Pierre Trebod, 33300 Bordeaux",
+        "adresse": "80 rue Pierre Trébod, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1194,7 +654,7 @@
         "modele_fontaine": "BAYARD",
         "x": 1419689.909643,
         "y": 4188547.3142863,
-        "adresse": "angle boulevard Jules Simon / rue de la Benauge, 33100 Bordeaux",
+        "adresse": "Angle boulevard Jules Simon / rue de la Benauge, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "non",
@@ -1212,7 +672,7 @@
         "modele_fontaine": "TANA",
         "x": 1417315.4696716,
         "y": 4188208.0777652,
-        "adresse": "Place Pey Berland, 33000 Bordeaux (proche arret tram ligne B)",
+        "adresse": "Place Pey-Berland, 33000 Bordeaux (proche arrêt tram ligne B)",
         "date_dernier_controle": "2026-03-03",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1302,7 +762,7 @@
         "modele_fontaine": "TANA",
         "x": 1417915.5385254,
         "y": 4188735.8350284,
-        "adresse": "Quai du Maréchal Lyautey, 33000 Bordeaux (Nord du miroir d'eau)",
+        "adresse": "Quai du Maréchal Lyautey, 33000 Bordeaux (nord du miroir d'eau)",
         "date_dernier_controle": "2026-03-25",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1320,7 +780,7 @@
         "modele_fontaine": "TANA",
         "x": 1418254.0815344,
         "y": 4189934.5276265,
-        "adresse": "Quai des Chartrons, 33000 Bordeaux (proche Skate Park-béton)",
+        "adresse": "Quai des Chartrons, 33000 Bordeaux (proche skate park – béton)",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1351,12 +811,12 @@
     },
     {
         "id": 38,
-        "nom_fontaine": "Place Stalingrad la Bastide",
+        "nom_fontaine": "Place Stalingrad – La Bastide",
         "nombre_robinets": 1,
         "modele_fontaine": "WALLACE",
         "x": 1418673.6351428,
         "y": 4188459.7030678,
-        "adresse": "place stalingrad, Bastide, 33100 Bordeaux",
+        "adresse": "Place Stalingrad, Bastide, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1392,7 +852,7 @@
         "modele_fontaine": "PRESTO",
         "x": 1419460.2622362,
         "y": 4188672.819071,
-        "adresse": "Place Calixte Camelle, 33100 Bordeaux (Sud de la place)",
+        "adresse": "Place Calixte Camelle, 33100 Bordeaux (sud de la place)",
         "date_dernier_controle": "2026-03-16",
         "etat": "hors service",
         "hivernage": "oui",
@@ -1410,7 +870,7 @@
         "modele_fontaine": "PRESTO",
         "x": 1417288.4838013,
         "y": 4189409.8297697,
-        "adresse": "Jardin Public, cours de verdun, 33000 Bordeaux (centre du parc, proche étang n°1)",
+        "adresse": "Jardin Public, cours de Verdun, 33000 Bordeaux (centre du parc, proche étang n°1)",
         "date_dernier_controle": "2026-03-09",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1428,7 +888,7 @@
         "modele_fontaine": "PRESTO",
         "x": 1417288.1555776,
         "y": 4189409.2542917,
-        "adresse": "Jardin Public, cours de verdun, 33000 Bordeaux (centre du parc, proche étang n°2)",
+        "adresse": "Jardin Public, cours de Verdun, 33000 Bordeaux (centre du parc, proche étang n°2)",
         "date_dernier_controle": "2026-03-09",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1440,170 +900,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 50,
-        "nom_fontaine": "Parc Bordelais (proche étang)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415172.8920459,
-        "y": 4189823.7964625,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6045929499943546,
-            "lat": 44.851398230946
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 95,
-        "nom_fontaine": "Cimetière Pins Francs n°1",
-        "nombre_robinets": 1,
-        "modele_fontaine": "ROBINET PAPILLON",
-        "x": 1413979.969796,
-        "y": 4190766.8881925,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6202026883381441,
-            "lat": 44.85939849594245
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 99,
-        "nom_fontaine": "Cimetière Pins Francs n°5",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1413992.0821241,
-        "y": 4190808.4820409,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6200730900028517,
-            "lat": 44.85977730594029
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 100,
-        "nom_fontaine": "Cimetière Pins Francs n°6",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1414022.2033901,
-        "y": 4190752.6799873,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6196608133283021,
-            "lat": 44.859287734276755
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 104,
-        "nom_fontaine": "Cimetière Pins Francs n°10",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1413845.854802,
-        "y": 4190691.6799275,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6218554216620877,
-            "lat": 44.85866843093885
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 146,
-        "nom_fontaine": "Parc Bordelais (aire de jeux du parc Cerey  milieu parc)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415458.3504745,
-        "y": 4190091.3886212,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6011355350028714,
-            "lat": 44.85391818297133
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 151,
-        "nom_fontaine": "Quai des Salinières",
-        "nombre_robinets": 3,
-        "modele_fontaine": "FONTAINE EN RANGEE",
-        "x": 1418521.5800239,
-        "y": 4187730.5049689,
-        "adresse": "Quai de la Monnaie, 33800 Bordeaux (rangée côté ring-hockey)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5611054033322284,
-            "lat": 44.83391059427859
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 153,
-        "nom_fontaine": "Quai des salinieres",
-        "nombre_robinets": 3,
-        "modele_fontaine": "FONTAINE EN RANGEE",
-        "x": 1418525.9432792,
-        "y": 4187726.4084602,
-        "adresse": "Quai de la Monnaie, 33800 Bordeaux (rangée côté ring-hockey)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5610479966700842,
-            "lat": 44.83387548927728
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 154,
-        "nom_fontaine": "Quai des salinieres (terrain de basket)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418528.0429685,
-        "y": 4187724.2966107,
-        "adresse": "174 Quai Sainte Croix, 33800 Bordeaux (parc des Sports Saint Michel)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5610202933302056,
-            "lat": 44.83385733260818
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 157,
-        "nom_fontaine": "Parc Rivière n°2 (Jardin)",
+        "nom_fontaine": "Parc Rivière n°2 (jardin)",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1416677.4613833,
@@ -1621,7 +919,7 @@
     },
     {
         "id": 158,
-        "nom_fontaine": "Ilôt Bonnac",
+        "nom_fontaine": "Îlot Bonnac",
         "nombre_robinets": 1,
         "modele_fontaine": "TANA",
         "x": 1416875.6899788,
@@ -1639,12 +937,12 @@
     },
     {
         "id": 159,
-        "nom_fontaine": "Ilôt Bonnac",
+        "nom_fontaine": "Îlot Bonnac",
         "nombre_robinets": 1,
         "modele_fontaine": "TANA",
         "x": 1416886.6621572,
         "y": 4188432.2445155,
-        "adresse": "18 rue Saint Sernin, 33000 Bordeaux",
+        "adresse": "18 rue Saint-Sernin, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-02",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1656,31 +954,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 161,
-        "nom_fontaine": "AIRE DE JEUX POINCARE",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1413889.0958454,
-        "y": 4189091.8337527,
-        "adresse": "Square Joséphine, 39 avenue Raymond Poincaré, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "hors service",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6204046733353917,
-            "lat": 44.844302697607056
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 168,
-        "nom_fontaine": "AUBIERS GINKO",
+        "nom_fontaine": "Aubiers – Ginko",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417815.6704892,
         "y": 4192452.4140382,
-        "adresse": "rue des genêts, 33300 Bordeaux (proche city stade - espace sportif de Lauzun)",
+        "adresse": "Rue des Genêts, 33300 Bordeaux (proche city stade – espace sportif de Lauzun)",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1692,26 +972,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 172,
-        "nom_fontaine": "Jardin Béchade (n°2, milieu parc)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415576.0318348,
-        "y": 4187036.8581127,
-        "adresse": "Jardin de la Béchade, 100 rue Léo Saignat, 33000 Bordeaux (milieu parc)",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5979326683363279,
-            "lat": 44.82650366261077
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 175,
-        "nom_fontaine": "Rue du muguet/angle puits descazeaux",
+        "nom_fontaine": "Rue du Muguet / Angle Puits Descazeaux",
         "nombre_robinets": 1,
         "modele_fontaine": "BAYARD",
         "x": 1417947.6031463,
@@ -1728,26 +990,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 178,
-        "nom_fontaine": "Place duburg",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418264.4940075,
-        "y": 4187803.9923393,
-        "adresse": "6 place Dubour, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5643945899983296,
-            "lat": 44.83446959428003
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 179,
-        "nom_fontaine": "Jardin botanique bastide1",
+        "nom_fontaine": "Jardin Botanique Bastide n°1",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418565.05,
@@ -1764,67 +1008,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 181,
-        "nom_fontaine": "Place maucaillou",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418057.6645819,
-        "y": 4187567.5464683,
-        "adresse": "place du Maucaillou, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5668763266654059,
-            "lat": 44.83226191927255
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 186,
-        "nom_fontaine": "Parc Carreire, aire de jeux",
-        "nombre_robinets": 1,
-        "modele_fontaine": "DELABIE",
-        "x": 1414746.5,
-        "y": 4186777.53,
-        "adresse": "rue Jean Baldé, 33000 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6082663189887014,
-            "lat": 44.82384033350401
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 189,
-        "nom_fontaine": "142 rue des Terres de Borde",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418969.1,
-        "y": 4186490.79,
-        "adresse": "142 rue des Terres de Borde, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5547632519652383,
-            "lat": 44.82294153937313
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 190,
-        "nom_fontaine": "Parc des Berges, quai dechamps",
+        "nom_fontaine": "Parc des Berges – Quai Deschamps",
         "nombre_robinets": 1,
         "modele_fontaine": "DELABIE",
         "x": 1419153.77,
         "y": 4187828.55,
-        "adresse": "52 quai deschamps, 33100 Bordeaux (proche café du port)",
+        "adresse": "52 quai Deschamps, 33100 Bordeaux (proche café du port)",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1836,31 +1026,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 191,
-        "nom_fontaine": "Square Paul Antin",
-        "nombre_robinets": 1,
-        "modele_fontaine": "BAYARD",
-        "x": 1417730.71,
-        "y": 4186155.89,
-        "adresse": "278 rue Pelleport, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-09",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5702209029855192,
-            "lat": 44.81944073251538
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 194,
-        "nom_fontaine": "Place Saint Projet",
+        "nom_fontaine": "Place Saint-Projet",
         "nombre_robinets": 3,
         "modele_fontaine": "PRESTO",
         "x": 1417511.8,
         "y": 4188283.87,
-        "adresse": "place saint projet, 33000 Bordeaux",
+        "adresse": "Place Saint-Projet, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-11",
         "etat": "fonctionnelle",
         "hivernage": "non",
@@ -1872,31 +1044,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 195,
-        "nom_fontaine": "Place Nansouty",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1417567.59,
-        "y": 4186235.27,
-        "adresse": "Place Nansouty, 163 cours de la somme, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5723256557271309,
-            "lat": 44.82008972519315
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 212,
-        "nom_fontaine": "Place Gaviniès (square de jeu gavinies)",
+        "nom_fontaine": "Place Gaviniès (square de jeu Gaviniès)",
         "nombre_robinets": 1,
         "modele_fontaine": "BAYARD",
         "x": 1415956.1,
         "y": 4187760.04,
-        "adresse": "place Gaviniès, 33000 Bordeaux",
+        "adresse": "Place Gaviniès, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-13",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1914,7 +1068,7 @@
         "modele_fontaine": "PRESTO",
         "x": 1416895.05,
         "y": 4190767.3,
-        "adresse": "80 rue Pierre Trebod, 33300 Bordeaux",
+        "adresse": "80 rue Pierre Trébod, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1927,7 +1081,7 @@
     },
     {
         "id": 227,
-        "nom_fontaine": "Square Docteur Roger Hypousteguy",
+        "nom_fontaine": "Square Docteur Roger Hypoustéguy",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1420078.33,
@@ -1945,12 +1099,12 @@
     },
     {
         "id": 228,
-        "nom_fontaine": "1 rue Lacanau, Bordeaux",
+        "nom_fontaine": "Fontaine 1 rue Lacanau",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1415988.9,
         "y": 4188276.57,
-        "adresse": "1 rue Lacanau, Bordeaux",
+        "adresse": "1 rue Lacanau, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-13",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -1980,31 +1134,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 233,
-        "nom_fontaine": "Nouvelle Gare Routière",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1419051.78,
-        "y": 4187234.22,
-        "adresse": "35 quai de paludate, Bordeaux",
-        "date_dernier_controle": "2026-03-12",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5541309902546113,
-            "lat": 44.82965810318917
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 235,
         "nom_fontaine": "Place Alice Girou",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1419170.33,
         "y": 4190815.68,
-        "adresse": "Place Alice Girou, Bordeaux",
+        "adresse": "Place Alice Girou, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2017,12 +1153,12 @@
     },
     {
         "id": 237,
-        "nom_fontaine": "Stade Promis n2 (côté rue Joseph Fauré)",
+        "nom_fontaine": "Stade Promis n°2 (côté rue Joseph Fauré)",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1419357.01,
         "y": 4188260.47,
-        "adresse": "50 rue Joseph Fauré, Bordeaux",
+        "adresse": "50 rue Joseph Fauré, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2034,31 +1170,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 238,
-        "nom_fontaine": "Square Armand Faulat",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1414342.5,
-        "y": 4189220.58,
-        "adresse": "226 rue Pasteur, Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6147476111158188,
-            "lat": 44.84564228377359
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 239,
         "nom_fontaine": "Place Mareilhac",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1419514.29,
         "y": 4192417.74,
-        "adresse": "Place Mareilhac, Bordeaux",
+        "adresse": "Place Mareilhac, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2071,12 +1189,12 @@
     },
     {
         "id": 240,
-        "nom_fontaine": "Parc Chantecrit - Aire de jeux",
+        "nom_fontaine": "Parc Chantecrit – Aire de jeux",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418420.49,
         "y": 4191016.84,
-        "adresse": "12 Cité Chantecrit, 33000 Bordeaux",
+        "adresse": "12 cité Chantecrit, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2094,7 +1212,7 @@
         "modele_fontaine": "METALCO",
         "x": 1416812.84,
         "y": 4189791.12,
-        "adresse": "Face au 2 rue du Lavoir, Bordeaux",
+        "adresse": "Face au 2 rue du Lavoir, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-13",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2106,49 +1224,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 251,
-        "nom_fontaine": "Place du 14 juillet, Bordeaux",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1415311.44,
-        "y": 4189446.91,
-        "adresse": "Place du 14 juillet, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6026299540890759,
-            "lat": 44.84806530437052
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 255,
-        "nom_fontaine": "place d'armagnac",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418988.77,
-        "y": 4186084.33,
-        "adresse": "place Armagnac, Bordeaux (rue Paul Peyrat)",
-        "date_dernier_controle": "2026-03-26",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5542893807358921,
-            "lat": 44.819294952573976
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 259,
         "nom_fontaine": "Placette Murielle Franco",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418874.1,
         "y": 4188484.68,
-        "adresse": "rue montméjan / rue Paul Camelle ; Bordeaux",
+        "adresse": "Rue Montméjan / rue Paul Camelle, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-17",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2161,7 +1243,7 @@
     },
     {
         "id": 264,
-        "nom_fontaine": "jardin de ta sœur",
+        "nom_fontaine": "Jardin de ta Sœur",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418623.63,
@@ -2178,31 +1260,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 265,
-        "nom_fontaine": "Place Ozanam",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1414439.06,
-        "y": 4189746.86,
-        "adresse": "Place frédérique Ozaman 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-17",
-        "etat": "hors service",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6138241749267075,
-            "lat": 44.85041247481959
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 269,
         "nom_fontaine": "GS Elsa Triolet",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1420236.11,
         "y": 4190243.04,
-        "adresse": "4 place nina simone, 33100 Bordeaux",
+        "adresse": "4 place Nina Simone, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-26",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2215,12 +1279,12 @@
     },
     {
         "id": 270,
-        "nom_fontaine": "Avenue des 40 journeaux bordeaux lac",
+        "nom_fontaine": "Avenue des 40 Journaux – Bordeaux Lac",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418187.13,
         "y": 4192774.04,
-        "adresse": "46 avenue des 40 journaux, Bordeaux",
+        "adresse": "46 avenue des 40 Journaux, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2233,12 +1297,12 @@
     },
     {
         "id": 273,
-        "nom_fontaine": "Square Jacques Nancy (placette henri labit)",
+        "nom_fontaine": "Square Jacques Nancy (placette Henri Labit)",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1416351,
         "y": 4188322.83,
-        "adresse": "1 rue Henri Labit, Bordeaux",
+        "adresse": "1 rue Henri Labit, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-03",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2250,31 +1314,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 277,
-        "nom_fontaine": "Eglise Belcier",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1419321.75,
-        "y": 4186632.09,
-        "adresse": "19 rue de Seigliere, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5503865544584905,
-            "lat": 44.824351024651875
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 281,
-        "nom_fontaine": "Square du Grand Parc n°5 - Aire Musculation",
+        "nom_fontaine": "Square du Grand Parc n°5 – Aire musculation",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1416781.75,
         "y": 4190671,
-        "adresse": "80 rue Pierre Trebod, 33300 Bordeaux",
+        "adresse": "80 rue Pierre Trébod, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2282,114 +1328,6 @@
         "geom": {
             "lon": -0.5847329198668914,
             "lat": 44.85965708405375
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 283,
-        "nom_fontaine": "Parc Bordelais - aire de jeux n°2 (nouvelle aire)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1415242.68,
-        "y": 4190256.77,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6039544809024793,
-            "lat": 44.855318761848075
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 2,
-        "nom_fontaine": "Place Emile Combes",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1414802.7402408,
-        "y": 4188183.3742759,
-        "adresse": "Square Emile Combes, 33000 Bordeaux",
-        "date_dernier_controle": "2025-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6083472666622323,
-            "lat": 44.836501969276604
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 6,
-        "nom_fontaine": "Place Simiot",
-        "nombre_robinets": 1,
-        "modele_fontaine": "BAYARD",
-        "x": 1417196.7989449,
-        "y": 4186566.8261904,
-        "adresse": "Place Simiot, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5771945162018686,
-            "lat": 44.82292343589155
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 12,
-        "nom_fontaine": "Place Flornoy (jardin de Lili)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1414556.276822,
-        "y": 4187817.9896375,
-        "adresse": "7 rue de Cantenac, 33000 Bordeaux (aire de Jeux du Jardin de Lili)",
-        "date_dernier_controle": "2025-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6112555216639495,
-            "lat": 44.83311823761235
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 14,
-        "nom_fontaine": "Gare Saint Jean (Place Casablanca)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418770.4723371,
-        "y": 4186865.3748353,
-        "adresse": "28 rue Saint Vincent de Paul, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-03",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5574803650018081,
-            "lat": 44.82623087927816
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 15,
-        "nom_fontaine": "Gare Saint Jean (arêt tram)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418802.5254507,
-        "y": 4186848.5410649,
-        "adresse": "28 rue Saint Vincent de Paul, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-03",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5570660799948963,
-            "lat": 44.826092192611895
         },
         "code_insee": "33063"
     },
@@ -2454,7 +1392,7 @@
         "modele_fontaine": "TANA",
         "x": 1419890.7966315,
         "y": 4192060.4181387,
-        "adresse": "Mairie de Quartier Bordeaux Maritime, 220 rue Achard, 33300 Bordeaux",
+        "adresse": "Mairie de quartier Bordeaux Maritime, 220 rue Achard, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "hors service",
         "hivernage": "oui",
@@ -2472,7 +1410,7 @@
         "modele_fontaine": "TANA",
         "x": 1418009.351816,
         "y": 4188389.0498236,
-        "adresse": "Quai Richelieu, 33000 Bordeaux (proche maison Eco-Citoyenne)",
+        "adresse": "Quai Richelieu, 33000 Bordeaux (proche maison éco-citoyenne)",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2490,7 +1428,7 @@
         "modele_fontaine": "TANA",
         "x": 1417867.7778269,
         "y": 4189013.8062718,
-        "adresse": "Quai Louis XVIII, 33000 Bordeaux (en face des Allées de Munich)",
+        "adresse": "Quai Louis XVIII, 33000 Bordeaux (en face des allées de Munich)",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2508,7 +1446,7 @@
         "modele_fontaine": "TANA",
         "x": 1417863.994404,
         "y": 4189199.563634,
-        "adresse": "Quai Louis XVIII, 33000 Bordeaux (en face des Allées de Bristol)",
+        "adresse": "Quai Louis XVIII, 33000 Bordeaux (en face des allées de Bristol)",
         "date_dernier_controle": "2026-03-12",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2574,278 +1512,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 96,
-        "nom_fontaine": "Cimetière Pins Francs n°2",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1413951.2509077,
-        "y": 4190774.5621003,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6205700416685797,
-            "lat": 44.85945594260547
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 102,
-        "nom_fontaine": "Cimetière Pins Francs n°8",
-        "nombre_robinets": 1,
-        "modele_fontaine": "ROBINET PAPILLON",
-        "x": 1413923.8546382,
-        "y": 4190702.705837,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6208757233309109,
-            "lat": 44.85879891928022
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 103,
-        "nom_fontaine": "Cimetière Pins Francs n°9",
-        "nombre_robinets": 1,
-        "modele_fontaine": "ROBINET PAPILLON",
-        "x": 1413873.4380575,
-        "y": 4190722.5081508,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.621524193328581,
-            "lat": 44.85895667760583
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 105,
-        "nom_fontaine": "Cimetière Pins Francs n°11",
-        "nombre_robinets": 1,
-        "modele_fontaine": "ROBINET PAPILLON",
-        "x": 1413840.6143528,
-        "y": 4190670.4499063,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6219096583384481,
-            "lat": 44.858475459277855
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 106,
-        "nom_fontaine": "Cimetière Pins Francs n°12",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1413823.5206626,
-        "y": 4190758.1144935,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6221752933347867,
-            "lat": 44.85925671594115
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 107,
-        "nom_fontaine": "Cimetière Pins Francs n°13",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1413906.2013891,
-        "y": 4190669.5262722,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6210801083312605,
-            "lat": 44.858493527613966
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 108,
-        "nom_fontaine": "Cimetière Pins Francs n°14",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1413906.2013892,
-        "y": 4190669.5262723,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6210801083300511,
-            "lat": 44.85849352761489
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 109,
-        "nom_fontaine": "Cimetière Pins Francs n°15",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1413906.2013893,
-        "y": 4190669.5262724,
-        "adresse": "32 Rue Soubiras, 33200 Bordeaux",
-        "date_dernier_controle": "2026-02-25",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6210801083288449,
-            "lat": 44.85849352761585
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 142,
-        "nom_fontaine": "Parc Bordelais (nouvele aire de jeux n°1)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1415324.8521272,
-        "y": 4189714.3630272,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6026108366651411,
-            "lat": 44.850475180947484
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 143,
-        "nom_fontaine": "Parc Bordelais (proche piste education routière)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415284.5977603,
-        "y": 4189712.2955789,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6031184283310606,
-            "lat": 44.85044049094605
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 147,
-        "nom_fontaine": "Quai des Salinières (Grave)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418378.8308812,
-        "y": 4187862.980607,
-        "adresse": "Quai de la Grave, 33800 Bordeaux (proche ring-hockey)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5629827099986493,
-            "lat": 44.83504517594158
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 149,
-        "nom_fontaine": "Quai des Salinières (Grave)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418517.2290065,
-        "y": 4187734.690665,
-        "adresse": "Quai de la Monnaie, 33800 Bordeaux (entre ring-hockey et parc des sports)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5611627049964352,
-            "lat": 44.83394650594045
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 152,
-        "nom_fontaine": "Quai des salinieres",
-        "nombre_robinets": 3,
-        "modele_fontaine": "FONTAINE EN RANGEE",
-        "x": 1418523.7523937,
-        "y": 4187728.4651847,
-        "adresse": "Quai de la Monnaie, 33800 Bordeaux (rangée côté ring-hockey)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5610768216732865,
-            "lat": 44.83389311427309
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 162,
-        "nom_fontaine": "SQUARE BRASCASSAT",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1418964.2745404,
-        "y": 4185616.5558357,
-        "adresse": "Parc de Brascassat, 10 rue Oscar et Jean Auriac, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5543394366682637,
-            "lat": 44.81507967760993
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 163,
-        "nom_fontaine": "JARDIN DES DAMES DE LA FOI",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1416858.7735358,
-        "y": 4186795.482102,
-        "adresse": "Jardin des Dames de la foi, 166 rue Saint Genès, 33000 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5815924199940246,
-            "lat": 44.8248448392748
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 164,
-        "nom_fontaine": "SQUARE MANDEL",
+        "nom_fontaine": "Square Mandel",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1415997.8736485,
@@ -2863,7 +1531,7 @@
     },
     {
         "id": 165,
-        "nom_fontaine": "JARDIN SAINTE MARIE",
+        "nom_fontaine": "Jardin Sainte-Marie",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418894.0130829,
@@ -2880,31 +1548,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 167,
-        "nom_fontaine": "JARDIN PARTAGE NOVICIAT",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1418438.9448266,
-        "y": 4187389.9417251,
-        "adresse": "Jardin Partagé du Noviciat, 11 rue Jacques Ellul, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "non",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5619602233304161,
-            "lat": 44.83081603927895
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 169,
-        "nom_fontaine": "GINKO",
+        "nom_fontaine": "Ginko",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417827.0292912,
         "y": 4192547.4381045,
-        "adresse": "Promenade du poete Jasmin, 25 cours du Québec, 33300 Bordeaux (fontaine au bord du cours d'eau)",
+        "adresse": "Promenade du poète Jasmin, 25 cours du Québec, 33300 Bordeaux (fontaine au bord du cours d'eau)",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2917,12 +1567,12 @@
     },
     {
         "id": 170,
-        "nom_fontaine": "JARDIN PARTAGE Petit nicolas (clown chocolat)",
+        "nom_fontaine": "Jardin partagé Petit Nicolas (clown chocolat)",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417831.1971243,
         "y": 4192641.2374576,
-        "adresse": "Aire de Jeux du clown Chocolat, 15 avenue André Reinson, 33300 Bordeaux",
+        "adresse": "Aire de jeux du Clown Chocolat, 15 avenue André Reinson, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -2934,26 +1584,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 171,
-        "nom_fontaine": "Jardin Béchade (n°1, proche entrée)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415439.8081868,
-        "y": 4187059.4650685,
-        "adresse": "Jardin de la Béchade, 100 rue Léo Saignat, 33000 Bordeaux (proche entrée)",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5996663133291855,
-            "lat": 44.82665247761082
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 180,
-        "nom_fontaine": "Jardin botanique bastide 2",
+        "nom_fontaine": "Jardin Botanique Bastide n°2",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418565.05,
@@ -2970,26 +1602,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 182,
-        "nom_fontaine": "Square J lasserre",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1417193.8399642,
-        "y": 4186760.2251665,
-        "adresse": "Square du professeur Jacques Lassere, 2 rue Colette, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-11",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5773398316660326,
-            "lat": 44.82466102594529
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 184,
-        "nom_fontaine": "Place buscaillet",
+        "nom_fontaine": "Place Buscaillet",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1419597.7390829,
@@ -3012,7 +1626,7 @@
         "modele_fontaine": "METALCO",
         "x": 1419504.76,
         "y": 4191205.33,
-        "adresse": "rue henri Salmide, 33300 Bordeaux",
+        "adresse": "Rue Henri Salmide, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "hors service",
         "hivernage": "oui",
@@ -3024,31 +1638,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 192,
-        "nom_fontaine": "Jardin de la Croix du Sud",
-        "nombre_robinets": 1,
-        "modele_fontaine": "DELABIE",
-        "x": 1417420.08,
-        "y": 4185972,
-        "adresse": "30 rue Jean Mermoz, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-09",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.574042218431736,
-            "lat": 44.8176642511696
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 196,
-        "nom_fontaine": "aire de jeux des droits de l'enfants",
+        "nom_fontaine": "Aire de jeux des Droits de l'Enfant",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418305.46,
         "y": 4189062.47,
-        "adresse": "1 rue nuyens, 33100 Bordeaux",
+        "adresse": "1 rue Nuyens, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-17",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3061,7 +1657,7 @@
     },
     {
         "id": 200,
-        "nom_fontaine": "Place Gambetta 1",
+        "nom_fontaine": "Place Gambetta n°1",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417037.77,
@@ -3079,7 +1675,7 @@
     },
     {
         "id": 201,
-        "nom_fontaine": "Place Gambetta 2",
+        "nom_fontaine": "Place Gambetta n°2",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417005.59,
@@ -3096,49 +1692,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 204,
-        "nom_fontaine": "Place André Meunier 2",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1418405.6,
-        "y": 4187258.81,
-        "adresse": "Place André Meunier, 33800 Bordeaux (aire de jeux)",
-        "date_dernier_controle": "2026-03-03",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5623086301065963,
-            "lat": 44.82962389456522
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 205,
-        "nom_fontaine": "Quai Sainte Croix - Fronton",
-        "nombre_robinets": 1,
-        "modele_fontaine": "TANA",
-        "x": 1418672.77,
-        "y": 4187583.72,
-        "adresse": "Quai Sainte Croix, 33800 Bordeaux (proche fronton)",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.55911357464139,
-            "lat": 44.83265066710774
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 207,
-        "nom_fontaine": "Parc des Berges, quai dechamps",
+        "nom_fontaine": "Parc des Berges – Quai Deschamps",
         "nombre_robinets": 1,
         "modele_fontaine": "DELABIE",
         "x": 1418771.49,
         "y": 4188152.68,
-        "adresse": "52 quai Deschamps, Bordeaux (proche pont st jean)",
+        "adresse": "52 quai Deschamps, 33100 Bordeaux (proche pont Saint-Jean)",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "non",
@@ -3186,31 +1746,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 214,
-        "nom_fontaine": "27 rue Ernest Renan",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1416157.16,
-        "y": 4189422.85,
-        "adresse": "27 rue Ernest Renan, 33000 Bordeaux",
-        "date_dernier_controle": "2026-03-10",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5919282240148154,
-            "lat": 44.848186780667966
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 217,
         "nom_fontaine": "Grand Parc (square) n°2",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1417201.55,
         "y": 4190795.81,
-        "adresse": "80 rue Pierre Trebod, 33300 Bordeaux",
+        "adresse": "80 rue Pierre Trébod, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3222,26 +1764,8 @@
         "code_insee": "33063"
     },
     {
-        "id": 220,
-        "nom_fontaine": "Parc stéhélin (complexe sportif stréhélin)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1413800.87,
-        "y": 4190385.67,
-        "adresse": "284 avenue de MAL de Lattre de Tassigny, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6222510026965117,
-            "lat": 44.85589921840949
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 222,
-        "nom_fontaine": "Place Sainte Eulalie",
+        "nom_fontaine": "Place Sainte-Eulalie",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1417255.73,
@@ -3258,67 +1782,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 226,
-        "nom_fontaine": "Rue Saint Macaire, placette",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1417967.4,
-        "y": 4186516.15,
-        "adresse": "167 rue Malbec / 37 rue Saint Macaire, 33800 Bordeaux",
-        "date_dernier_controle": "2026-03-09",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5674315426257039,
-            "lat": 44.82277347664888
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 232,
-        "nom_fontaine": "Place d'Armagnac",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1419299.27,
-        "y": 4186296.51,
-        "adresse": "angle rue Beck et rue d'armagnac, Bordeaux",
-        "date_dernier_controle": "2026-03-09",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5504846607501624,
-            "lat": 44.82132506596894
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 234,
-        "nom_fontaine": "Place Marie Curie",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418718.58,
-        "y": 4187005.45,
-        "adresse": "angle cours de la Marne / rue de Saget, 33300 Bordeaux",
-        "date_dernier_controle": "2026-03-03",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5582137086103997,
-            "lat": 44.82746974728837
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 241,
-        "nom_fontaine": "Parc Chantecrit - dans le parc",
+        "nom_fontaine": "Parc Chantecrit – Dans le parc",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1418490.33,
         "y": 4191043.22,
-        "adresse": "12 Cité Chantecrit, 33000 Bordeaux",
+        "adresse": "12 cité Chantecrit, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3330,103 +1800,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 243,
-        "nom_fontaine": "Place LEHU",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1414323.07,
-        "y": 4189294.18,
-        "adresse": "Place Lehu, Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6150346797359149,
-            "lat": 44.846296175148765
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 246,
-        "nom_fontaine": "Ecole Maternelle de la Bechade square Madagascar",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1415658.83,
-        "y": 4186944.23,
-        "adresse": "9 rue de Madagascar, Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5968346756558655,
-            "lat": 44.82570396448148
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 249,
-        "nom_fontaine": "Parc Bordelais (proche entrée Maison Brieix)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO",
-        "x": 1415644.4,
-        "y": 4190099.28,
-        "adresse": "Parc Bordelais, 71 avenue Charles de Gaulle, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-13",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5987884370148583,
-            "lat": 44.85406349448411
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 250,
-        "nom_fontaine": "Parc Monséjour",
-        "nombre_robinets": 1,
-        "modele_fontaine": "PRESTO \navec abreuvoir",
-        "x": 1413145.92,
-        "y": 4190221.9,
-        "adresse": "rue François Coppée, 33200 Bordeaux",
-        "date_dernier_controle": "2026-03-06",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.6304364267876517,
-            "lat": 44.85416317641637
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 252,
-        "nom_fontaine": "Pont Simone Veil (rive gauche)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1420051.08,
-        "y": 4186311.65,
-        "adresse": "Angle Bd Freres Moge / Pont Simone Veil",
-        "date_dernier_controle": "2026-03-12",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5409957637512939,
-            "lat": 44.82175716494282
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 253,
-        "nom_fontaine": "Aire du Jeux du Capitaine Némo",
+        "nom_fontaine": "Aire de jeux du Capitaine Nemo",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1419088.25,
         "y": 4191726.65,
-        "adresse": "cours Henri Brunet, Bordeaux",
+        "adresse": "Cours Henri Brunet, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3444,7 +1824,7 @@
         "modele_fontaine": "METALCO",
         "x": 1418883.36,
         "y": 4189161.82,
-        "adresse": "Square Françoise Dolto, Bordeaux",
+        "adresse": "Square Françoise Dolto, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-16",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3456,49 +1836,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 256,
-        "nom_fontaine": "Atelier des citernes (proche Amédée Saint Germain)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418562.19,
-        "y": 4186350.18,
-        "adresse": "45 rue de la compagnie du midi, Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5598255551274911,
-            "lat": 44.821516644839924
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 258,
-        "nom_fontaine": "Pont de la Palombe",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1418919.85,
-        "y": 4186229.81,
-        "adresse": "rue de la palombe, Bordeaux",
-        "date_dernier_controle": "2026-03-04",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5552406630912143,
-            "lat": 44.8205757139366
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 261,
-        "nom_fontaine": "place d'arlac",
+        "nom_fontaine": "Place d'Arlac",
         "nombre_robinets": 1,
         "modele_fontaine": "PRESTO",
         "x": 1416324.88,
         "y": 4187466.16,
-        "adresse": "face au 144 rue mouneyra, 33000 Bordeaux",
+        "adresse": "Face au 144 rue Mouneyra, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-17",
         "etat": "hors service",
         "hivernage": "oui",
@@ -3511,12 +1855,12 @@
     },
     {
         "id": 262,
-        "nom_fontaine": "jardin de ta soeur",
+        "nom_fontaine": "Jardin de ta Sœur",
         "nombre_robinets": 1,
-        "modele_fontaine": "METALCO\n+\nabreuvoir",
+        "modele_fontaine": "METALCO + abreuvoir",
         "x": 1418729.38,
         "y": 4190519.11,
-        "adresse": "rue Emile Peynaud, 33300 Bordeaux",
+        "adresse": "Rue Émile Peynaud, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3529,12 +1873,12 @@
     },
     {
         "id": 266,
-        "nom_fontaine": "Thiers - Pujol",
+        "nom_fontaine": "Thiers – Pujol",
         "nombre_robinets": 1,
         "modele_fontaine": "TANA",
         "x": 1419877.88,
         "y": 4189361.89,
-        "adresse": "angle Avenue Thiers - rue Josepj Pujol",
+        "adresse": "Angle avenue Thiers / rue Joseph Pujol, 33100 Bordeaux",
         "date_dernier_controle": "2026-03-17",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3552,7 +1896,7 @@
         "modele_fontaine": "METALCO",
         "x": 1417546.31,
         "y": 4192028.84,
-        "adresse": "76 Allées de Boutaut, Bordeaux/Bruges",
+        "adresse": "76 allées de Boutaut, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3564,49 +1908,13 @@
         "code_insee": "33063"
     },
     {
-        "id": 271,
-        "nom_fontaine": "Bd Freres Moga - côté Nouvelle Gare Routiere (face caisse d'épargne)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1419340.49,
-        "y": 4187076.03,
-        "adresse": "Boulevard Freres Moga, Bordeaux",
-        "date_dernier_controle": "2026-03-12",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5503957132739025,
-            "lat": 44.82834973879579
-        },
-        "code_insee": "33063"
-    },
-    {
-        "id": 272,
-        "nom_fontaine": "Bd freres Moga - Côté Pont Simone Veil (angle  Bd freres Moga et rue de la seigliere)",
-        "nombre_robinets": 1,
-        "modele_fontaine": "METALCO",
-        "x": 1419539.88,
-        "y": 4186903.56,
-        "adresse": "Angle boulevard Freres Moga et rue de la seigliere, Bordeaux",
-        "date_dernier_controle": "2026-03-12",
-        "etat": "fonctionnelle",
-        "hivernage": "oui",
-        "complement_information": null,
-        "geom": {
-            "lon": -0.5477811464873489,
-            "lat": 44.82687768542546
-        },
-        "code_insee": "33063"
-    },
-    {
         "id": 274,
         "nom_fontaine": "Square Joséphine",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418706.2,
         "y": 4190746.61,
-        "adresse": "97 rue Joséphine, Bordeaux",
+        "adresse": "97 rue Joséphine, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-05",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3619,12 +1927,12 @@
     },
     {
         "id": 279,
-        "nom_fontaine": "Square du Grand Parc n°3 - Aire Boulistes",
+        "nom_fontaine": "Square du Grand Parc n°3 – Aire boulistes",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1416772.04,
         "y": 4190611.88,
-        "adresse": "80 rue Pierre Trebod, 33300 Bordeaux",
+        "adresse": "80 rue Pierre Trébod, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-10",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3637,12 +1945,12 @@
     },
     {
         "id": 282,
-        "nom_fontaine": "Ecvole Sousa-Mendes",
+        "nom_fontaine": "École Sousa-Mendes",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1417962.01,
         "y": 4191061.4,
-        "adresse": "rue Samuel Kersz, 33000 Bordeaux",
+        "adresse": "Rue Samuel Kersz, 33000 Bordeaux",
         "date_dernier_controle": "2026-03-19",
         "etat": "fonctionnelle",
         "hivernage": "oui",
@@ -3655,12 +1963,12 @@
     },
     {
         "id": 284,
-        "nom_fontaine": "Jardin de la Faiencerie",
+        "nom_fontaine": "Jardin de la Faïencerie",
         "nombre_robinets": 1,
         "modele_fontaine": "METALCO",
         "x": 1418918.63,
         "y": 4190817.05,
-        "adresse": "55 rue de la Faiencerie, Bordeaux",
+        "adresse": "55 rue de la Faïencerie, 33300 Bordeaux",
         "date_dernier_controle": "2026-03-19",
         "etat": "fonctionnelle",
         "hivernage": "oui",
