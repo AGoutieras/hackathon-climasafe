@@ -8,6 +8,70 @@ import { api } from "../lib/api.js";
 
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
 
+function getTemperatureProfile(temperature) {
+  if (temperature == null) {
+    return {
+      pageGradient: "from-orange-50 to-slate-50",
+      alertCard: "bg-orange-500",
+      alertSubtext: "text-orange-100",
+      tempIconBox: "bg-orange-100",
+      tempIcon: "text-orange-600",
+      fallbackAlert: "Analyse locale en cours",
+      fallbackTips: [
+        "Buvez de l'eau régulièrement",
+        "Évitez les efforts physiques",
+        "Restez à l'ombre ou au frais",
+      ],
+    };
+  }
+
+  if (temperature >= 36) {
+    return {
+      pageGradient: "from-red-50 to-slate-50",
+      alertCard: "bg-red-600",
+      alertSubtext: "text-red-100",
+      tempIconBox: "bg-red-100",
+      tempIcon: "text-red-600",
+      fallbackAlert: `Température critique: ${Math.round(temperature)}°C, limitez toute exposition`,
+      fallbackTips: [
+        "Restez dans un lieu frais et aéré",
+        "Hydratez-vous fréquemment, même sans soif",
+        "Évitez toute activité physique en extérieur",
+      ],
+    };
+  }
+
+  if (temperature >= 30) {
+    return {
+      pageGradient: "from-orange-50 to-slate-50",
+      alertCard: "bg-orange-500",
+      alertSubtext: "text-orange-100",
+      tempIconBox: "bg-orange-100",
+      tempIcon: "text-orange-600",
+      fallbackAlert: `Forte chaleur locale: ${Math.round(temperature)}°C, restez vigilant`,
+      fallbackTips: [
+        "Buvez de l'eau toutes les 20 à 30 minutes",
+        "Cherchez l'ombre pendant les heures chaudes",
+        "Privilégiez des déplacements courts",
+      ],
+    };
+  }
+
+  return {
+    pageGradient: "from-amber-50 to-slate-50",
+    alertCard: "bg-amber-500",
+    alertSubtext: "text-amber-100",
+    tempIconBox: "bg-amber-100",
+    tempIcon: "text-amber-600",
+    fallbackAlert: `Température actuelle: ${Math.round(temperature)}°C`,
+    fallbackTips: [
+      "Restez hydraté tout au long de la journée",
+      "Évitez une exposition prolongée au soleil",
+      "Privilégiez les zones ombragées",
+    ],
+  };
+}
+
 export function HomeScreen() {
   const [currentPos, setCurrentPos] = useState(BORDEAUX_CENTER);
   const [gpsError, setGpsError] = useState(false);
@@ -81,7 +145,7 @@ export function HomeScreen() {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  const riskLevel = riskData?.level ?? "medium";
+  const riskLevel = riskData?.level ?? "low";
   const riskScore = riskData?.score ?? 0;
   const currentTemp =
     riskData?.temperature != null ? Math.round(riskData.temperature) : "--";
@@ -91,6 +155,8 @@ export function HomeScreen() {
     riskData?.apparent_temperature != null
       ? Math.round(riskData.apparent_temperature)
       : "--";
+  const temperatureValue = typeof riskData?.temperature === "number" ? riskData.temperature : null;
+  const tempProfile = getTemperatureProfile(temperatureValue);
 
   const nearestRefuge = riskData?.nearestRefuge ?? null;
   const alertBanner = alerts[0] ?? null;
@@ -100,23 +166,24 @@ export function HomeScreen() {
     : "Position détectée en direct";
 
   const quickTips = tips.flatMap((section) => section.tips || []).slice(0, 3);
+  const displayedTips = quickTips.length > 0 ? quickTips : tempProfile.fallbackTips;
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-orange-50 to-slate-50 p-4 sm:p-6">
+    <div className={`min-h-full bg-gradient-to-b ${tempProfile.pageGradient} p-4 sm:p-6`}>
       <div className="pt-4 pb-6">
         <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">ClimaSafe</h1>
         <p className="text-slate-600 text-base sm:text-lg">Votre assistant canicule</p>
       </div>
 
-      <div className="bg-red-500 text-white p-4 rounded-2xl mb-6 shadow-lg">
+      <div className={`${tempProfile.alertCard} text-white p-4 rounded-2xl mb-6 shadow-lg`}>
         <div className="flex items-center gap-3">
           <ThermometerSun size={28} />
           <div className="flex-1">
             <p className="font-semibold text-lg">
               {alertBanner?.title ?? "Chargement des alertes..."}
             </p>
-            <p className="text-red-100 text-sm">
-              {alertBanner?.message ?? "Analyse locale en cours"}
+            <p className={`${tempProfile.alertSubtext} text-sm`}>
+              {alertBanner?.message ?? tempProfile.fallbackAlert}
             </p>
           </div>
         </div>
@@ -130,8 +197,8 @@ export function HomeScreen() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-              <ThermometerSun className="text-orange-600" size={24} />
+            <div className={`w-12 h-12 ${tempProfile.tempIconBox} rounded-xl flex items-center justify-center`}>
+              <ThermometerSun className={tempProfile.tempIcon} size={24} />
             </div>
             <div>
               <p className="text-2xl text-slate-900">
@@ -186,14 +253,7 @@ export function HomeScreen() {
       <Card className="p-4 sm:p-5 shadow-sm border-slate-200">
         <h2 className="text-xl mb-3 text-slate-900">Conseils rapides</h2>
         <ul className="space-y-2 text-slate-700">
-          {(quickTips.length > 0
-          ? quickTips
-          : [
-            "Buvez de l'eau régulièrement",
-            "Évitez les efforts physiques",
-            "Restez à l'ombre ou au frais",
-          ]
-        ).map((tip, index) => (
+          {displayedTips.map((tip, index) => (
           <li key={index} className="flex items-start gap-2">
             <span className="text-blue-600 mt-1">•</span>
             <span>{tip}</span>

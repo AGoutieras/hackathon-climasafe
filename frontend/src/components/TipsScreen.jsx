@@ -1,4 +1,5 @@
-import { 
+import { useEffect, useMemo, useState } from "react";
+import {
   Droplets, 
   Sun, 
   Home, 
@@ -11,16 +12,71 @@ import {
   Wind
 } from "lucide-react";
 import { Card } from "./ui/card.jsx";
+import { api } from "../lib/api.js";
 
-export function TipsScreen() {
-  const tipsData = [
+const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
+
+function getTipsTemperatureProfile(temperature) {
+  if (temperature == null) {
+    return {
+      pageGradient: "from-blue-50 to-slate-50",
+      warningGradient: "from-orange-500 to-red-500",
+      title: "Vigilance chaleur",
+      message:
+        "Suivez ces conseils pour votre sécurité et celle de vos proches. La vigilance est essentielle.",
+      hydration: "Buvez au moins 1,5L d'eau par jour, même sans soif",
+      sunExposure: "Évitez l'exposition au soleil entre 12h et 17h",
+      effort: "Évitez les efforts physiques intenses",
+    };
+  }
+
+  if (temperature >= 36) {
+    return {
+      pageGradient: "from-red-50 to-slate-50",
+      warningGradient: "from-red-600 to-orange-600",
+      title: "Canicule intense",
+      message:
+        "Température critique mesurée. Limitez fortement les sorties et privilégiez des lieux climatisés.",
+      hydration: "Buvez 1 verre d'eau toutes les 15 à 20 minutes",
+      sunExposure: "Évitez toute exposition directe entre 10h et 20h",
+      effort: "Suspendez toute activité physique en extérieur",
+    };
+  }
+
+  if (temperature >= 30) {
+    return {
+      pageGradient: "from-orange-50 to-slate-50",
+      warningGradient: "from-orange-500 to-red-500",
+      title: "Forte chaleur",
+      message:
+        "Restez vigilant: hydratez-vous souvent et réduisez les déplacements aux heures chaudes.",
+      hydration: "Buvez au moins 2L d'eau répartis sur la journée",
+      sunExposure: "Évitez l'exposition au soleil entre 11h et 18h",
+      effort: "Réduisez les efforts physiques, surtout l'après-midi",
+    };
+  }
+
+  return {
+    pageGradient: "from-amber-50 to-slate-50",
+    warningGradient: "from-amber-500 to-orange-500",
+    title: "Chaleur modérée",
+    message:
+      "Adoptez de bons réflexes d'hydratation et privilégiez les zones ombragées pendant les pics de chaleur.",
+    hydration: "Buvez régulièrement de l'eau tout au long de la journée",
+    sunExposure: "Limitez l'exposition en plein soleil en début d'après-midi",
+    effort: "Privilégiez des efforts modérés aux heures fraîches",
+  };
+}
+
+function buildTipsData(profile) {
+  return [
     {
       id: 1,
       category: "Hydratation",
       icon: Droplets,
       iconBg: "bg-blue-500",
       tips: [
-        "Buvez au moins 1,5L d'eau par jour, même sans soif",
+        profile.hydration,
         "Évitez l'alcool et les boissons sucrées",
         "Privilégiez l'eau fraîche mais pas glacée",
         "Emportez toujours une bouteille d'eau avec vous",
@@ -32,7 +88,7 @@ export function TipsScreen() {
       icon: Sun,
       iconBg: "bg-orange-500",
       tips: [
-        "Évitez l'exposition au soleil entre 12h et 17h",
+        profile.sunExposure,
         "Portez un chapeau à larges bords",
         "Utilisez de la crème solaire SPF 50+",
         "Recherchez l'ombre autant que possible",
@@ -68,7 +124,7 @@ export function TipsScreen() {
       icon: Activity,
       iconBg: "bg-red-500",
       tips: [
-        "Évitez les efforts physiques intenses",
+        profile.effort,
         "Reportez les activités sportives",
         "Si nécessaire, sortez tôt le matin",
         "Faites des pauses fréquentes à l'ombre",
@@ -135,28 +191,83 @@ export function TipsScreen() {
       ],
     },
   ];
+}
+
+export function TipsScreen() {
+  const [currentPos, setCurrentPos] = useState(BORDEAUX_CENTER);
+  const [riskData, setRiskData] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadRiskData() {
+      try {
+        const response = await api.getRisks(currentPos.latitude, currentPos.longitude);
+        if (!cancelled) {
+          setRiskData(response ?? null);
+        }
+      } catch (error) {
+        console.error("Erreur chargement conseils :", error);
+        if (!cancelled) {
+          setRiskData(null);
+        }
+      }
+    }
+
+    loadRiskData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentPos]);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      return;
+    }
+
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        setCurrentPos({
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+        });
+      },
+      () => {
+        setCurrentPos(BORDEAUX_CENTER);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
+
+  const currentTemp = typeof riskData?.temperature === "number" ? riskData.temperature : null;
+  const tipsProfile = getTipsTemperatureProfile(currentTemp);
+  const tipsData = useMemo(() => buildTipsData(tipsProfile), [tipsProfile]);
+  const localTempLabel =
+    currentTemp != null ? `${Math.round(currentTemp)}°C` : "température en cours d'analyse";
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-blue-50 to-slate-50 p-4 sm:p-6">
+    <div className={`min-h-full bg-gradient-to-b ${tipsProfile.pageGradient} p-4 sm:p-6`}>
       {/* Header */}
       <div className="pt-4 pb-6">
         <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">Conseils de prévention</h1>
         <p className="text-slate-600 text-base sm:text-lg">
-          Protégez-vous de la chaleur
+          Protégez-vous de la chaleur ({localTempLabel})
         </p>
       </div>
 
       {/* Warning Card */}
-      <Card className="p-4 sm:p-5 mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg">
+      <Card className={`p-4 sm:p-5 mb-6 bg-gradient-to-r ${tipsProfile.warningGradient} text-white border-0 shadow-lg`}>
         <div className="flex items-start gap-3">
           <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
             <Sun size={24} />
           </div>
           <div>
-            <h2 className="text-xl mb-2">Canicule en cours</h2>
+            <h2 className="text-xl mb-2">{tipsProfile.title}</h2>
             <p className="text-sm text-white/90">
-              Suivez ces conseils pour votre sécurité et celle de vos proches.
-              La vigilance est essentielle.
+              {tipsProfile.message}
             </p>
           </div>
         </div>

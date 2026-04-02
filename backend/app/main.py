@@ -101,12 +101,14 @@ def data_sources():
         ],
     }
 
+
 @app.get('/api/weather')
 async def get_weather(
     lat: float = Query(BORDEAUX_CENTER['lat']),
     lng: float = Query(BORDEAUX_CENTER['lng']),
 ):
     return await fetch_current_weather(lat, lng)
+
 
 @app.get('/api/risks')
 async def get_risks(
@@ -124,30 +126,74 @@ async def get_risks(
 
     weather = await fetch_current_weather(lat, lng)
 
-    real_temp = weather.get("temperature") or 35
-    humidity = weather.get("humidity") or 25
-    apparent_temp = weather.get("apparent_temperature") or real_temp
+    real_temp = weather.get("temperature")
+    humidity = weather.get("humidity")
+    apparent_temp = weather.get("apparent_temperature")
 
-    score = 55 + hot_nearby * 7 - cool_nearby * 4
+    # Keep safe defaults only when weather provider does not return a value.
+    if real_temp is None:
+        real_temp = 30
+    if humidity is None:
+        humidity = 45
+    if apparent_temp is None:
+        apparent_temp = real_temp
 
-    if real_temp >= 37:
-        score += 15
-    elif real_temp >= 34:
-        score += 10
-    elif real_temp >= 30:
-        score += 5
+    if real_temp < 0:
+        thermal_score = 0
+    elif real_temp < 8:
+        thermal_score = 3
+    elif real_temp < 16:
+        thermal_score = 8
+    elif real_temp < 20:
+        thermal_score = 12
+    elif real_temp < 24:
+        thermal_score = 18
+    elif real_temp < 27:
+        thermal_score = 24
+    elif real_temp < 30:
+        thermal_score = 34
+    elif real_temp < 33:
+        thermal_score = 48
+    elif real_temp < 36:
+        thermal_score = 68
+    else:
+        thermal_score = 82
 
-    if humidity >= 70:
-        score += 5
+    raw_urban_adjust = hot_nearby * 2 - cool_nearby * 2
 
-    if apparent_temp >= 40:
-        score += 8
+    if real_temp < 22:
+        urban_cap = 6
+    elif real_temp < 30:
+        urban_cap = 10
+    elif real_temp < 35:
+        urban_cap = 14
+    else:
+        urban_cap = 20
 
-    score = min(95, max(20, score))
+    urban_adjust = min(urban_cap, max(-10, raw_urban_adjust))
 
-    if score >= 80:
+    if real_temp >= 26:
+        humidity_adjust = 6 if humidity >= 75 else 3 if humidity >= 60 else 0
+    else:
+        humidity_adjust = 0
+
+    if real_temp >= 30:
+        apparent_adjust = 6 if apparent_temp >= 40 else 3 if apparent_temp >= 36 else 0
+    else:
+        apparent_adjust = 0
+
+    score = thermal_score + urban_adjust + humidity_adjust + apparent_adjust
+
+    if real_temp < 20:
+        score = min(score, 25)
+    elif real_temp < 24:
+        score = min(score, 35)
+
+    score = min(95, max(5, score))
+
+    if score >= 70:
         level = 'high'
-    elif score >= 60:
+    elif score >= 40:
         level = 'medium'
     else:
         level = 'low'
@@ -219,14 +265,18 @@ async def get_alerts(
 ):
     risk = await get_risks(lat=lat, lng=lng)
 
+    heat_alert_active = risk['score'] >= 40
+    vigilance_type = 'high' if risk['score'] >= 70 else 'medium' if risk['score'] >= 40 else 'low'
+
     return [
         {
             'id': 1,
-            'type': 'high' if risk['score'] >= 80 else 'medium',
-            'title': 'Alerte chaleur élevée',
-            'message': f"Indice local estimé à {risk['score']}/100 autour de {risk['zone']}. Rejoignez une zone fraîche proche.",
+            'type': vigilance_type,
+            'title': 'Alerte chaleur élevée' if heat_alert_active else 'Situation thermique stable',
+            'message': f"Indice local estimé à {risk['score']}/100 autour de {risk['zone']}."
+            + (' Rejoignez une zone fraîche proche.' if heat_alert_active else ' Restez hydraté et surveillez l’évolution météo.'),
             'time': 'Source LCZ 2022 + météo temps réel',
-            'isActive': True,
+            'isActive': heat_alert_active,
         },
         {
             'id': 2,
@@ -234,11 +284,11 @@ async def get_alerts(
             'title': 'Refuge frais le plus proche',
             'message': f"{risk['nearestRefuge']['name']} à {risk['nearestRefuge']['distance']} m, environ {risk['nearestRefuge']['walkTime']} min à pied.",
             'time': 'Calcul dynamique',
-            'isActive': True,
+            'isActive': heat_alert_active,
         },
     ]
 
-  
+
 @app.get('/api/tips')
 def get_tips():
     return [
