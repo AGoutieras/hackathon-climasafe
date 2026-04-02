@@ -251,7 +251,10 @@ export function AlertScreen() {
         <p className="text-slate-300 text-sm mb-4">
           Si vous ressentez des malaises, vertiges, nausées ou maux de tête intenses
         </p>
-        <Button className="w-full bg-white text-slate-900 hover:bg-slate-100 h-14 text-lg rounded-xl">
+        <Button 
+          onClick={() => window.location.href = "tel:15"}
+          className="w-full bg-white text-slate-900 hover:bg-slate-100 h-14 text-lg rounded-xl"
+        >
           Appeler le 15 (SAMU)
         </Button>
       </Card>
