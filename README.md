@@ -117,7 +117,7 @@ cd climasafe
 
 ```bash
 cd backend
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
@@ -179,7 +179,6 @@ Projet développé dans le cadre du **Hackathon Bordeaux Métropole**, avec un f
 
 *  GITHUB
 ° @AGoutieras
-°
+° @stvnm-58
 ° @Victoire07
-°
-
+° @Vitushan

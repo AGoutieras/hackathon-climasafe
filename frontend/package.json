@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.2.2",
     "lucide-react": "^0.487.0",
     "maplibre-gl": "^5.21.1",
     "react": "^18.3.1",

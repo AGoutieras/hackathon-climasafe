@@ -8,8 +8,8 @@ import {
   TriangleAlert, MapPin, CheckCircle2,
 } from "lucide-react";
 import { Card } from "./ui/card.jsx";
+import { api } from "../lib/api.js";
 
-const API_BASE = "http://localhost:8000/api";
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
 const OSRM = "https://router.project-osrm.org/route/v1/foot";
 
@@ -320,6 +320,18 @@ export function MapScreen() {
 
   const mapRef = useRef(null);
 
+  const recenterOnUser = useCallback(() => {
+    const target = userPos ?? BORDEAUX_CENTER;
+
+    mapRef.current?.flyTo({
+      center: [target.longitude, target.latitude],
+      zoom: userPos ? 15.5 : 13.5,
+      pitch: 0,
+      bearing: 0,
+      duration: 700,
+    });
+  }, [userPos]);
+
   // ── load backend data ──────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
@@ -330,9 +342,13 @@ export function MapScreen() {
       let accumulated = [];
 
       while (!cancelled && offset < totalCount) {
-        const wr = await fetch(`${API_BASE}/water-stations?limit=${pageSize}&offset=${offset}`);
-        if (!wr.ok) throw new Error("Erreur API");
-        const batch = await wr.json();
+        const batch = await api.getWaterStations(
+          BORDEAUX_CENTER.latitude,
+          BORDEAUX_CENTER.longitude,
+          offset,
+          pageSize
+        );
+
         if (!Array.isArray(batch) || batch.length === 0) break;
 
         accumulated = [...accumulated, ...batch];
@@ -343,13 +359,11 @@ export function MapScreen() {
 
     (async () => {
       try {
-        const [cr, hr, wcr] = await Promise.all([
-          fetch(`${API_BASE}/cool-spots?limit=80`),
-          fetch(`${API_BASE}/heat-zones?limit=80`),
-          fetch(`${API_BASE}/water-stations/count`),
+        const [cd, hd, wc] = await Promise.all([
+          api.getCoolSpots(BORDEAUX_CENTER.latitude, BORDEAUX_CENTER.longitude, 80),
+          api.getHeatZones(BORDEAUX_CENTER.latitude, BORDEAUX_CENTER.longitude, 80),
+          api.getWaterStationsCount(),
         ]);
-        if (!cr.ok || !hr.ok || !wcr.ok) throw new Error("Erreur API");
-        const [cd, hd, wc] = await Promise.all([cr.json(), hr.json(), wcr.json()]);
         setCoolSpots(cd);
         setHeatZones(hd);
         const totalCount = wc.count ?? 0;
@@ -383,7 +397,21 @@ export function MapScreen() {
         setGpsLoading(false);
         mapRef.current?.flyTo({ center: [p.longitude, p.latitude], zoom: 15, duration: 800 });
       },
-      (err) => { setGpsError("Position indisponible"); setGpsLoading(false); },
+      (err) => {
+        console.error("Erreur GPS :", err);
+
+        if (err.code === 1) {
+          setGpsError("Accès au GPS refusé. Carte centrée sur Bordeaux.");
+        } else if (err.code === 2) {
+          setGpsError("Position indisponible. Carte centrée sur Bordeaux.");
+        } else if (err.code === 3) {
+          setGpsError("Le GPS a mis trop de temps à répondre. Carte centrée sur Bordeaux.");
+        } else {
+          setGpsError("Position indisponible. Carte centrée sur Bordeaux.");
+        }
+        
+        setGpsLoading(false);
+      },
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
     );
   }, []);
@@ -511,36 +539,79 @@ export function MapScreen() {
     <div className="min-h-full bg-slate-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 p-4 shadow-sm">
-        <h1 className="text-2xl text-slate-900">Carte thermique</h1>
-        <p className="text-slate-500 text-sm mt-0.5">
-          {loading ? "Chargement…" : `${coolSpots.length} zones fraîches · ${heatZones.length} zones chaudes · ${waterStationsCount} fontaines`}
-        </p>
+        <h1 className="text-2xl text-slate-900">TROUVE TON REFUGE 🌳</h1>
+        <div className="text-slate-500 text-sm mt-0.5 space-y-1">
+          <p>
+            {loading
+              ? "Chargement…"
+              : `${coolSpots.length} zones fraîches · ${heatZones.length} zones chaudes · ${waterStationsCount} fontaines`}
+          </p>
+          <p className="text-xs">
+            {userPos ? "Position GPS active" : "Carte centrée sur Bordeaux"}
+          </p>
       </div>
+    </div>
 
       {/* Layer toggle */}
       <div className="flex gap-2 px-4 py-3 bg-white border-b border-slate-100 flex-wrap">
-        <button onClick={() => setShowCool((v) => !v)}
+        <button
+          onClick={() => setShowCool((v) => !v)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-            showCool ? "bg-sky-100 border-sky-300 text-sky-700" : "bg-slate-100 border-slate-200 text-slate-500"}`}>
+            showCool
+              ? "bg-sky-100 border-sky-300 text-sky-700"
+              : "bg-slate-100 border-slate-200 text-slate-500"
+          }`}
+        >
           <Trees size={13} /> Zones fraîches
         </button>
-        <button onClick={() => setShowHeat((v) => !v)}
+
+        <button
+          onClick={() => setShowHeat((v) => !v)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-            showHeat ? "bg-red-100 border-red-300 text-red-700" : "bg-slate-100 border-slate-200 text-slate-500"}`}>
+            showHeat
+              ? "bg-red-100 border-red-300 text-red-700"
+              : "bg-slate-100 border-slate-200 text-slate-500"
+          }`}
+        >
           <Flame size={13} /> Zones chaudes
         </button>
-        <button onClick={() => setShowWater((v) => !v)}
+
+        <button
+          onClick={() => setShowWater((v) => !v)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-            showWater ? "bg-cyan-100 border-cyan-300 text-cyan-700" : "bg-slate-100 border-slate-200 text-slate-500"}`}>
+            showWater
+              ? "bg-cyan-100 border-cyan-300 text-cyan-700"
+              : "bg-slate-100 border-slate-200 text-slate-500"
+          }`}
+        >
           <Droplets size={13} /> Fontaines
         </button>
-        <button onClick={startGps} disabled={gpsLoading}
+
+        <button
+          onClick={startGps}
+          disabled={gpsLoading}
           className={`w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-            userPos ? "bg-green-100 border-green-300 text-green-700" :
-            gpsLoading ? "bg-slate-100 border-slate-200 text-slate-400" :
-            "bg-white border-slate-300 text-slate-600 hover:bg-slate-50"}`}>
-          {gpsLoading ? <Loader2 size={13} className="animate-spin" /> : <LocateFixed size={13} />}
+            userPos
+              ? "bg-green-100 border-green-300 text-green-700"
+              : gpsLoading
+              ? "bg-slate-100 border-slate-200 text-slate-400"
+              : "bg-white border-slate-300 text-slate-600 hover:bg-slate-50"
+          }`}
+        >
+          {gpsLoading ? (
+            <Loader2 size={13} className="animate-spin" />
+          ) : (
+          <LocateFixed size={13} />
+          )}
           {userPos ? "GPS actif" : gpsLoading ? "Localisation…" : "Me localiser"}
+        </button>
+
+        <button
+          onClick={recenterOnUser}
+            className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-white border-slate-300 text-slate-600 hover:bg-slate-50"
+        >
+          <Navigation size={13} />
+          Recentrer
         </button>
       </div>
 
