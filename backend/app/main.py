@@ -101,9 +101,15 @@ def data_sources():
         ],
     }
 
+@app.get('/api/weather')
+async def get_weather(
+    lat: float = Query(BORDEAUX_CENTER['lat']),
+    lng: float = Query(BORDEAUX_CENTER['lng']),
+):
+    return await fetch_current_weather(lat, lng)
 
 @app.get('/api/risks')
-def get_risks(
+async def get_risks(
     lat: float = Query(BORDEAUX_CENTER['lat']),
     lng: float = Query(BORDEAUX_CENTER['lng']),
 ):
@@ -115,7 +121,30 @@ def get_risks(
 
     hot_nearby = sum(1 for z in heat_zones if z['distance'] <= 1000)
     cool_nearby = sum(1 for s in cool_spots if s['distance'] <= 1000)
-    score = min(95, max(20, 55 + hot_nearby * 7 - cool_nearby * 4))
+
+    weather = await fetch_current_weather(lat, lng)
+
+    real_temp = weather.get("temperature") or 35
+    humidity = weather.get("humidity") or 25
+    apparent_temp = weather.get("apparent_temperature") or real_temp
+
+    score = 55 + hot_nearby * 7 - cool_nearby * 4
+
+    if real_temp >= 37:
+        score += 15
+    elif real_temp >= 34:
+        score += 10
+    elif real_temp >= 30:
+        score += 5
+
+    if humidity >= 70:
+        score += 5
+
+    if apparent_temp >= 40:
+        score += 8
+
+    score = min(95, max(20, score))
+
     if score >= 80:
         level = 'high'
     elif score >= 60:
@@ -126,10 +155,14 @@ def get_risks(
     return {
         'level': level,
         'score': score,
-        'temperature': 38 if level == 'high' else 34 if level == 'medium' else 30,
-        'humidity': 25,
+        'temperature': real_temp,
+        'humidity': humidity,
+        'apparent_temperature': apparent_temp,
+        'weather_code': weather.get("weather_code"),
+        'wind_speed': weather.get("wind_speed"),
+        'weather_time': weather.get("time"),
         'zone': BORDEAUX_CENTER['name'],
-        'method': 'proxy_from_uploaded_lcz_data',
+        'method': 'lcz_plus_open_meteo',
         'nearestRefuge': {
             'name': nearest_cool['name'],
             'distance': nearest_cool['distance'],
@@ -180,15 +213,19 @@ def water_stations_count():
 
 
 @app.get('/api/alerts')
-def get_alerts():
-    risk = get_risks()
+async def get_alerts(
+    lat: float = Query(BORDEAUX_CENTER['lat']),
+    lng: float = Query(BORDEAUX_CENTER['lng']),
+):
+    risk = await get_risks(lat=lat, lng=lng)
+
     return [
         {
             'id': 1,
             'type': 'high' if risk['score'] >= 80 else 'medium',
             'title': 'Alerte chaleur élevée',
             'message': f"Indice local estimé à {risk['score']}/100 autour de {risk['zone']}. Rejoignez une zone fraîche proche.",
-            'time': 'Source LCZ 2022 + logique app',
+            'time': 'Source LCZ 2022 + météo temps réel',
             'isActive': True,
         },
         {
@@ -201,7 +238,7 @@ def get_alerts():
         },
     ]
 
-
+  
 @app.get('/api/tips')
 def get_tips():
     return [
