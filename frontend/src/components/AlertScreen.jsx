@@ -3,7 +3,7 @@ import { AlertTriangle, ThermometerSun, Clock, Bell, CheckCircle } from "lucide-
 import { Card } from "./ui/card.jsx";
 import { Button } from "./ui/button.jsx";
 import { api } from "../lib/api.js";
-import { deriveThermalLevel, getThermalUi } from "../lib/thermal.js";
+import { deriveThermalLevel, getThermalUi, getImmediateActions } from "../lib/thermal.js";
 
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
 
@@ -105,6 +105,7 @@ export function AlertScreen() {
       : null;
   const thermalLevel = deriveThermalLevel(currentTemp, riskData?.score);
   const thermalUi = getThermalUi(thermalLevel);
+  const immediateActions = getImmediateActions(thermalLevel);
   const hydrationPerHour = currentTemp != null && currentTemp >= 38 ? "1,5L" : "1L";
   const warningLabel = riskData?.score != null ? `Indice ${riskData.score}/100` : thermalUi.summaryZoneLabel;
   const summaryTitle = hasActiveAlerts ? thermalUi.summaryTitle : "Aucune alerte en cours";
@@ -116,6 +117,27 @@ export function AlertScreen() {
     ? `${thermalUi.cardBg} text-white`
     : "bg-slate-800 text-white";
   const summaryTextClass = hasActiveAlerts ? thermalUi.cardSubtext : "text-slate-200";
+
+  // Determine action item colors based on thermal level
+  const getActionColors = () => {
+    switch (thermalLevel) {
+      case "freezing":
+        return { bg: "bg-cyan-50", icon: "bg-cyan-500", text: "text-cyan-900" };
+      case "cool":
+        return { bg: "bg-sky-50", icon: "bg-sky-500", text: "text-sky-900" };
+      case "mild":
+        return { bg: "bg-green-50", icon: "bg-green-500", text: "text-green-900" };
+      case "warm":
+        return { bg: "bg-amber-50", icon: "bg-amber-500", text: "text-amber-900" };
+      case "hot":
+        return { bg: "bg-orange-50", icon: "bg-orange-500", text: "text-orange-900" };
+      case "extreme":
+        return { bg: "bg-red-50", icon: "bg-red-600", text: "text-red-900" };
+      default:
+        return { bg: "bg-blue-50", icon: "bg-blue-500", text: "text-blue-900" };
+    }
+  };
+  const actionColors = getActionColors();
 
   return (
     <div className={`min-h-full bg-gradient-to-b ${thermalUi.pageGradient} p-4 sm:p-6`}>
@@ -167,33 +189,17 @@ export function AlertScreen() {
       <Card className="p-5 mb-6 shadow-sm border-slate-200">
         <h2 className="text-xl mb-4 text-slate-900">Actions immédiates</h2>
         <ul className="space-y-3">
-          <li className="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-white text-sm">1</span>
-            </div>
-            <div>
-              <p className="text-slate-900">Buvez au moins {hydrationPerHour} d'eau par heure</p>
-              <p className="text-sm text-slate-600 mt-1">Même sans soif</p>
-            </div>
-          </li>
-          <li className="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-white text-sm">2</span>
-            </div>
-            <div>
-              <p className="text-slate-900">Trouvez un endroit frais</p>
-              <p className="text-sm text-slate-600 mt-1">Refuge, climatisation, ombre</p>
-            </div>
-          </li>
-          <li className="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-white text-sm">3</span>
-            </div>
-            <div>
-              <p className="text-slate-900">Évitez tout effort physique</p>
-              <p className="text-sm text-slate-600 mt-1">Reportez les activités</p>
-            </div>
-          </li>
+          {immediateActions.map((action) => (
+            <li key={action.number} className={`flex items-start gap-3 p-3 ${actionColors.bg} rounded-xl`}>
+              <div className={`w-8 h-8 ${actionColors.icon} rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                <span className="text-white text-sm">{action.number}</span>
+              </div>
+              <div>
+                <p className={`${actionColors.text}`}>{action.title}</p>
+                <p className="text-sm text-slate-600 mt-1">{action.description}</p>
+              </div>
+            </li>
+          ))}
         </ul>
       </Card>
 

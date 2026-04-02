@@ -151,3 +151,112 @@ export function getThermalUi(level) {
 
   return config[level] ?? config.mild;
 }
+
+export function getImmediateActions(level) {
+  const actionsByLevel = {
+    freezing: [
+      {
+        number: "1",
+        title: "Trouvez un endroit chaud",
+        description: "Intérieur climatisé, refuge, chauffage",
+      },
+      {
+        number: "2",
+        title: "Portez des vêtements chauds",
+        description: "Couches épaisses, bonnet, gants, écharpe",
+      },
+      {
+        number: "3",
+        title: "Évitez rester dehors longtemps",
+        description: "Limitez l'exposition au froid intense",
+      },
+    ],
+    cool: [
+      {
+        number: "1",
+        title: "Portez une veste",
+        description: "Protection légère contre le froid modéré",
+      },
+      {
+        number: "2",
+        title: "Restez protégé du vent",
+        description: "Cherchez les zones abritées",
+      },
+      {
+        number: "3",
+        title: "Réchauffez-vous régulièrement",
+        description: "Beverages chaudes, mouvements, soleil",
+      },
+    ],
+    mild: [
+      {
+        number: "1",
+        title: "Maintenez l'équilibre hydrique",
+        description: "Buvez régulièrement, même sans soif",
+      },
+      {
+        number: "2",
+        title: "Utilisez la protection solaire",
+        description: "Crème écran, chapeau, vêtements légers",
+      },
+      {
+        number: "3",
+        title: "Restez vigilant",
+        description: "Écoutez votre corps",
+      },
+    ],
+    warm: [
+      {
+        number: "1",
+        title: "Buvez au moins 500ml d'eau par heure",
+        description: "Même sans soif, hydration régulière",
+      },
+      {
+        number: "2",
+        title: "Cherchez l'ombre régulièrement",
+        description: "Évitez l'exposition directe au soleil",
+      },
+      {
+        number: "3",
+        title: "Limitez l'activité physique",
+        description: "Reportez les efforts importants",
+      },
+    ],
+    hot: [
+      {
+        number: "1",
+        title: "Buvez au moins 1L d'eau par heure",
+        description: "Même sans soif",
+      },
+      {
+        number: "2",
+        title: "Trouvez un endroit frais",
+        description: "Refuge, climatisation, piscine, ombre",
+      },
+      {
+        number: "3",
+        title: "Évitez tout effort physique",
+        description: "Reportez les activités",
+      },
+    ],
+    extreme: [
+      {
+        number: "1",
+        title: "Buvez 1,5L d'eau par heure",
+        description: "Hydratation constante",
+      },
+      {
+        number: "2",
+        title: "Rester en climatisation",
+        description: "Restez à l'intérieur avec climatiseur",
+      },
+      {
+        number: "3",
+        title: "Appelez le 15 si malaise",
+        description: "Vertiges, nausées, maux de tête intenses",
+      },
+    ],
+  };
+
+  return actionsByLevel[level] ?? actionsByLevel.mild;
+}
