@@ -7,6 +7,7 @@ from math import radians, sin, cos, sqrt, atan2
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from app.services.weather import fetch_current_weather
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / 'data'
