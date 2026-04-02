@@ -1,39 +1,34 @@
 
 import { AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card } from './ui/card.jsx';
+import { getThermalUi } from '../lib/thermal.js';
 
 export function RiskIndicator({ level, score }) {
-  const config = {
-    low: {
-      color: 'bg-green-500',
-      textColor: 'text-green-700',
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-200',
-      icon: CheckCircle,
-      label: 'Risque faible',
-      message: 'Conditions normales',
-    },
-    medium: {
-      color: 'bg-orange-500',
-      textColor: 'text-orange-700',
-      bgColor: 'bg-orange-50',
-      borderColor: 'border-orange-200',
-      icon: AlertCircle,
-      label: 'Risque modéré',
-      message: 'Soyez vigilant',
-    },
-    high: {
-      color: 'bg-red-500',
-      textColor: 'text-red-700',
-      bgColor: 'bg-red-50',
-      borderColor: 'border-red-200',
-      icon: AlertTriangle,
-      label: 'Risque élevé',
-      message: 'Prenez des précautions',
-    },
+  const normalizedLevel = level === 'medium' ? 'moderate' : level;
+  const thermalUi = getThermalUi(normalizedLevel);
+
+  const iconByLevel = {
+    freezing: AlertTriangle,
+    cool: AlertCircle,
+    mild: CheckCircle,
+    warm: AlertCircle,
+    hot: AlertTriangle,
+    extreme: AlertTriangle,
+    low: CheckCircle,
+    moderate: AlertCircle,
+    high: AlertTriangle,
   };
 
-  const currentConfig = config[level] || config.high;
+  const currentConfig = {
+    color: thermalUi.panelAccentBg,
+    textColor: thermalUi.panelText,
+    bgColor: thermalUi.panelBg,
+    borderColor: thermalUi.panelBorder,
+    icon: iconByLevel[normalizedLevel] || AlertCircle,
+    label: thermalUi.riskLabel,
+    message: thermalUi.riskMessage,
+  };
+
   const Icon = currentConfig.icon;
 
   return (

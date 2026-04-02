@@ -5,36 +5,16 @@ import { RiskIndicator } from "./RiskIndicator.jsx";
 import { Button } from "./ui/button.jsx";
 import { Card } from "./ui/card.jsx";
 import { api } from "../lib/api.js";
+import { deriveThermalLevel, getThermalUi } from "../lib/thermal.js";
 import logoClimaSafe from "../assets/LOGO_CLIMASAFE.png";
 
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
 
-function getTemperatureProfile(temperature) {
-  if (temperature == null) {
+function getFallbackGuidance(level, temperature) {
+  if (level === "extreme") {
     return {
-      pageGradient: "from-orange-50 to-slate-50",
-      alertCard: "bg-orange-500",
-      alertSubtext: "text-orange-100",
-      tempIconBox: "bg-orange-100",
-      tempIcon: "text-orange-600",
-      fallbackAlert: "Analyse locale en cours",
-      fallbackTips: [
-        "Buvez de l'eau régulièrement",
-        "Évitez les efforts physiques",
-        "Restez à l'ombre ou au frais",
-      ],
-    };
-  }
-
-  if (temperature >= 36) {
-    return {
-      pageGradient: "from-red-50 to-slate-50",
-      alertCard: "bg-red-600",
-      alertSubtext: "text-red-100",
-      tempIconBox: "bg-red-100",
-      tempIcon: "text-red-600",
-      fallbackAlert: `Température critique: ${Math.round(temperature)}°C, limitez toute exposition`,
-      fallbackTips: [
+      alert: `Température critique: ${Math.round(temperature)}°C, limitez toute exposition`,
+      tips: [
         "Restez dans un lieu frais et aéré",
         "Hydratez-vous fréquemment, même sans soif",
         "Évitez toute activité physique en extérieur",
@@ -42,15 +22,10 @@ function getTemperatureProfile(temperature) {
     };
   }
 
-  if (temperature >= 30) {
+  if (level === "hot" || level === "high") {
     return {
-      pageGradient: "from-orange-50 to-slate-50",
-      alertCard: "bg-orange-500",
-      alertSubtext: "text-orange-100",
-      tempIconBox: "bg-orange-100",
-      tempIcon: "text-orange-600",
-      fallbackAlert: `Forte chaleur locale: ${Math.round(temperature)}°C, restez vigilant`,
-      fallbackTips: [
+      alert: `Forte chaleur locale: ${Math.round(temperature)}°C, restez vigilant`,
+      tips: [
         "Buvez de l'eau toutes les 20 à 30 minutes",
         "Cherchez l'ombre pendant les heures chaudes",
         "Privilégiez des déplacements courts",
@@ -58,17 +33,45 @@ function getTemperatureProfile(temperature) {
     };
   }
 
+  if (level === "warm" || level === "moderate") {
+    return {
+      alert: temperature == null ? "Analyse locale en cours" : `Vigilance chaleur: ${Math.round(temperature)}°C`,
+      tips: [
+        "Restez hydraté tout au long de la journée",
+        "Évitez une exposition prolongée au soleil",
+        "Privilégiez les zones ombragées",
+      ],
+    };
+  }
+
+  if (level === "cool") {
+    return {
+      alert: temperature == null ? "Temps frais" : `Temps frais: ${Math.round(temperature)}°C`,
+      tips: [
+        "Prévoyez une couche supplémentaire",
+        "Restez actif pour maintenir la chaleur corporelle",
+        "Hydratez-vous aussi par temps frais",
+      ],
+    };
+  }
+
+  if (level === "freezing") {
+    return {
+      alert: temperature == null ? "Froid intense" : `Froid intense: ${Math.round(temperature)}°C`,
+      tips: [
+        "Limitez l'exposition au froid",
+        "Couvrez les extrémités (mains, tête, pieds)",
+        "Privilégiez des pauses en intérieur chauffé",
+      ],
+    };
+  }
+
   return {
-    pageGradient: "from-amber-50 to-slate-50",
-    alertCard: "bg-amber-500",
-    alertSubtext: "text-amber-100",
-    tempIconBox: "bg-amber-100",
-    tempIcon: "text-amber-600",
-    fallbackAlert: `Température actuelle: ${Math.round(temperature)}°C`,
-    fallbackTips: [
-      "Restez hydraté tout au long de la journée",
-      "Évitez une exposition prolongée au soleil",
-      "Privilégiez les zones ombragées",
+    alert: temperature == null ? "Conditions stables" : `Température tempérée: ${Math.round(temperature)}°C`,
+    tips: [
+      "Gardez une hydratation régulière",
+      "Privilégiez les endroits ventilés",
+      "Surveillez l'évolution dans la journée",
     ],
   };
 }
@@ -76,6 +79,7 @@ function getTemperatureProfile(temperature) {
 export function HomeScreen() {
   const [currentPos, setCurrentPos] = useState(BORDEAUX_CENTER);
   const [gpsError, setGpsError] = useState(false);
+  const [gpsStatusMessage, setGpsStatusMessage] = useState("");
   const [riskData, setRiskData] = useState(null);
   const [alerts, setAlerts] = useState([]);
   const [tips, setTips] = useState([]);
@@ -124,29 +128,56 @@ export function HomeScreen() {
   useEffect(() => {
     if (!navigator.geolocation) {
       setGpsError(true);
+      setGpsStatusMessage("Géolocalisation non prise en charge par votre navigateur.");
       return;
     }
 
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        setGpsError(false);
-        setCurrentPos({
+    function handlePosition(position) {
+      setGpsError(false);
+      setGpsStatusMessage("");
+      setCurrentPos((prev) => {
+        const next = {
           longitude: position.coords.longitude,
           latitude: position.coords.latitude,
-        });
-      },
-      (error) => {
-        console.error("Erreur GPS :", error);
-        setGpsError(true);
-        setCurrentPos(BORDEAUX_CENTER);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        };
+
+        // Ignore micro-variations to avoid unnecessary API reloads.
+        const latDiff = Math.abs(next.latitude - prev.latitude);
+        const lonDiff = Math.abs(next.longitude - prev.longitude);
+        return latDiff < 0.0001 && lonDiff < 0.0001 ? prev : next;
+      });
+    }
+
+    function handlePositionError(error) {
+      const fallbackMessage = {
+        1: "Accès GPS refusé. Vérifiez les permissions du navigateur.",
+        2: "Position indisponible pour le moment. Réessai en mode moins précis.",
+        3: "Le GPS met trop de temps à répondre.",
+      };
+
+      console.error("Erreur GPS :", error);
+      setGpsError(true);
+      setGpsStatusMessage(fallbackMessage[error.code] || "Erreur GPS inconnue.");
+
+      // Keep the last known valid position instead of forcing a jump to Bordeaux.
+      if (error.code === 2 || error.code === 3) {
+        navigator.geolocation.getCurrentPosition(
+          handlePosition,
+          () => {},
+          { enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 }
+        );
+      }
+    }
+
+    const watchId = navigator.geolocation.watchPosition(
+      handlePosition,
+      handlePositionError,
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 30000 }
     );
 
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  const riskLevel = riskData?.level ?? "low";
   const riskScore = riskData?.score ?? 0;
   const currentTemp =
     riskData?.temperature != null ? Math.round(riskData.temperature) : "--";
@@ -157,17 +188,28 @@ export function HomeScreen() {
       ? Math.round(riskData.apparent_temperature)
       : "--";
   const temperatureValue = typeof riskData?.temperature === "number" ? riskData.temperature : null;
-  const tempProfile = getTemperatureProfile(temperatureValue);
+  const thermalLevel = deriveThermalLevel(temperatureValue, riskScore);
+  const tempProfile = getThermalUi(thermalLevel);
+  const fallbackGuidance = getFallbackGuidance(thermalLevel, temperatureValue);
 
   const nearestRefuge = riskData?.nearestRefuge ?? null;
   const alertBanner = alerts[0] ?? null;
+  const isAlertBannerLoading = !alertBanner;
+
+  const alertBannerContainerClass = isAlertBannerLoading
+    ? "bg-amber-100 border border-amber-300 text-amber-900"
+    : `${tempProfile.cardBg} text-white`;
+
+  const alertBannerSubtextClass = isAlertBannerLoading
+    ? "text-amber-800"
+    : tempProfile.cardSubtext;
 
   const locationLabel = gpsError
-    ? "Position par défaut : Bordeaux Centre"
+    ? gpsStatusMessage || "Localisation temporairement indisponible"
     : "Position détectée en direct";
 
   const quickTips = tips.flatMap((section) => section.tips || []).slice(0, 3);
-  const displayedTips = quickTips.length > 0 ? quickTips : tempProfile.fallbackTips;
+  const displayedTips = quickTips.length > 0 ? quickTips : fallbackGuidance.tips;
 
   return (
     <div className={`min-h-full bg-gradient-to-b ${tempProfile.pageGradient} p-4 sm:p-6`}>
@@ -183,21 +225,21 @@ export function HomeScreen() {
         <p className="text-slate-600 text-base sm:text-lg">Votre assistant canicule</p>
       </div>
 
-      <div className={`${tempProfile.alertCard} text-white p-4 rounded-2xl mb-6 shadow-lg`}>
+      <div className={`${alertBannerContainerClass} p-4 rounded-2xl mb-6 shadow-lg`}>
         <div className="flex items-center gap-3">
           <ThermometerSun size={28} />
           <div className="flex-1">
             <p className="font-semibold text-lg">
               {alertBanner?.title ?? "Chargement des alertes..."}
             </p>
-            <p className={`${tempProfile.alertSubtext} text-sm`}>
-              {alertBanner?.message ?? tempProfile.fallbackAlert}
+            <p className={`${alertBannerSubtextClass} text-sm`}>
+              {alertBanner?.message ?? fallbackGuidance.alert}
             </p>
           </div>
         </div>
       </div>
 
-      <RiskIndicator level={riskLevel} score={riskScore} />
+      <RiskIndicator level={thermalLevel} score={riskScore} />
 
       <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
         <h2 className="text-xl mb-1 text-slate-900">Conditions actuelles</h2>
@@ -205,8 +247,8 @@ export function HomeScreen() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 ${tempProfile.tempIconBox} rounded-xl flex items-center justify-center`}>
-              <ThermometerSun className={tempProfile.tempIcon} size={24} />
+            <div className={`w-12 h-12 ${tempProfile.iconBox} rounded-xl flex items-center justify-center`}>
+              <ThermometerSun className={tempProfile.iconColor} size={24} />
             </div>
             <div>
               <p className="text-2xl text-slate-900">

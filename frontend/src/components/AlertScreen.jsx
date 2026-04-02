@@ -3,52 +3,9 @@ import { AlertTriangle, ThermometerSun, Clock, Bell, CheckCircle } from "lucide-
 import { Card } from "./ui/card.jsx";
 import { Button } from "./ui/button.jsx";
 import { api } from "../lib/api.js";
+import { deriveThermalLevel, getThermalUi } from "../lib/thermal.js";
 
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
-
-function getAlertTemperatureProfile(temperature) {
-  if (temperature == null) {
-    return {
-      headerBg: "bg-orange-500",
-      summaryBg: "bg-orange-500",
-      summaryText: "text-orange-100",
-      pageGradient: "from-orange-50 to-slate-50",
-      title: "Vigilance chaleur",
-      zoneLabel: "Niveau local en calcul",
-    };
-  }
-
-  if (temperature >= 36) {
-    return {
-      headerBg: "bg-red-600",
-      summaryBg: "bg-red-600",
-      summaryText: "text-red-100",
-      pageGradient: "from-red-50 to-slate-50",
-      title: "Canicule exceptionnelle",
-      zoneLabel: "Niveau 3 local",
-    };
-  }
-
-  if (temperature >= 30) {
-    return {
-      headerBg: "bg-orange-500",
-      summaryBg: "bg-orange-500",
-      summaryText: "text-orange-100",
-      pageGradient: "from-orange-50 to-slate-50",
-      title: "Forte chaleur",
-      zoneLabel: "Niveau 2 local",
-    };
-  }
-
-  return {
-    headerBg: "bg-amber-500",
-    summaryBg: "bg-amber-500",
-    summaryText: "text-amber-100",
-    pageGradient: "from-amber-50 to-slate-50",
-    title: "Vigilance thermique",
-    zoneLabel: "Niveau 1 local",
-  };
-}
 
 export function AlertScreen() {
   const [currentPos, setCurrentPos] = useState(BORDEAUX_CENTER);
@@ -118,10 +75,10 @@ export function AlertScreen() {
         };
       case "medium":
         return {
-          bgColor: "bg-orange-50",
-          borderColor: "border-orange-200",
-          iconBg: "bg-orange-500",
-          textColor: "text-orange-700",
+          bgColor: "bg-amber-50",
+          borderColor: "border-amber-200",
+          iconBg: "bg-amber-600",
+          textColor: "text-amber-800",
           icon: ThermometerSun,
         };
       default:
@@ -146,21 +103,26 @@ export function AlertScreen() {
     apparentTemp != null
       ? Math.max(apparentTemp, (currentTemp ?? apparentTemp) + 1)
       : null;
-  const temperatureProfile = getAlertTemperatureProfile(currentTemp);
+  const thermalLevel = deriveThermalLevel(currentTemp, riskData?.score);
+  const thermalUi = getThermalUi(thermalLevel);
   const hydrationPerHour = currentTemp != null && currentTemp >= 38 ? "1,5L" : "1L";
-  const warningLabel = riskData?.score != null ? `Indice ${riskData.score}/100` : temperatureProfile.zoneLabel;
-  const summaryTitle = hasActiveAlerts ? temperatureProfile.title : "Aucune alerte en cours";
+  const warningLabel = riskData?.score != null ? `Indice ${riskData.score}/100` : thermalUi.summaryZoneLabel;
+  const summaryTitle = hasActiveAlerts ? thermalUi.summaryTitle : "Aucune alerte en cours";
   const summaryKicker = hasActiveAlerts ? "Alerte en cours" : "Statut actuel";
   const summaryMessage = hasActiveAlerts
     ? summaryAlert?.message
     : "Les conditions actuelles sont stables. Continuez à surveiller la météo locale.";
+  const summaryCardClass = hasActiveAlerts
+    ? `${thermalUi.cardBg} text-white`
+    : "bg-slate-800 text-white";
+  const summaryTextClass = hasActiveAlerts ? thermalUi.cardSubtext : "text-slate-200";
 
   return (
-    <div className={`min-h-full bg-gradient-to-b ${temperatureProfile.pageGradient} p-4 sm:p-6`}>
+    <div className={`min-h-full bg-gradient-to-b ${thermalUi.pageGradient} p-4 sm:p-6`}>
       {/* Header */}
       <div className="pt-4 pb-6">
         <div className="flex items-center gap-3 mb-2">
-          <div className={`w-12 h-12 ${temperatureProfile.headerBg} rounded-full flex items-center justify-center`}>
+          <div className={`w-12 h-12 ${thermalUi.panelAccentBg} rounded-full flex items-center justify-center`}>
             <Bell className="text-white" size={24} />
           </div>
           <div>
@@ -171,35 +133,35 @@ export function AlertScreen() {
       </div>
 
       {/* Current Alert Summary */}
-      <Card className={`p-4 sm:p-6 mb-6 ${temperatureProfile.summaryBg} text-white border-0 shadow-xl`}>
+      <div className={`p-4 sm:p-6 mb-6 rounded-xl shadow-xl ${summaryCardClass}`}>
         <div className="flex items-start gap-4 mb-4">
           <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
             {hasActiveAlerts ? <AlertTriangle size={28} /> : <CheckCircle size={28} />}
           </div>
           <div className="flex-1">
-            <p className={`text-sm ${temperatureProfile.summaryText} mb-1`}>{summaryKicker}</p>
+            <p className={`text-sm ${summaryTextClass} mb-1`}>{summaryKicker}</p>
             <h2 className="text-xl sm:text-2xl mb-2">{summaryTitle}</h2>
-            <p className={`${temperatureProfile.summaryText} text-sm`}>
+            <p className={`${summaryTextClass} text-sm`}>
               {warningLabel} • Zone {riskData?.zone ?? "Bordeaux Métropole"}
             </p>
           </div>
         </div>
 
-        <p className={`${temperatureProfile.summaryText} text-sm mb-4`}>{summaryMessage}</p>
+        <p className={`${summaryTextClass} text-sm mb-4`}>{summaryMessage}</p>
         
         <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <p className={`text-sm ${temperatureProfile.summaryText} mb-1`}>Température actuelle</p>
+              <p className={`text-sm ${summaryTextClass} mb-1`}>Température actuelle</p>
               <p className="text-2xl sm:text-3xl">{currentTemp != null ? `${currentTemp}°C` : "--"}</p>
             </div>
             <div>
-              <p className={`text-sm ${temperatureProfile.summaryText} mb-1`}>Pic attendu</p>
+              <p className={`text-sm ${summaryTextClass} mb-1`}>Pic attendu</p>
               <p className="text-2xl sm:text-3xl">{forecastPeak != null ? `${forecastPeak}°C` : "--"}</p>
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Immediate Actions */}
       <Card className="p-5 mb-6 shadow-sm border-slate-200">
