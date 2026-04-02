@@ -4,6 +4,9 @@ import json
 from functools import lru_cache
 from pathlib import Path
 from math import radians, sin, cos, sqrt, atan2
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+from urllib.error import URLError
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -71,6 +74,113 @@ def with_live_distance(items: list[dict], user_lat: float, user_lng: float) -> l
         clone['walkTime'] = max(2, round(distance_m / 80))
         enriched.append(clone)
     return sorted(enriched, key=lambda x: x['distance'])
+
+
+def estimate_zone_name(user_lat: float, user_lng: float) -> str:
+    lat_diff = user_lat - BORDEAUX_CENTER['lat']
+    lng_diff = user_lng - BORDEAUX_CENTER['lng']
+
+    # ~0.003 deg is roughly a few hundred meters in Bordeaux.
+    if abs(lat_diff) < 0.003 and abs(lng_diff) < 0.003:
+        return BORDEAUX_CENTER['name']
+
+    if lat_diff >= 0.003:
+        north_south = 'Nord'
+    elif lat_diff <= -0.003:
+        north_south = 'Sud'
+    else:
+        north_south = ''
+
+    if lng_diff >= 0.003:
+        east_west = 'Est'
+    elif lng_diff <= -0.003:
+        east_west = 'Ouest'
+    else:
+        east_west = ''
+
+    if north_south and east_west:
+        return f"Bordeaux {north_south}-{east_west}"
+    if north_south:
+        return f"Bordeaux {north_south}"
+    if east_west:
+        return f"Bordeaux {east_west}"
+    return "Bordeaux"
+
+
+@lru_cache(maxsize=512)
+def reverse_city_name(lat_key: float, lng_key: float) -> str | None:
+    user_agent = 'climasafe/1.0 (+hackathon)'
+
+    # Primary: OSM Nominatim reverse geocoding
+    nominatim_params = urlencode({
+        'format': 'jsonv2',
+        'lat': lat_key,
+        'lon': lng_key,
+        'accept-language': 'fr',
+    })
+    nominatim_url = f"https://nominatim.openstreetmap.org/reverse?{nominatim_params}"
+    nominatim_request = Request(
+        nominatim_url,
+        headers={'User-Agent': user_agent}
+    )
+
+    try:
+        with urlopen(nominatim_request, timeout=3) as response:
+            payload = json.loads(response.read().decode('utf-8'))
+        address = payload.get('address') or {}
+        city = (
+            address.get('city')
+            or address.get('town')
+            or address.get('village')
+            or address.get('municipality')
+        )
+        if city:
+            return city
+    except (URLError, TimeoutError, ValueError):
+        pass
+
+    # Fallback: adresse.data.gouv.fr reverse
+    ban_params = urlencode({
+        'lat': lat_key,
+        'lon': lng_key,
+        'type': 'municipality',
+    })
+    ban_url = f"https://api-adresse.data.gouv.fr/reverse/?{ban_params}"
+    ban_request = Request(
+        ban_url,
+        headers={'User-Agent': user_agent}
+    )
+
+    try:
+        with urlopen(ban_request, timeout=3) as response:
+            payload = json.loads(response.read().decode('utf-8'))
+        features = payload.get('features') or []
+        if not features:
+            return None
+        properties = features[0].get('properties') or {}
+        return properties.get('city') or properties.get('name')
+    except (URLError, TimeoutError, ValueError):
+        return None
+
+
+def resolve_zone_name(user_lat: float, user_lng: float) -> str:
+    # Round coordinates to limit cache cardinality while keeping city precision.
+    lat_key = round(user_lat, 4)
+    lng_key = round(user_lng, 4)
+    city_name = reverse_city_name(lat_key, lng_key)
+    if city_name:
+        return city_name
+
+    distance_from_center_km = haversine_km(
+        user_lat,
+        user_lng,
+        BORDEAUX_CENTER['lat'],
+        BORDEAUX_CENTER['lng']
+    )
+    if distance_from_center_km > 25:
+        return "Ville inconnue"
+
+    return estimate_zone_name(user_lat, user_lng)
 
 
 @app.get('/api/health')
@@ -198,6 +308,8 @@ async def get_risks(
     else:
         level = 'low'
 
+    dynamic_zone = resolve_zone_name(lat, lng)
+
     return {
         'level': level,
         'score': score,
@@ -207,7 +319,7 @@ async def get_risks(
         'weather_code': weather.get("weather_code"),
         'wind_speed': weather.get("wind_speed"),
         'weather_time': weather.get("time"),
-        'zone': BORDEAUX_CENTER['name'],
+        'zone': dynamic_zone,
         'method': 'lcz_plus_open_meteo',
         'nearestRefuge': {
             'name': nearest_cool['name'],
