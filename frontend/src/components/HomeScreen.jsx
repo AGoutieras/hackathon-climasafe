@@ -13,6 +13,7 @@ export function HomeScreen() {
   const [gpsError, setGpsError] = useState(false);
   const [riskData, setRiskData] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,14 +23,16 @@ export function HomeScreen() {
     try {
       setLoading(true);
 
-        const [riskResponse, alertsResponse] = await Promise.all([
+        const [riskResponse, alertsResponse, tipsResponse] = await Promise.all([
           api.getRisks(currentPos.latitude, currentPos.longitude),
           api.getAlerts(currentPos.latitude, currentPos.longitude),
+          api.getTips(),
         ]);
 
         if (!cancelled) {
           setRiskData(riskResponse);
           setAlerts(Array.isArray(alertsResponse) ? alertsResponse : []);
+          setTips(Array.isArray(tipsResponse) ? tipsResponse : []);
         }
       } catch (error) {
         console.error("Erreur chargement accueil :", error);
@@ -37,6 +40,7 @@ export function HomeScreen() {
         if (!cancelled) {
           setRiskData(null);
           setAlerts([]);
+          setTips([]);
         }
       } finally {
         if (!cancelled) {
@@ -94,6 +98,8 @@ export function HomeScreen() {
   const locationLabel = gpsError
     ? "Position par défaut : Bordeaux Centre"
     : "Position détectée en direct";
+
+  const quickTips = tips.flatMap((section) => section.tips || []).slice(0, 3);
 
   return (
     <div className="min-h-full bg-gradient-to-b from-orange-50 to-slate-50 p-4 sm:p-6">
@@ -180,18 +186,19 @@ export function HomeScreen() {
       <Card className="p-4 sm:p-5 shadow-sm border-slate-200">
         <h2 className="text-xl mb-3 text-slate-900">Conseils rapides</h2>
         <ul className="space-y-2 text-slate-700">
-          <li className="flex items-start gap-2">
+          {(quickTips.length > 0
+          ? quickTips
+          : [
+            "Buvez de l'eau régulièrement",
+            "Évitez les efforts physiques",
+            "Restez à l'ombre ou au frais",
+          ]
+        ).map((tip, index) => (
+          <li key={index} className="flex items-start gap-2">
             <span className="text-blue-600 mt-1">•</span>
-            <span>Buvez de l'eau régulièrement</span>
+            <span>{tip}</span>
           </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">•</span>
-            <span>Évitez les efforts physiques</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">•</span>
-            <span>Restez à l'ombre ou au frais</span>
-          </li>
+        ))}
         </ul>
         <Link to="/conseils">
           <Button
