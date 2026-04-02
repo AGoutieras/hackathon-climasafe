@@ -539,7 +539,7 @@ export function MapScreen() {
     <div className="min-h-full bg-slate-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 p-4 shadow-sm">
-        <h1 className="text-2xl text-slate-900">Carte thermique</h1>
+        <h1 className="text-2xl text-slate-900">TROUVE TON REFUGE 🌳</h1>
         <div className="text-slate-500 text-sm mt-0.5 space-y-1">
           <p>
             {loading
