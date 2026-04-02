@@ -13,58 +13,73 @@ import {
 } from "lucide-react";
 import { Card } from "./ui/card.jsx";
 import { api } from "../lib/api.js";
+import { deriveThermalLevel, getThermalUi } from "../lib/thermal.js";
 
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
 
-function getTipsTemperatureProfile(temperature) {
-  if (temperature == null) {
-    return {
-      pageGradient: "from-blue-50 to-slate-50",
-      warningGradient: "from-orange-500 to-red-500",
+function getTipsThermalProfile(level) {
+  const thermalUi = getThermalUi(level);
+
+  const byLevel = {
+    freezing: {
+      warningGradient: "from-cyan-700 to-sky-700",
+      title: "Froid intense",
+      message:
+        "Les températures sont basses. Protégez-vous du froid et maintenez une bonne hydratation.",
+      hydration: "Hydratez-vous même sans sensation de soif",
+      sunExposure: "Profitez des heures les plus douces de la journée",
+      effort: "Évitez les efforts intenses prolongés en extérieur",
+    },
+    cool: {
+      warningGradient: "from-sky-600 to-blue-600",
+      title: "Temps frais",
+      message:
+        "Conditions fraîches: adaptez vos sorties et gardez de bons réflexes de prévention.",
+      hydration: "Buvez régulièrement, même par temps frais",
+      sunExposure: "Privilégiez les périodes ensoleillées et abritées",
+      effort: "Échauffez-vous avant toute activité extérieure",
+    },
+    mild: {
+      warningGradient: "from-green-600 to-green-500",
+      title: "Situation thermique stable",
+      message:
+        "Conditions globalement stables. Conservez les bons réflexes d'hydratation au quotidien.",
+      hydration: "Buvez au moins 1,5L d'eau répartis sur la journée",
+      sunExposure: "Limitez l'exposition prolongée en plein soleil",
+      effort: "Privilégiez des efforts modérés aux heures confortables",
+    },
+    warm: {
+      warningGradient: "from-amber-600 to-orange-500",
       title: "Vigilance chaleur",
       message:
-        "Suivez ces conseils pour votre sécurité et celle de vos proches. La vigilance est essentielle.",
-      hydration: "Buvez au moins 1,5L d'eau par jour, même sans soif",
-      sunExposure: "Évitez l'exposition au soleil entre 12h et 17h",
-      effort: "Évitez les efforts physiques intenses",
-    };
-  }
-
-  if (temperature >= 36) {
-    return {
-      pageGradient: "from-red-50 to-slate-50",
-      warningGradient: "from-red-600 to-orange-600",
-      title: "Canicule intense",
+        "La chaleur monte localement. Anticipez les pics et réduisez l'exposition directe.",
+      hydration: "Buvez de l'eau régulièrement sans attendre la soif",
+      sunExposure: "Évitez le soleil direct entre 12h et 17h",
+      effort: "Réduisez les efforts physiques aux heures chaudes",
+    },
+    hot: {
+      warningGradient: "from-orange-600 to-red-500",
+      title: "Forte chaleur",
       message:
-        "Température critique mesurée. Limitez fortement les sorties et privilégiez des lieux climatisés.",
+        "Risque thermique élevé: hydratez-vous fréquemment et limitez vos déplacements en journée.",
+      hydration: "Buvez au moins 2L d'eau répartis sur la journée",
+      sunExposure: "Évitez l'exposition au soleil entre 11h et 18h",
+      effort: "Reportez les activités physiques au matin ou au soir",
+    },
+    extreme: {
+      warningGradient: "from-red-700 to-orange-600",
+      title: "Canicule exceptionnelle",
+      message:
+        "Température critique: limitez fortement les sorties et privilégiez les lieux frais.",
       hydration: "Buvez 1 verre d'eau toutes les 15 à 20 minutes",
       sunExposure: "Évitez toute exposition directe entre 10h et 20h",
       effort: "Suspendez toute activité physique en extérieur",
-    };
-  }
-
-  if (temperature >= 30) {
-    return {
-      pageGradient: "from-orange-50 to-slate-50",
-      warningGradient: "from-orange-500 to-red-500",
-      title: "Forte chaleur",
-      message:
-        "Restez vigilant: hydratez-vous souvent et réduisez les déplacements aux heures chaudes.",
-      hydration: "Buvez au moins 2L d'eau répartis sur la journée",
-      sunExposure: "Évitez l'exposition au soleil entre 11h et 18h",
-      effort: "Réduisez les efforts physiques, surtout l'après-midi",
-    };
-  }
+    },
+  };
 
   return {
-    pageGradient: "from-amber-50 to-slate-50",
-    warningGradient: "from-amber-500 to-orange-500",
-    title: "Chaleur modérée",
-    message:
-      "Adoptez de bons réflexes d'hydratation et privilégiez les zones ombragées pendant les pics de chaleur.",
-    hydration: "Buvez régulièrement de l'eau tout au long de la journée",
-    sunExposure: "Limitez l'exposition en plein soleil en début d'après-midi",
-    effort: "Privilégiez des efforts modérés aux heures fraîches",
+    ...thermalUi,
+    ...(byLevel[level] ?? byLevel.mild),
   };
 }
 
@@ -243,7 +258,8 @@ export function TipsScreen() {
   }, []);
 
   const currentTemp = typeof riskData?.temperature === "number" ? riskData.temperature : null;
-  const tipsProfile = getTipsTemperatureProfile(currentTemp);
+  const thermalLevel = deriveThermalLevel(currentTemp, riskData?.score);
+  const tipsProfile = getTipsThermalProfile(thermalLevel);
   const tipsData = useMemo(() => buildTipsData(tipsProfile), [tipsProfile]);
   const localTempLabel =
     currentTemp != null ? `${Math.round(currentTemp)}°C` : "température en cours d'analyse";
