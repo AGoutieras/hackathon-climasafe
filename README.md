@@ -182,4 +182,3 @@ Projet développé dans le cadre du **Hackathon Bordeaux Métropole**, avec un f
 ° @stvnm-58
 ° @Victoire07
 ° @Vitushan
-
