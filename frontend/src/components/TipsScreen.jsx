@@ -268,7 +268,7 @@ export function TipsScreen() {
     <div className={`min-h-full bg-gradient-to-b ${tipsProfile.pageGradient} p-4 sm:p-6`}>
       {/* Header */}
       <div className="pt-4 pb-6">
-        <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">Conseils de prévention</h1>
+        <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">NOS CONSEILS 💡</h1>
         <p className="text-slate-600 text-base sm:text-lg">
           Protégez-vous de la chaleur ({localTempLabel})
         </p>

@@ -185,7 +185,7 @@ export function getImmediateActions(level) {
       {
         number: "3",
         title: "Réchauffez-vous régulièrement",
-        description: "Beverages chaudes, mouvements, soleil",
+        description: "Boissons chaudes, mouvements, soleil",
       },
     ],
     mild: [
@@ -197,7 +197,7 @@ export function getImmediateActions(level) {
       {
         number: "2",
         title: "Utilisez la protection solaire",
-        description: "Crème écran, chapeau, vêtements légers",
+        description: "Crème solaire, chapeau, vêtements légers",
       },
       {
         number: "3",
