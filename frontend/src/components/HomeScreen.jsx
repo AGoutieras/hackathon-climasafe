@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { RiskIndicator } from "./RiskIndicator.jsx";
 import { Button } from "./ui/button.jsx";
 import { Card } from "./ui/card.jsx";
+import logoClimaSafe from "../assets/LOGO_CLIMASAFE.png";
 
 const API_BASE = "http://localhost:8000/api";
 const BORDEAUX_CENTER = { longitude: -0.5792, latitude: 44.8378 };
@@ -136,7 +137,14 @@ export function HomeScreen() {
     <div className="min-h-full bg-gradient-to-b from-orange-50 to-slate-50 p-4 sm:p-6">
       {/* Header */}
       <div className="pt-4 pb-6">
-        <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">ClimaSafe</h1>
+        <div className="flex items-center gap-3 mb-2">
+          <img
+            src={logoClimaSafe}
+            alt="Logo ClimaSafe"
+            className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+          />
+          <h1 className="text-3xl sm:text-4xl text-slate-900">ClimaSafe</h1>
+        </div>
         <p className="text-slate-600 text-base sm:text-lg">Votre assistant canicule</p>
       </div>
 
