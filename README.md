@@ -10,15 +10,15 @@ CLIMASAFE est une application web conçue pour **anticiper, alerter et protéger
 
 Les épisodes de canicule deviennent :
 
-- Plus **fréquents**
-- Plus **intenses**
-- Plus **dangereux en ville** (îlots de chaleur urbains)
+* Plus **fréquents**
+* Plus **intenses**
+* Plus **dangereux en ville** (îlots de chaleur urbains)
 
 👉 Pourtant, les citoyens manquent :
 
-- d’informations **localisées**
-- d’alertes **claires et exploitables**
-- de **guides d’action concrets**
+* d’informations **localisées**
+* d’alertes **claires et exploitables**
+* de **guides d’action concrets**
 
 ---
 
@@ -26,10 +26,10 @@ Les épisodes de canicule deviennent :
 
 CLIMASAFE propose une plateforme simple et accessible qui permet de :
 
-- 🌡️ **Visualiser les zones à risque de chaleur**
-- 🚨 **Recevoir des alertes en temps réel**
-- 🧠 **Adopter les bons réflexes face à la canicule**
-- 🏙️ **Mieux comprendre son environnement urbain**
+* 🌡️ **Visualiser les zones à risque de chaleur**
+* 🚨 **Recevoir des alertes en temps réel**
+* 🧠 **Adopter les bons réflexes face à la canicule**
+* 🏙️ **Mieux comprendre son environnement urbain**
 
 ---
 
@@ -37,36 +37,36 @@ CLIMASAFE propose une plateforme simple et accessible qui permet de :
 
 ### 📍 Carte des zones de chaleur
 
-- Identification des îlots de chaleur urbains
-- Visualisation des zones critiques en temps réel
-- Intégration de données open data (Bordeaux Métropole)
+* Identification des îlots de chaleur urbains
+* Visualisation des zones critiques en temps réel
+* Intégration de données open data (Bordeaux Métropole)
 
 ---
 
 ### 🚨 Système d’alerte canicule
 
-- Notifications selon la localisation utilisateur
-- Niveaux d’alerte (vigilance, danger, extrême)
-- Messages simples et actionnables
+* Notifications selon la localisation utilisateur
+* Niveaux d’alerte (vigilance, danger, extrême)
+* Messages simples et actionnables
 
 ---
 
 ### 👤 Dashboard utilisateur
 
-- Vue personnalisée des risques
-- Suivi des alertes reçues
-- Informations locales en continu
+* Vue personnalisée des risques
+* Suivi des alertes reçues
+* Informations locales en continu
 
 ---
 
 ### 💡 Conseils intelligents
 
-- Recommandations adaptées :
-  - Hydratation 💧
-  - Horaires à éviter ⛔
-  - Comportements à adopter 🧢
+* Recommandations adaptées :
 
-- Conseils ciblés selon niveau de danger
+  * Hydratation 💧
+  * Horaires à éviter ⛔
+  * Comportements à adopter 🧢
+* Conseils ciblés selon niveau de danger
 
 ---
 
@@ -74,19 +74,19 @@ CLIMASAFE propose une plateforme simple et accessible qui permet de :
 
 ### Frontend
 
-- React.js
-- Interface responsive & moderne
+* React.js
+* Interface responsive & moderne
 
 ### Backend
 
-- Python (API REST)
-- Framework : FastAPI / Flask
+* Python (API REST)
+* Framework : FastAPI / Flask
 
 ### Données
 
-- Open Data Bordeaux Métropole
-- Données géospatiales
-- APIs environnementales
+* Open Data Bordeaux Métropole
+* Données géospatiales
+* APIs environnementales
 
 ---
 
@@ -133,10 +133,10 @@ bash demo-start.sh
 
 Le script:
 
-- démarre FastAPI sur `8000`
-- build le frontend React
-- lance le serveur de démo sur `4175`
-- ouvre un tunnel public temporaire avec `localtunnel`
+* démarre FastAPI sur `8000`
+* build le frontend React
+* lance le serveur de démo sur `4175`
+* ouvre un tunnel public temporaire avec `localtunnel`
 
 ### 3. Frontend
 
@@ -150,9 +150,9 @@ npm run dev
 
 ## 🌐 Sources de données
 
-- Open Data Bordeaux Métropole
-- Données climatiques publiques
-- Données géographiques urbaines
+* Open Data Bordeaux Métropole
+* Données climatiques publiques
+* Données géographiques urbaines
 
 ---
 
@@ -160,9 +160,9 @@ npm run dev
 
 CLIMASAFE permet :
 
-- 🧑‍🤝‍🧑 Aux citoyens → de **se protéger efficacement**
-- 🏙️ Aux villes → de **mieux anticiper les crises**
-- 🌍 À la société → de **s’adapter au réchauffement climatique**
+* 🧑‍🤝‍🧑 Aux citoyens → de **se protéger efficacement**
+* 🏙️ Aux villes → de **mieux anticiper les crises**
+* 🌍 À la société → de **s’adapter au réchauffement climatique**
 
 ---
 
@@ -170,9 +170,9 @@ CLIMASAFE permet :
 
 Faire de CLIMASAFE un **assistant climatique urbain spécialisé canicule**, capable de :
 
-- Prédire les zones à risque 🔮
-- Alerter automatiquement 📲
-- Sauver des vies ❤️
+* Prédire les zones à risque 🔮
+* Alerter automatiquement 📲
+* Sauver des vies ❤️
 
 ---
 
@@ -184,16 +184,16 @@ Projet développé dans le cadre du **Hackathon Bordeaux Métropole**, avec un f
 
 ---
 
-## 👥 Team
+## 👥 Team 
 
-- ÉQUIPE :
-  ° Anthony GOUTIERAS
-  ° Steven MARIANI
-  ° Victoire BOUTIN
-  ° Vitushan SATKUNANATHAN
+*  ÉQUIPE : 
+° Anthony GOUTIERAS
+° Steven MARIANI
+° Victoire BOUTIN
+° Vitushan SATKUNANATHAN
 
-- GITHUB
-  ° @AGoutieras
-  ° @stvnm-58
-  ° @Victoire07
-  ° @Vitushan
+*  GITHUB
+° @AGoutieras
+° @stvnm-58
+° @Victoire07
+° @Vitushan
