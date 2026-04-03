@@ -171,14 +171,12 @@ Projet développé dans le cadre du **Hackathon Bordeaux Métropole**, avec un f
 
 ## 👥 Team 
 
-*  ÉQUIPE : 
-° Anthony GOUTIERAS
-° Steven MARIANI
-° Victoire BOUTIN
-° Vitushan SATKUNANATHAN
+*  ÉQUIPE :
+  
+     * [Anthony GOUTIERAS](https://github.com/AGoutieras)
 
-*  GITHUB
-° @AGoutieras
-° @stvnm-58
-° @Victoire07
-° @Vitushan
+     * [Steven MARIANI](https://github.com/stvnm-58)
+  
+     * [Victoire BOUTIN](https://github.com/Victoire07)
+  
+     * [Vitushan SATKUNANATHAN](https://github.com/Vitushan)
