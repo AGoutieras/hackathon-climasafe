@@ -15,15 +15,25 @@ import { fetchRoute } from "../lib/routing.js";
 
 // ── Colour helpers ────────────────────────────────────────────────────────
 
-const coolColor  = (score) => score >= 90 ? "#0ea5e9" : score >= 80 ? "#22c55e" : "#84cc16";
+const COOL_ZONE_COLORS = {
+  water: { high: "#0ea5e9", base: "#06b6d4" },
+  park: "#00e453",
+  green: "#166534",
+  fallback: "#84cc16",
+};
+
+const coolColor  = (score, type) => {
+  if (type === "water") return score >= 90 ? COOL_ZONE_COLORS.water.high : COOL_ZONE_COLORS.water.base;
+  return COOL_ZONE_COLORS[type] ?? COOL_ZONE_COLORS.fallback;
+};
 const heatColor  = (risk)  => ({ very_high: "#ef4444", high: "#f97316", medium: "#facc15" }[risk] ?? "#fde68a");
 const riskLabel  = (risk)  => ({ very_high: "Très élevé", high: "Élevé", medium: "Modéré" }[risk] ?? "Faible");
-const spotLabel  = (type)  => ({ park: "Zone boisée", water: "Plan d'eau", green: "Espace vert" }[type] ?? "Zone fraîche");
+const spotLabel  = (type)  => ({ park: "Zone boisée", water: "Plan d'eau", green: "Zone arborée" }[type] ?? "Zone fraîche");
 
 // ── Marker components ─────────────────────────────────────────────────────
 
 function CoolMarker({ spot, selected, onClick }) {
-  const c = coolColor(spot.coolnessScore);
+  const c = coolColor(spot.coolnessScore, spot.type);
   const size = selected ? 40 : 28;
   return (
     <Marker longitude={spot.lng} latitude={spot.lat}
@@ -90,7 +100,7 @@ function NavPanel({ route, dest, onCancel }) {
   const mins = Math.round(route.duration / 60);
   const km   = (route.distance / 1000).toFixed(2);
   return (
-    <div className="fixed bottom-20 left-0 right-0 w-full max-w-2xl mx-auto px-3 z-50 md:bottom-24">
+    <div className="fixed bottom-[5.5rem] left-0 right-0 w-full max-w-2xl mx-auto px-3 z-50 md:bottom-24">
       <Card className="shadow-2xl border-0 overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 bg-sky-600 text-white">
           <div className="flex items-center gap-2">
@@ -145,7 +155,7 @@ function NavPanel({ route, dest, onCancel }) {
 // ── Cool spot detail panel ─────────────────────────────────────────────────
 
 function CoolPanel({ spot, onClose, onNavigate, navigating }) {
-  const c = coolColor(spot.coolnessScore);
+  const c = coolColor(spot.coolnessScore, spot.type);
   return (
     <Card className="p-5 shadow-xl border-2 mb-4" style={{ borderColor: c }}>
       <div className="flex items-start gap-4 mb-4">
@@ -378,11 +388,11 @@ export function MapScreen() {
 
   // ── Render ─────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-full bg-slate-50">
+    <div className="min-h-full bg-slate-50 overflow-x-hidden">
 
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 p-4 shadow-sm">
-        <h1 className="text-2xl text-slate-900">Trouve ton refuge 🌳</h1>
+      <div className="bg-white border-b border-slate-200 p-4 sm:p-4 shadow-sm">
+        <h1 className="text-xl sm:text-2xl text-slate-900">Trouve ton refuge 🌳</h1>
         <div className="text-slate-500 text-sm mt-0.5 space-y-1">
           <p>{loading ? "Chargement…" : `${coolSpots.length} zones fraîches · ${heatZones.length} zones chaudes · ${waterStationsCount} fontaines`}</p>
           <p className="text-xs">{userPos ? "Position GPS active" : "Carte centrée sur Bordeaux"}</p>
@@ -426,7 +436,7 @@ export function MapScreen() {
       )}
 
       {/* Map */}
-      <div style={{ height: "min(62vh, 560px)", position: "relative" }}>
+      <div style={{ height: "min(54vh, 520px)", position: "relative" }}>
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
             <Loader2 className="animate-spin text-slate-500" size={32} />
@@ -494,9 +504,10 @@ export function MapScreen() {
       {/* Legend */}
       <div className="px-4 py-2 bg-white border-b border-slate-100 flex flex-wrap gap-3 text-xs text-slate-500">
         {[
-          { color: "#0ea5e9", label: "Eau",       shape: "rounded-full" },
-          { color: "#22c55e", label: "Boisé",     shape: "rounded-full" },
-          { color: "#06b6d4", label: "Fontaines", shape: "rounded-full" },
+          { color: COOL_ZONE_COLORS.water.high, label: "Eau",       shape: "rounded-full" },
+          { color: COOL_ZONE_COLORS.park, label: "Boisé",     shape: "rounded-full" },
+          { color: COOL_ZONE_COLORS.green, label: "Arboré",  shape: "rounded-full" },
+          { color: COOL_ZONE_COLORS.water.base, label: "Fontaines", shape: "rounded-full" },
           { color: "#ef4444", label: "Très chaud", shape: "rotate-45" },
           { color: "#f97316", label: "Chaud",      shape: "rotate-45" },
           { color: "#facc15", label: "Modéré",     shape: "rotate-45" },
@@ -517,7 +528,7 @@ export function MapScreen() {
         {selected?.kind === "heat" && (() => {
           const c = heatColor(selected.data.risk);
           return (
-            <Card className="p-5 shadow-xl border-2 mb-4" style={{ borderColor: c }}>
+            <Card className="p-4 sm:p-5 shadow-xl border-2 mb-4" style={{ borderColor: c }}>
               <div className="flex items-start gap-4 mb-3">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white flex-shrink-0" style={{ background: c }}>
                   <Flame size={26} />
@@ -540,8 +551,8 @@ export function MapScreen() {
 
         {selected?.kind === "water" && (
           <>
-            <Card className="p-5 shadow-xl border-2 mb-4" style={{ borderColor: "#06b6d4" }}>
-              <div className="flex items-start gap-4 mb-3">
+            <Card className="p-4 sm:p-5 shadow-xl border-2 mb-4" style={{ borderColor: "#06b6d4" }}>
+                <div className="flex items-start gap-4 mb-3">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white flex-shrink-0" style={{ background: "#06b6d4" }}>
                   <Droplets size={26} />
                 </div>
@@ -583,7 +594,7 @@ export function MapScreen() {
               {nearbyPlaces.slice(0, 5).map((place) => {
                 const isCool  = place.kind === "cool";
                 const item    = place.data;
-                const iconClr = isCool ? coolColor(item.coolnessScore) : "#06b6d4";
+                const iconClr = isCool ? coolColor(item.coolnessScore, item.type) : "#06b6d4";
                 return (
                   <Card key={place.id} className="p-3 cursor-pointer hover:shadow-md transition-shadow border-slate-200"
                     onClick={() => setSelected({ kind: place.kind, data: item })}>

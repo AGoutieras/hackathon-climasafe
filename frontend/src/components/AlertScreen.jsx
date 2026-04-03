@@ -91,7 +91,7 @@ export function AlertScreen() {
             <Bell className="text-white" size={24} />
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl text-slate-900">Sois préparé ⚠️</h1>
+            <h1 className="text-2xl sm:text-4xl text-slate-900">Sois préparé ⚠️</h1>
             <p className="text-slate-600">
               {activeAlerts.length} alerte{activeAlerts.length !== 1 ? "s" : ""} active{activeAlerts.length !== 1 ? "s" : ""}
             </p>
