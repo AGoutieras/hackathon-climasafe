@@ -1,9 +1,11 @@
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { Layout }      from "./components/Layout.jsx";
-import { HomeScreen }  from "./components/HomeScreen.jsx";
-import { MapScreen }   from "./components/MapScreen.jsx";
-import { AlertScreen } from "./components/AlertScreen.jsx";
-import { TipsScreen }  from "./components/TipsScreen.jsx";
+import { Layout } from "./components/Layout.jsx";
+
+const HomeScreen = lazy(() => import("./components/HomeScreen.jsx").then((module) => ({ default: module.HomeScreen })));
+const MapScreen = lazy(() => import("./components/MapScreen.jsx").then((module) => ({ default: module.MapScreen })));
+const AlertScreen = lazy(() => import("./components/AlertScreen.jsx").then((module) => ({ default: module.AlertScreen })));
+const TipsScreen = lazy(() => import("./components/TipsScreen.jsx").then((module) => ({ default: module.TipsScreen })));
 
 export const router = createBrowserRouter([
   {

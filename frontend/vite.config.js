@@ -5,6 +5,20 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-map-gl') || id.includes('maplibre-gl')) return 'maplibre';
+            if (id.includes('lucide-react')) return 'icons';
+            return 'vendor';
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1200,
+  },
   server: {
     host: true,
     port: 5173,
