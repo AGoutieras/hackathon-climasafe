@@ -66,7 +66,7 @@ export function AlertScreen() {
   const alertStateConfig = {
     active:    { label: "En cours",      pill: "bg-red-100 text-red-800" },
     monitoring:{ label: "Surveillance",  pill: "bg-amber-100 text-amber-900" },
-    resolved:  { label: "Terminée",      pill: "bg-slate-100 text-slate-700" },
+    resolved:  { label: "Terminée",      pill: "bg-slate-900 text-white" },
   };
 
   const actionColors = {
@@ -177,25 +177,29 @@ export function AlertScreen() {
             const status = alert.isActive
               ? alertStateConfig.active
               : (index === 0 ? alertStateConfig.monitoring : alertStateConfig.resolved);
+            const isResolved = !alert.isActive && index > 0;
+            const cardStateClass = isResolved
+              ? "bg-slate-100 border-slate-300 shadow-sm ring-1 ring-slate-200"
+              : `${cfg.bgColor} ${cfg.borderColor} ${alert.isActive ? "shadow-md" : "opacity-80"}`;
 
             return (
               <div key={alert.id} className="flex gap-3">
                 <div className="flex flex-col items-center pt-1">
-                  <div className={`w-3 h-3 rounded-full ${cfg.iconBg} ${alert.isActive ? "animate-pulse" : ""}`} />
+                  <div className={`w-3 h-3 rounded-full ${isResolved ? "bg-slate-900" : cfg.iconBg} ${alert.isActive ? "animate-pulse" : ""}`} />
                   {index < timelineAlerts.length - 1 && <div className="w-px flex-1 min-h-20 bg-slate-200 mt-2" />}
                 </div>
 
-                <Card className={`flex-1 p-4 ${cfg.bgColor} ${cfg.borderColor} border ${alert.isActive ? "shadow-md" : "opacity-80"}`}>
+                <Card className={`flex-1 p-4 border ${cardStateClass}`}>
                   <div className="flex items-start gap-3">
-                    <div className={`w-12 h-12 ${cfg.iconBg} rounded-xl flex items-center justify-center text-white flex-shrink-0`}>
+                    <div className={`w-12 h-12 ${isResolved ? "bg-slate-900" : cfg.iconBg} rounded-xl flex items-center justify-center text-white flex-shrink-0`}>
                       <Icon size={20} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="min-w-0">
                           <h3 className="text-slate-900">{alert.title}</h3>
-                          <p className="text-xs text-slate-500 mt-1 uppercase tracking-wide">
-                            {alert.type === "high" ? "Vigilance forte" : alert.type === "medium" ? "Vigilance modérée" : "Situation stable"}
+                          <p className={`text-xs mt-1 uppercase tracking-wide ${isResolved ? "text-slate-700 font-semibold" : "text-slate-500"}`}>
+                            {isResolved ? "Alertes clôturées" : alert.type === "high" ? "Vigilance forte" : alert.type === "medium" ? "Vigilance modérée" : "Situation stable"}
                           </p>
                         </div>
                         <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${status.pill}`}>
@@ -203,15 +207,15 @@ export function AlertScreen() {
                         </span>
                       </div>
 
-                      <p className="text-sm text-slate-700 mb-3">{alert.message}</p>
+                      <p className={`text-sm mb-3 ${isResolved ? "text-slate-800" : "text-slate-700"}`}>{alert.message}</p>
 
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                      <div className={`flex flex-wrap items-center gap-3 text-xs ${isResolved ? "text-slate-700" : "text-slate-500"}`}>
                         <span className="inline-flex items-center gap-1.5">
                           <Clock size={12} />
                           {alert.time}
                         </span>
                         <span className="h-1 w-1 rounded-full bg-slate-300" />
-                        <span>{alert.isActive ? "Nécessite une action immédiate" : "À garder en mémoire"}</span>
+                        <span>{alert.isActive ? "Nécessite une action immédiate" : isResolved ? "Alertes terminées et archivées" : "À garder en mémoire"}</span>
                       </div>
                     </div>
                   </div>
