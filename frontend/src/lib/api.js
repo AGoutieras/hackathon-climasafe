@@ -6,13 +6,24 @@ async function fetchJson(path) {
   return response.json();
 }
 
+function withCity(path, params = {}) {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== "") {
+      search.set(key, String(value));
+    }
+  }
+  const query = search.toString();
+  return query ? `${path}?${query}` : path;
+}
+
 export const api = {
-  getWeather:          (lat, lng)           => fetchJson(`/weather?lat=${lat}&lng=${lng}`),
-  getRisks:            (lat, lng)           => fetchJson(`/risks?lat=${lat}&lng=${lng}`),
-  getCoolSpots:        (lat, lng, limit=20) => fetchJson(`/cool-spots?lat=${lat}&lng=${lng}&limit=${limit}`),
-  getHeatZones:        (lat, lng, limit=20) => fetchJson(`/heat-zones?lat=${lat}&lng=${lng}&limit=${limit}`),
-  getWaterStations:    (lat, lng, off=0, limit=20) => fetchJson(`/water-stations?lat=${lat}&lng=${lng}&offset=${off}&limit=${limit}`),
-  getWaterStationsCount: ()                 => fetchJson(`/water-stations/count`),
-  getAlerts:           (lat, lng)           => fetchJson(`/alerts?lat=${lat}&lng=${lng}`),
-  getTips:             ()                   => fetchJson(`/tips`),
+  getWeather: (lat, lng) => fetchJson(withCity("/weather", { lat, lng })),
+  getRisks: (lat, lng, city) => fetchJson(withCity("/risks", { lat, lng, city })),
+  getCoolSpots: (lat, lng, limit = 20, city) => fetchJson(withCity("/cool-spots", { lat, lng, limit, city })),
+  getHeatZones: (lat, lng, limit = 20, city) => fetchJson(withCity("/heat-zones", { lat, lng, limit, city })),
+  getWaterStations: (lat, lng, off = 0, limit = 20, city) => fetchJson(withCity("/water-stations", { lat, lng, offset: off, limit, city })),
+  getWaterStationsCount: (city) => fetchJson(withCity("/water-stations/count", { city })),
+  getAlerts: (lat, lng, city) => fetchJson(withCity("/alerts", { lat, lng, city })),
+  getTips: () => fetchJson("/tips"),
 };

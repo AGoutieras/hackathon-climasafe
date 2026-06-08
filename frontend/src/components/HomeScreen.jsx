@@ -5,16 +5,21 @@ import { RiskIndicator } from "./RiskIndicator.jsx";
 import { Button } from "./ui/button.jsx";
 import { Card } from "./ui/card.jsx";
 import { api } from "../lib/api.js";
-import { deriveThermalLevel, getThermalUi, getImmediateActions } from "../lib/thermal.js";
+import { DEFAULT_CITY } from "../lib/constants.js";
+import {
+  deriveThermalLevel,
+  getThermalUi,
+  getImmediateActions,
+} from "../lib/thermal.js";
 import { useGeoPosition } from "../lib/useGeoPosition.js";
 import logoClimaSafe from "../assets/LOGO_CLIMASAFE.png";
 
 export function HomeScreen() {
   const { position, gpsError, gpsStatusMessage } = useGeoPosition();
   const [riskData, setRiskData] = useState(null);
-  const [alerts,   setAlerts]   = useState([]);
-  const [tips,     setTips]     = useState([]);
-  const [loading,  setLoading]  = useState(true);
+  const [alerts, setAlerts] = useState([]);
+  const [tips, setTips] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -23,65 +28,88 @@ export function HomeScreen() {
       try {
         setLoading(true);
         const [risk, alertsRes, tipsRes] = await Promise.all([
-          api.getRisks(position.latitude, position.longitude),
-          api.getAlerts(position.latitude, position.longitude),
+          api.getRisks(position.latitude, position.longitude, DEFAULT_CITY.key),
+          api.getAlerts(
+            position.latitude,
+            position.longitude,
+            DEFAULT_CITY.key,
+          ),
           api.getTips(),
         ]);
         if (!cancelled) {
-          setRiskData(riskData => risk);
+          setRiskData((riskData) => risk);
           setAlerts(Array.isArray(alertsRes) ? alertsRes : []);
           setTips(Array.isArray(tipsRes) ? tipsRes : []);
         }
       } catch (err) {
         console.error("Erreur chargement accueil :", err);
-        if (!cancelled) { setRiskData(null); setAlerts([]); setTips([]); }
+        if (!cancelled) {
+          setRiskData(null);
+          setAlerts([]);
+          setTips([]);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [position]);
 
   // ── Derived values ────────────────────────────────────────────────────
-  const score      = riskData?.score ?? 0;
-  const tempRaw    = typeof riskData?.temperature === "number" ? riskData.temperature : null;
-  const level      = deriveThermalLevel(tempRaw, score);
-  const ui         = getThermalUi(level);
-  const actions    = getImmediateActions(level);  // fallback tips from thermal lib
+  const score = riskData?.score ?? 0;
+  const tempRaw =
+    typeof riskData?.temperature === "number" ? riskData.temperature : null;
+  const level = deriveThermalLevel(tempRaw, score);
+  const ui = getThermalUi(level);
+  const actions = getImmediateActions(level); // fallback tips from thermal lib
 
-  const displayTemp     = tempRaw != null ? `${Math.round(tempRaw)}°C` : "--";
-  const displayApparent = riskData?.apparent_temperature != null
-    ? `${Math.round(riskData.apparent_temperature)}°C`
-    : "--";
-  const displayHumidity = riskData?.humidity != null ? `${Math.round(riskData.humidity)}%` : "--";
+  const displayTemp = tempRaw != null ? `${Math.round(tempRaw)}°C` : "--";
+  const displayApparent =
+    riskData?.apparent_temperature != null
+      ? `${Math.round(riskData.apparent_temperature)}°C`
+      : "--";
+  const displayHumidity =
+    riskData?.humidity != null ? `${Math.round(riskData.humidity)}%` : "--";
 
-  const alertBanner  = alerts[0] ?? null;
+  const alertBanner = alerts[0] ?? null;
   const nearestRefuge = riskData?.nearestRefuge ?? null;
 
   // Quick tips: prefer backend tips, fall back to action descriptions
   const quickTips = tips.flatMap((s) => s.tips ?? []).slice(0, 3);
-  const displayedTips = quickTips.length > 0
-    ? quickTips
-    : actions.map((a) => `${a.title} — ${a.description}`);
+  const displayedTips =
+    quickTips.length > 0
+      ? quickTips
+      : actions.map((a) => `${a.title} — ${a.description}`);
 
-  const alertCardClass  = alertBanner ? `${ui.cardBg} text-white` : "bg-amber-100 border border-amber-300 text-amber-900";
-  const alertSubClass   = alertBanner ? ui.cardSubtext : "text-amber-800";
-  const locationLabel   = gpsError
+  const alertCardClass = alertBanner
+    ? `${ui.cardBg} text-white`
+    : "bg-amber-100 border border-amber-300 text-amber-900";
+  const alertSubClass = alertBanner ? ui.cardSubtext : "text-amber-800";
+  const locationLabel = gpsError
     ? gpsStatusMessage || "Localisation temporairement indisponible"
     : "Position détectée en direct";
 
   return (
-    <div className={`min-h-full bg-gradient-to-b ${ui.pageGradient} p-4 sm:p-6`}>
-
+    <div
+      className={`min-h-full bg-gradient-to-b ${ui.pageGradient} p-4 sm:p-6`}
+    >
       {/* Header */}
       <div className="pt-4 pb-6">
         <div className="flex items-center gap-3 mb-2">
-          <img src={logoClimaSafe} alt="Logo ClimaSafe" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+          <img
+            src={logoClimaSafe}
+            alt="Logo ClimaSafe"
+            className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+          />
           <h1 className="text-2xl sm:text-4xl text-slate-900">ClimaSafe</h1>
         </div>
-        <p className="text-slate-600 text-sm sm:text-lg">Votre assistant canicule</p>
+        <p className="text-slate-600 text-sm sm:text-lg">
+          Votre assistant canicule
+        </p>
       </div>
 
       {/* Alert banner */}
@@ -109,13 +137,19 @@ export function HomeScreen() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 ${ui.iconBox} rounded-xl flex items-center justify-center`}>
+            <div
+              className={`w-12 h-12 ${ui.iconBox} rounded-xl flex items-center justify-center`}
+            >
               <ThermometerSun className={ui.iconColor} size={24} />
             </div>
             <div>
-              <p className="text-2xl text-slate-900">{loading ? "…" : displayTemp}</p>
+              <p className="text-2xl text-slate-900">
+                {loading ? "…" : displayTemp}
+              </p>
               <p className="text-sm text-slate-500">Température</p>
-              <p className="text-xs text-slate-400">Ressenti : {loading ? "…" : displayApparent}</p>
+              <p className="text-xs text-slate-400">
+                Ressenti : {loading ? "…" : displayApparent}
+              </p>
             </div>
           </div>
 
@@ -124,7 +158,9 @@ export function HomeScreen() {
               <Droplets className="text-blue-600" size={24} />
             </div>
             <div>
-              <p className="text-2xl text-slate-900">{loading ? "…" : displayHumidity}</p>
+              <p className="text-2xl text-slate-900">
+                {loading ? "…" : displayHumidity}
+              </p>
               <p className="text-sm text-slate-500">Humidité</p>
             </div>
           </div>
@@ -136,8 +172,12 @@ export function HomeScreen() {
         <div className="flex items-center gap-3 mb-3">
           <MapPin className="text-blue-600" size={24} />
           <div className="flex-1">
-            <p className="text-sm text-slate-600">Refuge frais le plus proche</p>
-            <p className="text-xl text-slate-900">{nearestRefuge?.name ?? "Chargement…"}</p>
+            <p className="text-sm text-slate-600">
+              Refuge frais le plus proche
+            </p>
+            <p className="text-xl text-slate-900">
+              {nearestRefuge?.name ?? "Chargement…"}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-slate-600 mb-4">
@@ -167,7 +207,10 @@ export function HomeScreen() {
           ))}
         </ul>
         <Link to="/conseils">
-          <Button variant="outline" className="w-full mt-4 h-12 text-base border-slate-300 rounded-xl">
+          <Button
+            variant="outline"
+            className="w-full mt-4 h-12 text-base border-slate-300 rounded-xl"
+          >
             Voir tous les conseils
           </Button>
         </Link>

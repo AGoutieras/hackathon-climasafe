@@ -2,41 +2,29 @@ from __future__ import annotations
 
 import json
 from functools import lru_cache
-import os
-from pathlib import Path
-from math import radians, sin, cos, sqrt, atan2
+from urllib.error import URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-from urllib.error import URLError
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.cities import (
+    DEFAULT_CITY_KEY,
+    get_city_config,
+    haversine_km as city_haversine_km,
+    infer_city_key,
+    list_cities,
+    load_cool_spots,
+    load_heat_zones,
+    load_water_stations,
+    resolve_zone_name as resolve_city_zone_name,
+)
 from app.services.weather import fetch_current_weather
 
-# ── Paths & defaults ──────────────────────────────────────────────────────
-
-BASE_DIR = Path(__file__).resolve().parents[1]
-DATA_DIR = BASE_DIR / "data"
-
-# Bordeaux constants
-BORDEAUX_LAT = 44.837789
-BORDEAUX_LNG = -0.57918
-BORDEAUX_CENTER = {"name": "Bordeaux Centre",
-                   "lat": BORDEAUX_LAT, "lng": BORDEAUX_LNG}
-
-# Paris constants
-PARIS_LAT = 48.8566
-PARIS_LNG = 2.3522
-PARIS_CENTER = {"name": "Paris Centre", "lat": PARIS_LAT, "lng": PARIS_LNG}
-
-# Default city selection via env var CLIMASAFE_DEFAULT ("PARIS" or "BORDEAUX")
-_default_city = os.environ.get("CLIMASAFE_DEFAULT", "PARIS").upper()
-if _default_city == "PARIS":
-    DEFAULT_LAT, DEFAULT_LNG = PARIS_LAT, PARIS_LNG
-else:
-    DEFAULT_LAT, DEFAULT_LNG = BORDEAUX_LAT, BORDEAUX_LNG
-
-# ── App setup ─────────────────────────────────────────────────────────────
+DEFAULT_CITY = get_city_config(DEFAULT_CITY_KEY)
+DEFAULT_LAT = DEFAULT_CITY.latitude
+DEFAULT_LNG = DEFAULT_CITY.longitude
 
 app = FastAPI(title="ClimaSafe API", version="2.0.0")
 
@@ -48,137 +36,71 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Data loading ──────────────────────────────────────────────────────────
-
-
-def _load_json(name: str):
-    return json.loads((DATA_DIR / name).read_text(encoding="utf-8"))
-
-
-@lru_cache(maxsize=1)
-def get_bdx_cool_spots():
-    return _load_json("bdx_cool_spots.json")
-
-
-@lru_cache(maxsize=1)
-def get_bdx_heat_zones():
-    return _load_json("bdx_heat_zones.json")
-
-
-@lru_cache(maxsize=1)
-def get_bdx_water_stations():
-    data = _load_json("bdx_water_stations.json")
-    return [
-        {**item, "lat": item["geom"]["lat"], "lng": item["geom"]["lon"]}
-        for item in data
-    ]
-
-
-@lru_cache(maxsize=1)
-def get_par_heat_zones():
-    raw = _load_json("par_heat_zones.json")
-    zones = []
-    for i, item in enumerate(raw):
-        flux = item.get("flux_chaleur", 0) or 0
-        aj = item.get("alea_jour", 0) or 0
-        an = item.get("alea_nuit", 0) or 0
-
-        # simple risk mapping based on flux_chaleur and night anomaly
-        if flux >= 60 or an >= 22:
-            risk = "very_high"
-        elif flux >= 30 or an >= 18:
-            risk = "high"
-        elif flux > 0 or aj >= 8:
-            risk = "medium"
-        else:
-            risk = "low"
-
-        zones.append({
-            "id": i + 1,
-            "name": f"Îlot Paris {i+1}",
-            "sourceClass": item.get("lcz") or item.get("type_lcz") or "?",
-            "risk": risk,
-            "distanceToCenterKm": round(haversine_km(item["lat"], item["lng"], PARIS_LAT, PARIS_LNG), 3),
-            "areaM2": int(item.get("area", 0)),
-            "lat": item["lat"],
-            "lng": item["lng"],
-        })
-    return zones
-
-
-def _choose_heat_zones_by_location(lat: float, lng: float) -> list[dict]:
-    # choose Paris if within ~25 km of Paris center, else Bordeaux
-    if haversine_km(lat, lng, PARIS_LAT, PARIS_LNG) <= 25:
-        return get_par_heat_zones()
-    return get_bdx_heat_zones()
-
-# ── Geo helpers ───────────────────────────────────────────────────────────
-
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    R = 6371.0
-    dlat = radians(lat2 - lat1)
-    dlon = radians(lon2 - lon1)
-    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * \
-        cos(radians(lat2)) * sin(dlon / 2) ** 2
-    return R * 2 * atan2(sqrt(a), sqrt(1 - a))
+    return city_haversine_km(lat1, lon1, lat2, lon2)
 
 
-def with_live_distance(items: list[dict], user_lat: float, user_lng: float) -> list[dict]:
+def with_live_distance(
+    items: list[dict],
+    user_lat: float,
+    user_lng: float,
+) -> list[dict]:
     enriched = []
     for item in items:
         km = haversine_km(user_lat, user_lng, item["lat"], item["lng"])
-        m = int(round(km * 1000))
-        enriched.append({
-            **item,
-            "distance":          m,
-            "distanceToUserKm":  round(km, 2),
-            "walkTime":          max(2, round(m / 80)),
-        })
-    return sorted(enriched, key=lambda x: x["distance"])
-
-# ── Reverse geocoding ─────────────────────────────────────────────────────
-
-
-def _estimate_zone_name(lat: float, lng: float) -> str:
-    dlat = lat - BORDEAUX_LAT
-    dlng = lng - BORDEAUX_LNG
-    threshold = 0.003
-
-    if abs(dlat) < threshold and abs(dlng) < threshold:
-        return BORDEAUX_CENTER["name"]
-
-    ns = "Nord" if dlat >= threshold else "Sud" if dlat <= -threshold else ""
-    ew = "Est" if dlng >= threshold else "Ouest" if dlng <= -threshold else ""
-
-    if ns and ew:
-        return f"Bordeaux {ns}-{ew}"
-    return f"Bordeaux {ns or ew}" if (ns or ew) else "Bordeaux"
+        distance_m = int(round(km * 1000))
+        enriched.append(
+            {
+                **item,
+                "distance": distance_m,
+                "distanceToUserKm": round(km, 2),
+                "walkTime": max(2, round(distance_m / 80)),
+            }
+        )
+    return sorted(enriched, key=lambda item: item["distance"])
 
 
 @lru_cache(maxsize=512)
 def _reverse_city_name(lat_key: float, lng_key: float) -> str | None:
-    ua = "climasafe/1.0 (+hackathon)"
+    user_agent = "climasafe/1.0 (+hackathon)"
+    params = urlencode(
+        {
+            "format": "jsonv2",
+            "lat": lat_key,
+            "lon": lng_key,
+            "accept-language": "fr",
+        }
+    )
 
-    # Primary: OSM Nominatim
-    params = urlencode({"format": "jsonv2", "lat": lat_key,
-                       "lon": lng_key, "accept-language": "fr"})
     try:
-        with urlopen(Request(f"https://nominatim.openstreetmap.org/reverse?{params}", headers={"User-Agent": ua}), timeout=3) as r:
-            addr = json.loads(r.read().decode()).get("address", {})
-            city = addr.get("city") or addr.get("town") or addr.get(
-                "village") or addr.get("municipality")
+        request = Request(
+            f"https://nominatim.openstreetmap.org/reverse?{params}",
+            headers={"User-Agent": user_agent},
+        )
+        with urlopen(request, timeout=3) as response:
+            addr = json.loads(response.read().decode()).get("address", {})
+            city = (
+                addr.get("city")
+                or addr.get("town")
+                or addr.get("village")
+                or addr.get("municipality")
+            )
             if city:
                 return city
     except (URLError, TimeoutError, ValueError):
         pass
 
-    # Fallback: BAN (Base Adresse Nationale)
     params = urlencode(
-        {"lat": lat_key, "lon": lng_key, "type": "municipality"})
+        {"lat": lat_key, "lon": lng_key, "type": "municipality"}
+    )
     try:
-        with urlopen(Request(f"https://api-adresse.data.gouv.fr/reverse/?{params}", headers={"User-Agent": ua}), timeout=3) as r:
-            features = json.loads(r.read().decode()).get("features", [])
+        request = Request(
+            f"https://api-adresse.data.gouv.fr/reverse/?{params}",
+            headers={"User-Agent": user_agent},
+        )
+        with urlopen(request, timeout=3) as response:
+            features = json.loads(response.read().decode()).get("features", [])
             if features:
                 props = features[0].get("properties", {})
                 return props.get("city") or props.get("name")
@@ -188,40 +110,31 @@ def _reverse_city_name(lat_key: float, lng_key: float) -> str | None:
     return None
 
 
-def resolve_zone_name(lat: float, lng: float) -> str:
+def resolve_location_name(lat: float, lng: float) -> str:
     city = _reverse_city_name(round(lat, 4), round(lng, 4))
     if city:
         return city
 
-    # If within 25 km of Paris or Bordeaux, estimate the zone name accordingly
-    dist_bdx = haversine_km(lat, lng, BORDEAUX_LAT, BORDEAUX_LNG)
-    dist_par = haversine_km(lat, lng, PARIS_LAT, PARIS_LNG)
-
-    if dist_bdx > 25 and dist_par > 25:
-        return "Ville inconnue"
-
-    if dist_par <= dist_bdx:
-        dlat = lat - PARIS_LAT
-        dlng = lng - PARIS_LNG
-        threshold = 0.003
-        ns = "Nord" if dlat >= threshold else "Sud" if dlat <= -threshold else ""
-        ew = "Est" if dlng >= threshold else "Ouest" if dlng <= -threshold else ""
-        if ns and ew:
-            return f"Paris {ns}-{ew}"
-        return f"Paris {ns or ew}" if (ns or ew) else "Paris"
-
-    return _estimate_zone_name(lat, lng)
-
-# ── Risk score computation ────────────────────────────────────────────────
+    city_key = infer_city_key(lat, lng)
+    return resolve_city_zone_name(lat, lng, city_key)
 
 
 def _thermal_score(temp: float) -> int:
-    thresholds = [(0, 0), (8, 3), (16, 8), (20, 12), (24, 18),
-                  (27, 24), (30, 34), (33, 48), (36, 68)]
+    thresholds = [
+        (0, 0),
+        (8, 3),
+        (16, 8),
+        (20, 12),
+        (24, 18),
+        (27, 24),
+        (30, 34),
+        (33, 48),
+        (36, 68),
+    ]
     for limit, score in reversed(thresholds):
         if temp >= limit:
             return score
-    return 82  # >= 36 °C
+    return 82
 
 
 def compute_risk_score(
@@ -233,27 +146,28 @@ def compute_risk_score(
 ) -> int:
     score = _thermal_score(real_temp)
 
-    # Urban heat island adjustment (capped by temperature band)
-    urban_cap = 6 if real_temp < 22 else 10 if real_temp < 30 else 14 if real_temp < 35 else 20
+    urban_cap = 20
+    if real_temp < 22:
+        urban_cap = 6
+    elif real_temp < 30:
+        urban_cap = 10
+    elif real_temp < 35:
+        urban_cap = 14
+
     score += min(urban_cap, max(-10, hot_nearby * 2 - cool_nearby * 2))
 
-    # Humidity adjustment (only relevant above 26 °C)
     if real_temp >= 26:
         score += 6 if humidity >= 75 else 3 if humidity >= 60 else 0
 
-    # Apparent-temperature adjustment (only relevant above 30 °C)
     if real_temp >= 30:
         score += 6 if apparent_temp >= 40 else 3 if apparent_temp >= 36 else 0
 
-    # Cap low temperatures
     if real_temp < 20:
         score = min(score, 25)
     elif real_temp < 24:
         score = min(score, 35)
 
     return min(95, max(5, score))
-
-# ── Routes ────────────────────────────────────────────────────────────────
 
 
 @app.get("/api/health")
@@ -265,27 +179,16 @@ def health():
 def data_sources():
     return {
         "project": "ClimaSafe",
-        "sources": [
+        "defaultCity": DEFAULT_CITY.key,
+        "cities": [
             {
-                "name": "LCZ SPOT 2022 Bordeaux",
-                "type": "uploaded_shapefile",
-                "description": "Données LCZ/îlots chaleur-fraîcheur dérivées du fichier fourni par l'équipe.",
-            },
-            {
-                "name": "LCZ Paris (converted)",
-                "type": "uploaded_geojson",
-                "description": "Jeu de données Paris importé et converti depuis `par_heat_zones.json`.",
-            },
-            {
-                "name": "Espaces fraîcheur - Bordeaux Métropole",
-                "type": "official_web_map",
-                "url": "https://geo.bordeaux-metropole.fr/adws/app/33cebc9f-cd8e-11ed-ad24-9bf3b515cd35/?context=q3KX",
-            },
-            {
-                "name": "ri_icu_ifu_s",
-                "type": "official_dataset_identifier",
-                "description": "Jeu de données Bordeaux Métropole — îlots de chaleur et de fraîcheur urbains (2022).",
-            },
+                "key": city.key,
+                "name": city.display_name,
+                "label": city.label,
+                "center": {"lat": city.latitude, "lng": city.longitude},
+                "datasets": sorted(city.datasets.keys()),
+            }
+            for city in list_cities()
         ],
     }
 
@@ -302,13 +205,14 @@ async def get_weather(
 async def get_risks(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
+    city: str | None = Query(None),
 ):
-    cool_spots = with_live_distance(get_bdx_cool_spots(), lat, lng)
-    heat_zones = with_live_distance(
-        _choose_heat_zones_by_location(lat, lng), lat, lng)
+    city_key = infer_city_key(lat, lng, city)
+    cool_spots = with_live_distance(load_cool_spots(city_key), lat, lng)
+    heat_zones = with_live_distance(load_heat_zones(city_key), lat, lng)
 
-    hot_nearby = sum(1 for z in heat_zones if z["distance"] <= 1000)
-    cool_nearby = sum(1 for s in cool_spots if s["distance"] <= 1000)
+    hot_nearby = sum(1 for zone in heat_zones if zone["distance"] <= 1000)
+    cool_nearby = sum(1 for spot in cool_spots if spot["distance"] <= 1000)
 
     weather = await fetch_current_weather(lat, lng)
     real_temp = weather.get("temperature") or 30
@@ -316,100 +220,140 @@ async def get_risks(
     apparent_temp = weather.get("apparent_temperature") or real_temp
 
     score = compute_risk_score(
-        real_temp, humidity, apparent_temp, hot_nearby, cool_nearby)
+        real_temp,
+        humidity,
+        apparent_temp,
+        hot_nearby,
+        cool_nearby,
+    )
     level = "high" if score >= 70 else "medium" if score >= 40 else "low"
 
-    nearest_cool = cool_spots[0]
-    nearest_hot = heat_zones[0]
+    nearest_cool = cool_spots[0] if cool_spots else None
+    nearest_hot = heat_zones[0] if heat_zones else None
 
-    return {
-        "level":               level,
-        "score":               score,
-        "temperature":         real_temp,
-        "humidity":            humidity,
-        "apparent_temperature": apparent_temp,
-        "weather_code":        weather.get("weather_code"),
-        "wind_speed":          weather.get("wind_speed"),
-        "weather_time":        weather.get("time"),
-        "zone":                resolve_zone_name(lat, lng),
-        "method":              "lcz_plus_open_meteo",
-        "nearestRefuge": {
-            "name":     nearest_cool["name"],
+    nearest_refuge = None
+    if nearest_cool:
+        nearest_refuge = {
+            "name": nearest_cool["name"],
             "distance": nearest_cool["distance"],
             "walkTime": nearest_cool["walkTime"],
-            "lat":      nearest_cool["lat"],
-            "lng":      nearest_cool["lng"],
-        },
-        "nearestHotZone": {
-            "name":     nearest_hot["name"],
+            "lat": nearest_cool["lat"],
+            "lng": nearest_cool["lng"],
+        }
+
+    nearest_hot_zone = None
+    if nearest_hot:
+        nearest_hot_zone = {
+            "name": nearest_hot["name"],
             "distance": nearest_hot["distance"],
-            "risk":     nearest_hot["risk"],
-        },
+            "risk": nearest_hot["risk"],
+        }
+
+    return {
+        "level": level,
+        "score": score,
+        "temperature": real_temp,
+        "humidity": humidity,
+        "apparent_temperature": apparent_temp,
+        "weather_code": weather.get("weather_code"),
+        "wind_speed": weather.get("wind_speed"),
+        "weather_time": weather.get("time"),
+        "zone": resolve_city_zone_name(lat, lng, city_key),
+        "method": "lcz_plus_open_meteo",
+        "nearestRefuge": nearest_refuge,
+        "nearestHotZone": nearest_hot_zone,
     }
 
 
 @app.get("/api/cool-spots")
 def cool_spots(
-    lat:   float = Query(DEFAULT_LAT),
-    lng:   float = Query(DEFAULT_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
     limit: int = Query(20, ge=1, le=100),
+    city: str | None = Query(None),
 ):
-    return with_live_distance(get_bdx_cool_spots(), lat, lng)[:limit]
+    city_key = infer_city_key(lat, lng, city)
+    spots = load_cool_spots(city_key)
+    return with_live_distance(spots, lat, lng)[:limit]
 
 
 @app.get("/api/heat-zones")
 def heat_zones(
-    lat:   float = Query(DEFAULT_LAT),
-    lng:   float = Query(DEFAULT_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
     limit: int = Query(20, ge=1, le=100),
+    city: str | None = Query(None),
 ):
-    return with_live_distance(_choose_heat_zones_by_location(lat, lng), lat, lng)[:limit]
+    city_key = infer_city_key(lat, lng, city)
+    zones = load_heat_zones(city_key)
+    return with_live_distance(zones, lat, lng)[:limit]
 
 
 @app.get("/api/water-stations")
 def water_stations(
-    lat:    float = Query(DEFAULT_LAT),
-    lng:    float = Query(DEFAULT_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
     offset: int = Query(0, ge=0),
-    limit:  int = Query(20, ge=1, le=1000),
+    limit: int = Query(20, ge=1, le=1000),
+    city: str | None = Query(None),
 ):
-    stations = with_live_distance(get_bdx_water_stations(), lat, lng)
+    city_key = infer_city_key(lat, lng, city)
+    stations = with_live_distance(load_water_stations(city_key), lat, lng)
     return stations[offset: offset + limit]
 
 
 @app.get("/api/water-stations/count")
-def water_stations_count():
-    return {"count": len(get_bdx_water_stations())}
+def water_stations_count(city: str | None = Query(None)):
+    city_key = infer_city_key(DEFAULT_LAT, DEFAULT_LNG, city)
+    return {"count": len(load_water_stations(city_key))}
 
 
 @app.get("/api/alerts")
 async def get_alerts(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
+    city: str | None = Query(None),
 ):
-    risk = await get_risks(lat=lat, lng=lng)
+    risk = await get_risks(lat=lat, lng=lng, city=city)
+    nearest_refuge = risk.get("nearestRefuge")
 
     is_active = risk["score"] >= 40
-    vigilance_type = "high" if risk["score"] >= 70 else "medium" if risk["score"] >= 40 else "low"
+    vigilance_type = "high"
+    if risk["score"] < 70:
+        vigilance_type = "medium" if risk["score"] >= 40 else "low"
 
     return [
         {
-            "id":       1,
-            "type":     vigilance_type,
-            "title":    "Alerte chaleur élevée" if is_active else "Situation thermique stable",
-            "message":  (
-                f"Indice local estimé à {risk['score']}/100 autour de {risk['zone']}."
-                + (" Rejoignez une zone fraîche proche." if is_active else " Restez hydraté et surveillez l'évolution météo.")
+            "id": 1,
+            "type": vigilance_type,
+            "title": (
+                "Alerte chaleur élevée"
+                if is_active
+                else "Situation thermique stable"
             ),
-            "time":     "Source LCZ 2022 + météo temps réel",
+            "message": (
+                "Indice local estimé à "
+                f"{risk['score']}/100 autour de {risk['zone']}."
+                + (
+                    " Rejoignez une zone fraîche proche."
+                    if is_active
+                    else " Restez hydraté et surveillez l'évolution météo."
+                )
+            ),
+            "time": "Source LCZ 2022 + météo temps réel",
             "isActive": is_active,
         },
         {
-            "id":       2,
-            "type":     "medium",
-            "title":    "Refuge frais le plus proche",
-            "message":  f"{risk['nearestRefuge']['name']} à {risk['nearestRefuge']['distance']} m, environ {risk['nearestRefuge']['walkTime']} min à pied.",
-            "time":     "Calcul dynamique",
+            "id": 2,
+            "type": "medium",
+            "title": "Refuge frais le plus proche",
+            "message": (
+                f"{nearest_refuge['name']} à {nearest_refuge['distance']} m, "
+                f"environ {nearest_refuge['walkTime']} min à pied."
+                if nearest_refuge
+                else "Aucun refuge frais n'est disponible dans cette zone."
+            ),
+            "time": "Calcul dynamique",
             "isActive": is_active,
         },
     ]
@@ -442,23 +386,26 @@ def get_route_safe(
     spot_id: int,
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
+    city: str | None = Query(None),
 ):
-    spots = with_live_distance(get_bdx_cool_spots(), lat, lng)
-    spot = next((s for s in spots if s["id"] == spot_id), None)
+    city_key = infer_city_key(lat, lng, city)
+    spots = with_live_distance(load_cool_spots(city_key), lat, lng)
+    spot = next((item for item in spots if item["id"] == spot_id), None)
     if not spot:
         raise HTTPException(status_code=404, detail="Spot not found")
 
     return {
-        "spot_id":        spot_id,
-        "destination":    spot["name"],
-        "distance":       spot["distance"],
-        "walkTime":       spot["walkTime"],
-        "safety":         "safe" if spot["distance"] <= 1500 else "moderate",
+        "spot_id": spot_id,
+        "destination": spot["name"],
+        "distance": spot["distance"],
+        "walkTime": spot["walkTime"],
+        "safety": "safe" if spot["distance"] <= 1500 else "moderate",
         "destinationLat": spot["lat"],
         "destinationLng": spot["lng"],
         "instructions": [
             "Suivez un trajet le plus direct possible vers la zone fraîche.",
-            "Privilégiez les rues ombragées et faites des pauses si nécessaire.",
+            "Privilégiez les rues ombragées et faites des pauses si "
+            "nécessaire.",
             "Hydratez-vous pendant le trajet et limitez l'effort physique.",
         ],
     }
