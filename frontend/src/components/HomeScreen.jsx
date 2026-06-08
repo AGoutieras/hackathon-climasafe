@@ -86,6 +86,23 @@ export function HomeScreen() {
   const score = personalized?.userRisk ?? riskData?.score ?? 0;
   const weatherScore = riskData?.score ?? 0;
   const hasProfile = Object.keys(profile).length > 0;
+  // Facteurs actifs : on traduit les multiplicateurs en explications lisibles
+  const factorLabels = {
+    age: "Âge",
+    health: "État de santé",
+    activity: "Activité physique",
+    housing: "Logement",
+  };
+  const activeFactors = personalized?.factors
+    ? Object.entries(personalized.factors)
+        .map(([key, value]) => ({
+          key,
+          label: factorLabels[key] ?? key,
+          percent: Math.round((value - 1) * 100),
+        }))
+        .filter((f) => f.percent !== 0)
+        .sort((a, b) => b.percent - a.percent)
+    : [];
   const tempRaw =
     typeof riskData?.temperature === "number" ? riskData.temperature : null;
   const level = deriveThermalLevel(tempRaw, score);
@@ -235,6 +252,43 @@ export function HomeScreen() {
                 </label>
               ))}
             </div>
+          </div>
+        )}
+
+        {hasProfile && activeFactors.length > 0 && (
+          <div className="mt-4 border-t border-slate-100 pt-4">
+            <p className="text-sm text-slate-600 mb-2">
+              Votre risque est ajusté par&nbsp;:
+            </p>
+            <ul className="space-y-1.5">
+              {activeFactors.map((f) => (
+                <li
+                  key={f.key}
+                  className="flex items-center justify-between text-sm"
+                >
+                  <span className="flex items-center gap-2 text-slate-700">
+                    <span
+                      className={
+                        f.percent > 0 ? "text-red-500" : "text-green-600"
+                      }
+                    >
+                      {f.percent > 0 ? "▲" : "▼"}
+                    </span>
+                    {f.label}
+                  </span>
+                  <span
+                    className={
+                      f.percent > 0
+                        ? "font-medium text-red-600"
+                        : "font-medium text-green-600"
+                    }
+                  >
+                    {f.percent > 0 ? "+" : ""}
+                    {f.percent}&nbsp;%
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </Card>
