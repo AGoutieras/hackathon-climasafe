@@ -21,6 +21,28 @@ export function HomeScreen() {
   const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [profile, setProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem("climasafe_profile");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  function updateProfile(patch) {
+    setProfile((prev) => {
+      const next = { ...prev, ...patch };
+      try {
+        localStorage.setItem("climasafe_profile", JSON.stringify(next));
+      } catch {
+        /* localStorage indisponible : on garde juste en mémoire */
+      }
+      return next;
+    });
+  }
+
   useEffect(() => {
     let cancelled = false;
 
@@ -28,7 +50,7 @@ export function HomeScreen() {
       try {
         setLoading(true);
         const [risk, alertsRes, tipsRes] = await Promise.all([
-          api.getRisks(position.latitude, position.longitude, DEFAULT_CITY.key),
+          api.getRisks(position.latitude, position.longitude, DEFAULT_CITY.key, profile),
           api.getAlerts(
             position.latitude,
             position.longitude,
@@ -57,10 +79,13 @@ export function HomeScreen() {
     return () => {
       cancelled = true;
     };
-  }, [position]);
+  }, [position, profile]);
 
   // ── Derived values ────────────────────────────────────────────────────
-  const score = riskData?.score ?? 0;
+  const personalized = riskData?.personalized ?? null;
+  const score = personalized?.userRisk ?? riskData?.score ?? 0;
+  const weatherScore = riskData?.score ?? 0;
+  const hasProfile = Object.keys(profile).length > 0;
   const tempRaw =
     typeof riskData?.temperature === "number" ? riskData.temperature : null;
   const level = deriveThermalLevel(tempRaw, score);
@@ -129,6 +154,90 @@ export function HomeScreen() {
 
       {/* Risk indicator */}
       <RiskIndicator level={level} score={score} />
+
+      {/* Profil personnalisé */}
+      <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
+        <button
+          onClick={() => setProfileOpen((v) => !v)}
+          className="w-full flex items-center gap-3"
+        >
+          <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+            <User className="text-slate-600" size={20} />
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-base text-slate-900">Mon profil de risque</p>
+            <p className="text-xs text-slate-500">
+              {hasProfile
+                ? `Risque météo ${weatherScore} ajusté à ${score}/100 selon votre profil`
+                : "Personnalisez votre indice de risque"}
+            </p>
+          </div>
+          <ChevronDown
+            className={`text-slate-400 transition-transform ${profileOpen ? "rotate-180" : ""}`}
+            size={20}
+          />
+        </button>
+
+        {profileOpen && (
+          <div className="mt-4 space-y-4 border-t border-slate-100 pt-4">
+            <div>
+              <label className="text-sm text-slate-600">Âge</label>
+              <input
+                type="number"
+                min="0"
+                max="120"
+                value={profile.age ?? ""}
+                onChange={(e) =>
+                  updateProfile({
+                    age: e.target.value === "" ? undefined : Number(e.target.value),
+                  })
+                }
+                placeholder="ex. 82"
+                className="w-full mt-1 h-11 px-3 rounded-xl border border-slate-300"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-slate-600">Activité physique</label>
+              <select
+                value={profile.activity ?? "light"}
+                onChange={(e) => updateProfile({ activity: e.target.value })}
+                className="w-full mt-1 h-11 px-3 rounded-xl border border-slate-300 bg-white"
+              >
+                <option value="rest">Au repos</option>
+                <option value="light">Légère</option>
+                <option value="moderate">Modérée</option>
+                <option value="intense">Intense</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              {[
+                { key: "heart_disease", label: "Maladie cardiaque" },
+                { key: "diabetes", label: "Diabète" },
+                { key: "pregnant", label: "Grossesse" },
+                { key: "overheated_housing", label: "Logement qui surchauffe" },
+                { key: "air_conditioned", label: "Logement climatisé" },
+              ].map((item) => (
+                <label
+                  key={item.key}
+                  className="flex items-center gap-3 text-slate-700"
+                >
+                  <input
+                    type="checkbox"
+                    checked={profile[item.key] ?? false}
+                    onChange={(e) =>
+                      updateProfile({ [item.key]: e.target.checked })
+                    }
+                    className="w-5 h-5 rounded"
+                  />
+                  <span>{item.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+      </Card>
 
       {/* Current conditions */}
       <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
