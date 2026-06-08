@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ThermometerSun, MapPin, TrendingUp, Droplets } from "lucide-react";
+import { ThermometerSun, MapPin, TrendingUp, Droplets, User, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { RiskIndicator } from "./RiskIndicator.jsx";
 import { Button } from "./ui/button.jsx";
