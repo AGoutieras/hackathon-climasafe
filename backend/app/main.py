@@ -326,7 +326,18 @@ async def get_alerts(
     lng: float = Query(DEFAULT_LNG),
     city: str | None = Query(None),
 ):
-    risk = await get_risks(lat=lat, lng=lng, city=city)
+    risk = await get_risks(
+        lat=lat,
+        lng=lng,
+        city=city,
+        age=None,
+        heart_disease=False,
+        diabetes=False,
+        pregnant=False,
+        activity="light",
+        air_conditioned=False,
+        overheated_housing=False,
+    )
 
     is_active = risk["score"] >= 40
     vigilance_type = "high"

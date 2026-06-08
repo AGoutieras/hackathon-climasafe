@@ -133,7 +133,7 @@ export function HomeScreen() {
           <h1 className="text-2xl sm:text-4xl text-slate-900">ClimaSafe</h1>
         </div>
         <p className="text-slate-600 text-sm sm:text-lg">
-          Votre assistant canicule
+          Avec ClimaSafe, restez safe.
         </p>
       </div>
 
