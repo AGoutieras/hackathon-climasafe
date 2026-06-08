@@ -21,6 +21,7 @@ from app.cities import (
     resolve_zone_name as resolve_city_zone_name,
 )
 from app.services.weather import fetch_current_weather
+from app.services.user_risk import UserProfile, personalise_risk
 
 DEFAULT_CITY = get_city_config(DEFAULT_CITY_KEY)
 DEFAULT_LAT = DEFAULT_CITY.latitude
@@ -206,6 +207,13 @@ async def get_risks(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
     city: str | None = Query(None),
+    age: int | None = Query(None),
+    heart_disease: bool = Query(False),
+    diabetes: bool = Query(False),
+    pregnant: bool = Query(False),
+    activity: str = Query("light"),
+    air_conditioned: bool = Query(False),
+    overheated_housing: bool = Query(False),
 ):
     city_key = infer_city_key(lat, lng, city)
     cool_spots = with_live_distance(load_cool_spots(city_key), lat, lng)
@@ -228,6 +236,17 @@ async def get_risks(
     )
     level = "high" if score >= 70 else "medium" if score >= 40 else "low"
 
+    profile = UserProfile(
+        age=age,
+        heart_disease=heart_disease,
+        diabetes=diabetes,
+        pregnant=pregnant,
+        activity=activity,
+        air_conditioned=air_conditioned,
+        overheated_housing=overheated_housing,
+    )
+    personalised = personalise_risk(score, profile)
+
     nearest_cool = cool_spots[0]
     nearest_hot = heat_zones[0]
 
@@ -242,6 +261,7 @@ async def get_risks(
         "weather_time": weather.get("time"),
         "zone": resolve_city_zone_name(lat, lng, city_key),
         "method": "lcz_plus_open_meteo",
+        "personalized": personalised,
         "nearestRefuge": {
             "name": nearest_cool["name"],
             "distance": nearest_cool["distance"],
