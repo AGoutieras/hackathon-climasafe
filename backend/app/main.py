@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from functools import lru_cache
+import os
 from pathlib import Path
 from math import radians, sin, cos, sqrt, atan2
 from urllib.parse import urlencode
@@ -17,10 +18,23 @@ from app.services.weather import fetch_current_weather
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / "data"
 
+# Bordeaux constants
 BORDEAUX_LAT = 44.837789
 BORDEAUX_LNG = -0.57918
 BORDEAUX_CENTER = {"name": "Bordeaux Centre",
                    "lat": BORDEAUX_LAT, "lng": BORDEAUX_LNG}
+
+# Paris constants
+PARIS_LAT = 48.8566
+PARIS_LNG = 2.3522
+PARIS_CENTER = {"name": "Paris Centre", "lat": PARIS_LAT, "lng": PARIS_LNG}
+
+# Default city selection via env var CLIMASAFE_DEFAULT ("PARIS" or "BORDEAUX")
+_default_city = os.environ.get("CLIMASAFE_DEFAULT", "PARIS").upper()
+if _default_city == "PARIS":
+    DEFAULT_LAT, DEFAULT_LNG = PARIS_LAT, PARIS_LNG
+else:
+    DEFAULT_LAT, DEFAULT_LNG = BORDEAUX_LAT, BORDEAUX_LNG
 
 # ── App setup ─────────────────────────────────────────────────────────────
 
@@ -58,6 +72,45 @@ def get_bdx_water_stations():
         {**item, "lat": item["geom"]["lat"], "lng": item["geom"]["lon"]}
         for item in data
     ]
+
+
+@lru_cache(maxsize=1)
+def get_par_heat_zones():
+    raw = _load_json("par_heat_zones.json")
+    zones = []
+    for i, item in enumerate(raw):
+        flux = item.get("flux_chaleur", 0) or 0
+        aj = item.get("alea_jour", 0) or 0
+        an = item.get("alea_nuit", 0) or 0
+
+        # simple risk mapping based on flux_chaleur and night anomaly
+        if flux >= 60 or an >= 22:
+            risk = "very_high"
+        elif flux >= 30 or an >= 18:
+            risk = "high"
+        elif flux > 0 or aj >= 8:
+            risk = "medium"
+        else:
+            risk = "low"
+
+        zones.append({
+            "id": i + 1,
+            "name": f"Îlot Paris {i+1}",
+            "sourceClass": item.get("lcz") or item.get("type_lcz") or "?",
+            "risk": risk,
+            "distanceToCenterKm": round(haversine_km(item["lat"], item["lng"], PARIS_LAT, PARIS_LNG), 3),
+            "areaM2": int(item.get("area", 0)),
+            "lat": item["lat"],
+            "lng": item["lng"],
+        })
+    return zones
+
+
+def _choose_heat_zones_by_location(lat: float, lng: float) -> list[dict]:
+    # choose Paris if within ~25 km of Paris center, else Bordeaux
+    if haversine_km(lat, lng, PARIS_LAT, PARIS_LNG) <= 25:
+        return get_par_heat_zones()
+    return get_bdx_heat_zones()
 
 # ── Geo helpers ───────────────────────────────────────────────────────────
 
@@ -139,8 +192,24 @@ def resolve_zone_name(lat: float, lng: float) -> str:
     city = _reverse_city_name(round(lat, 4), round(lng, 4))
     if city:
         return city
-    if haversine_km(lat, lng, BORDEAUX_LAT, BORDEAUX_LNG) > 25:
+
+    # If within 25 km of Paris or Bordeaux, estimate the zone name accordingly
+    dist_bdx = haversine_km(lat, lng, BORDEAUX_LAT, BORDEAUX_LNG)
+    dist_par = haversine_km(lat, lng, PARIS_LAT, PARIS_LNG)
+
+    if dist_bdx > 25 and dist_par > 25:
         return "Ville inconnue"
+
+    if dist_par <= dist_bdx:
+        dlat = lat - PARIS_LAT
+        dlng = lng - PARIS_LNG
+        threshold = 0.003
+        ns = "Nord" if dlat >= threshold else "Sud" if dlat <= -threshold else ""
+        ew = "Est" if dlng >= threshold else "Ouest" if dlng <= -threshold else ""
+        if ns and ew:
+            return f"Paris {ns}-{ew}"
+        return f"Paris {ns or ew}" if (ns or ew) else "Paris"
+
     return _estimate_zone_name(lat, lng)
 
 # ── Risk score computation ────────────────────────────────────────────────
@@ -203,6 +272,11 @@ def data_sources():
                 "description": "Données LCZ/îlots chaleur-fraîcheur dérivées du fichier fourni par l'équipe.",
             },
             {
+                "name": "LCZ Paris (converted)",
+                "type": "uploaded_geojson",
+                "description": "Jeu de données Paris importé et converti depuis `par_heat_zones.json`.",
+            },
+            {
                 "name": "Espaces fraîcheur - Bordeaux Métropole",
                 "type": "official_web_map",
                 "url": "https://geo.bordeaux-metropole.fr/adws/app/33cebc9f-cd8e-11ed-ad24-9bf3b515cd35/?context=q3KX",
@@ -218,19 +292,20 @@ def data_sources():
 
 @app.get("/api/weather")
 async def get_weather(
-    lat: float = Query(BORDEAUX_LAT),
-    lng: float = Query(BORDEAUX_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
 ):
     return await fetch_current_weather(lat, lng)
 
 
 @app.get("/api/risks")
 async def get_risks(
-    lat: float = Query(BORDEAUX_LAT),
-    lng: float = Query(BORDEAUX_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
 ):
     cool_spots = with_live_distance(get_bdx_cool_spots(), lat, lng)
-    heat_zones = with_live_distance(get_bdx_heat_zones(), lat, lng)
+    heat_zones = with_live_distance(
+        _choose_heat_zones_by_location(lat, lng), lat, lng)
 
     hot_nearby = sum(1 for z in heat_zones if z["distance"] <= 1000)
     cool_nearby = sum(1 for s in cool_spots if s["distance"] <= 1000)
@@ -275,8 +350,8 @@ async def get_risks(
 
 @app.get("/api/cool-spots")
 def cool_spots(
-    lat:   float = Query(BORDEAUX_LAT),
-    lng:   float = Query(BORDEAUX_LNG),
+    lat:   float = Query(DEFAULT_LAT),
+    lng:   float = Query(DEFAULT_LNG),
     limit: int = Query(20, ge=1, le=100),
 ):
     return with_live_distance(get_bdx_cool_spots(), lat, lng)[:limit]
@@ -284,17 +359,17 @@ def cool_spots(
 
 @app.get("/api/heat-zones")
 def heat_zones(
-    lat:   float = Query(BORDEAUX_LAT),
-    lng:   float = Query(BORDEAUX_LNG),
+    lat:   float = Query(DEFAULT_LAT),
+    lng:   float = Query(DEFAULT_LNG),
     limit: int = Query(20, ge=1, le=100),
 ):
-    return with_live_distance(get_bdx_heat_zones(), lat, lng)[:limit]
+    return with_live_distance(_choose_heat_zones_by_location(lat, lng), lat, lng)[:limit]
 
 
 @app.get("/api/water-stations")
 def water_stations(
-    lat:    float = Query(BORDEAUX_LAT),
-    lng:    float = Query(BORDEAUX_LNG),
+    lat:    float = Query(DEFAULT_LAT),
+    lng:    float = Query(DEFAULT_LNG),
     offset: int = Query(0, ge=0),
     limit:  int = Query(20, ge=1, le=1000),
 ):
@@ -309,8 +384,8 @@ def water_stations_count():
 
 @app.get("/api/alerts")
 async def get_alerts(
-    lat: float = Query(BORDEAUX_LAT),
-    lng: float = Query(BORDEAUX_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
 ):
     risk = await get_risks(lat=lat, lng=lng)
 
@@ -365,8 +440,8 @@ def get_tips():
 @app.get("/api/route-safe/{spot_id}")
 def get_route_safe(
     spot_id: int,
-    lat: float = Query(BORDEAUX_LAT),
-    lng: float = Query(BORDEAUX_LNG),
+    lat: float = Query(DEFAULT_LAT),
+    lng: float = Query(DEFAULT_LNG),
 ):
     spots = with_live_distance(get_bdx_cool_spots(), lat, lng)
     spot = next((s for s in spots if s["id"] == spot_id), None)
