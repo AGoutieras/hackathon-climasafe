@@ -408,6 +408,9 @@ export function MapScreen() {
   // ── Load backend data ──────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
+    const dataLat = effectivePos.latitude;
+    const dataLng = effectivePos.longitude;
+    const dataCityKey = effectivePos.key ?? DEFAULT_CITY.key;
 
     async function loadWaterProgressively(total) {
       const PAGE = 250;
@@ -415,11 +418,11 @@ export function MapScreen() {
       let acc = [];
       while (!cancelled && offset < total) {
         const batch = await api.getWaterStations(
-          DEFAULT_CITY.latitude,
-          DEFAULT_CITY.longitude,
+          dataLat,
+          dataLng,
           offset,
           PAGE,
-          DEFAULT_CITY.key,
+          dataCityKey,
         );
         if (!Array.isArray(batch) || batch.length === 0) break;
         acc = [...acc, ...batch];
@@ -430,20 +433,12 @@ export function MapScreen() {
 
     (async () => {
       try {
+        setLoading(true);
+        setDataError(null);
         const [cool, heat, wc] = await Promise.all([
-          api.getCoolSpots(
-            DEFAULT_CITY.latitude,
-            DEFAULT_CITY.longitude,
-            80,
-            DEFAULT_CITY.key,
-          ),
-          api.getHeatZones(
-            DEFAULT_CITY.latitude,
-            DEFAULT_CITY.longitude,
-            80,
-            DEFAULT_CITY.key,
-          ),
-          api.getWaterStationsCount(DEFAULT_CITY.key),
+          api.getCoolSpots(dataLat, dataLng, 80, dataCityKey),
+          api.getHeatZones(dataLat, dataLng, 80, dataCityKey),
+          api.getWaterStationsCount(dataCityKey),
         ]);
         setCoolSpots(cool);
         setHeatZones(heat);
@@ -461,7 +456,7 @@ export function MapScreen() {
       cancelled = true;
       if (watchId.current) navigator.geolocation.clearWatch(watchId.current);
     };
-  }, []);
+  }, [effectivePos]);
 
   // ── GPS ────────────────────────────────────────────────────────────────
   const startGps = useCallback(() => {

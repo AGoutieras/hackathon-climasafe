@@ -228,8 +228,26 @@ async def get_risks(
     )
     level = "high" if score >= 70 else "medium" if score >= 40 else "low"
 
-    nearest_cool = cool_spots[0]
-    nearest_hot = heat_zones[0]
+    nearest_cool = cool_spots[0] if cool_spots else None
+    nearest_hot = heat_zones[0] if heat_zones else None
+
+    nearest_refuge = None
+    if nearest_cool:
+        nearest_refuge = {
+            "name": nearest_cool["name"],
+            "distance": nearest_cool["distance"],
+            "walkTime": nearest_cool["walkTime"],
+            "lat": nearest_cool["lat"],
+            "lng": nearest_cool["lng"],
+        }
+
+    nearest_hot_zone = None
+    if nearest_hot:
+        nearest_hot_zone = {
+            "name": nearest_hot["name"],
+            "distance": nearest_hot["distance"],
+            "risk": nearest_hot["risk"],
+        }
 
     return {
         "level": level,
@@ -242,18 +260,8 @@ async def get_risks(
         "weather_time": weather.get("time"),
         "zone": resolve_city_zone_name(lat, lng, city_key),
         "method": "lcz_plus_open_meteo",
-        "nearestRefuge": {
-            "name": nearest_cool["name"],
-            "distance": nearest_cool["distance"],
-            "walkTime": nearest_cool["walkTime"],
-            "lat": nearest_cool["lat"],
-            "lng": nearest_cool["lng"],
-        },
-        "nearestHotZone": {
-            "name": nearest_hot["name"],
-            "distance": nearest_hot["distance"],
-            "risk": nearest_hot["risk"],
-        },
+        "nearestRefuge": nearest_refuge,
+        "nearestHotZone": nearest_hot_zone,
     }
 
 
@@ -307,6 +315,7 @@ async def get_alerts(
     city: str | None = Query(None),
 ):
     risk = await get_risks(lat=lat, lng=lng, city=city)
+    nearest_refuge = risk.get("nearestRefuge")
 
     is_active = risk["score"] >= 40
     vigilance_type = "high"
@@ -339,9 +348,10 @@ async def get_alerts(
             "type": "medium",
             "title": "Refuge frais le plus proche",
             "message": (
-                f"{risk['nearestRefuge']['name']} à "
-                f"{risk['nearestRefuge']['distance']} m, "
-                f"environ {risk['nearestRefuge']['walkTime']} min à pied."
+                f"{nearest_refuge['name']} à {nearest_refuge['distance']} m, "
+                f"environ {nearest_refuge['walkTime']} min à pied."
+                if nearest_refuge
+                else "Aucun refuge frais n'est disponible dans cette zone."
             ),
             "time": "Calcul dynamique",
             "isActive": is_active,
