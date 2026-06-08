@@ -123,6 +123,21 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
+## 🚀 Lancement démo en une commande
+
+Depuis la racine du projet:
+
+```bash
+bash demo-start.sh
+```
+
+Le script:
+
+* démarre FastAPI sur `8000`
+* build le frontend React
+* lance le serveur de démo sur `4175`
+* ouvre un tunnel public temporaire avec `localtunnel`
+
 ### 3. Frontend
 
 ```bash

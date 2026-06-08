@@ -12,18 +12,18 @@ export function BottomNav() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 w-full max-w-6xl mx-auto bg-white border-t border-slate-200 shadow-lg md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:w-[calc(100%-2rem)] md:rounded-2xl md:border">
-      <div className="grid grid-cols-4 h-16 md:h-[4.5rem]">
+    <nav className="fixed bottom-0 left-0 right-0 w-full max-w-6xl mx-auto bg-white/95 backdrop-blur border-t border-slate-200 shadow-lg pb-[env(safe-area-inset-bottom)] md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:w-[calc(100%-2rem)] md:rounded-2xl md:border">
+      <div className="grid grid-cols-4 h-[4.75rem] md:h-[4.5rem]">
         {NAV_ITEMS.map(({ path, icon: Icon, label }) => (
           <Link
             key={path}
             to={path}
-            className={`flex flex-col items-center justify-center gap-1 py-2 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-1 py-2 transition-colors min-w-0 ${
               pathname === path ? "text-blue-600" : "text-slate-600 hover:text-blue-500"
             }`}
           >
-            <Icon size={22} />
-            <span className="text-xs">{label}</span>
+            <Icon size={20} className="md:size-[22px]" />
+            <span className="text-[11px] leading-none md:text-xs truncate">{label}</span>
           </Link>
         ))}
       </div>

@@ -77,8 +77,8 @@ export function TipsScreen() {
 
       {/* Header */}
       <div className="pt-4 pb-6">
-        <h1 className="text-3xl sm:text-4xl mb-2 text-slate-900">Nos conseils 💡</h1>
-        <p className="text-slate-600 text-base sm:text-lg">Protégez-vous de la chaleur ({tempLabel})</p>
+        <h1 className="text-2xl sm:text-4xl mb-2 text-slate-900">Nos conseils 💡</h1>
+        <p className="text-slate-600 text-sm sm:text-lg">Protégez-vous de la chaleur ({tempLabel})</p>
       </div>
 
       {/* Warning card */}
