@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BORDEAUX_CENTER } from "./constants.js";
+import { DEFAULT_CITY } from "./constants.js";
 
 /**
  * Watches the user's GPS position.
@@ -7,7 +7,7 @@ import { BORDEAUX_CENTER } from "./constants.js";
  * Returns { position, gpsError, gpsStatusMessage }.
  */
 export function useGeoPosition() {
-  const [position, setPosition] = useState(BORDEAUX_CENTER);
+  const [position, setPosition] = useState(DEFAULT_CITY);
   const [gpsError, setGpsError] = useState(false);
   const [gpsStatusMessage, setGpsStatusMessage] = useState("");
 
