@@ -436,8 +436,8 @@ export function MapScreen() {
         setLoading(true);
         setDataError(null);
         const [cool, heat, wc] = await Promise.all([
-          api.getCoolSpots(dataLat, dataLng, 80, dataCityKey),
-          api.getHeatZones(dataLat, dataLng, 80, dataCityKey),
+          api.getCoolSpots(dataLat, dataLng, 1000, dataCityKey),
+          api.getHeatZones(dataLat, dataLng, 1000, dataCityKey),
           api.getWaterStationsCount(dataCityKey),
         ]);
         setCoolSpots(cool);
