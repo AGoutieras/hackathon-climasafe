@@ -17,18 +17,30 @@ import logoClimaSafe from "../assets/LOGO_CLIMASAFE.png";
 export function HomeScreen() {
   const { position, gpsError, gpsStatusMessage } = useGeoPosition();
   const [riskData, setRiskData] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [editingProfile, setEditingProfile] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // load saved profile from localStorage
+    try {
+      const raw = localStorage.getItem("climasafe_profile");
+      if (raw) setProfile(JSON.parse(raw));
+      else
+        setProfile({ age: null, heart_disease: false, diabetes: false, pregnant: false, activity: "low", ac: false, overheated_home: false });
+    } catch (e) {
+      setProfile({ age: null, heart_disease: false, diabetes: false, pregnant: false, activity: "low", ac: false, overheated_home: false });
+    }
+
     let cancelled = false;
 
     async function load() {
       try {
         setLoading(true);
         const [risk, alertsRes, tipsRes] = await Promise.all([
-          api.getRisks(position.latitude, position.longitude, DEFAULT_CITY.key),
+          api.getRisks(position.latitude, position.longitude, DEFAULT_CITY.key, profile || {}),
           api.getAlerts(
             position.latitude,
             position.longitude,
@@ -58,6 +70,24 @@ export function HomeScreen() {
       cancelled = true;
     };
   }, [position]);
+
+  useEffect(() => {
+    // refetch when profile changes
+    if (!position) return;
+    let cancelled = false;
+    async function reload() {
+      try {
+        const risk = await api.getRisks(position.latitude, position.longitude, DEFAULT_CITY.key, profile || {});
+        if (!cancelled) setRiskData(risk);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    reload();
+    return () => {
+      cancelled = true;
+    };
+  }, [profile, position]);
 
   // ── Derived values ────────────────────────────────────────────────────
   const score = riskData?.score ?? 0;
@@ -131,6 +161,49 @@ export function HomeScreen() {
       <RiskIndicator level={level} score={score} />
 
       {/* Current conditions */}
+      {/* Profile card */}
+      <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
+        <h2 className="text-xl mb-1 text-slate-900">Votre profil</h2>
+        <p className="text-sm text-slate-500 mb-3">Utilisé pour personnaliser l'indice</p>
+        {profile && !editingProfile && (
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-700">
+              <div>Âge: {profile.age ?? "—"}</div>
+              <div>Conditions: {profile.heart_disease || profile.diabetes || profile.pregnant ? "Oui" : "Non"}</div>
+              <div>Logement: {profile.overheated_home ? "Surchauffé" : profile.ac ? "Climatisé" : "—"}</div>
+            </div>
+            <div>
+              <button onClick={() => setEditingProfile(true)} className="text-blue-600 underline">Modifier</button>
+            </div>
+          </div>
+        )}
+        {profile && editingProfile && (
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <input className="w-24 p-1 border rounded" type="number" placeholder="Âge" value={profile.age ?? ""} onChange={(e)=> setProfile({...profile, age: e.target.value ? parseInt(e.target.value) : null})} />
+              <select value={profile.activity} onChange={(e)=> setProfile({...profile, activity: e.target.value})} className="p-1 border rounded">
+                <option value="low">Activité faible</option>
+                <option value="moderate">Activité modérée</option>
+                <option value="high">Activité élevée</option>
+                <option value="very_high">Activité très élevée</option>
+              </select>
+            </div>
+            <div className="flex gap-3 text-sm">
+              <label><input type="checkbox" checked={profile.heart_disease} onChange={(e)=> setProfile({...profile, heart_disease: e.target.checked})} /> Maladie cardiaque</label>
+              <label><input type="checkbox" checked={profile.diabetes} onChange={(e)=> setProfile({...profile, diabetes: e.target.checked})} /> Diabète</label>
+              <label><input type="checkbox" checked={profile.pregnant} onChange={(e)=> setProfile({...profile, pregnant: e.target.checked})} /> Grossesse</label>
+            </div>
+            <div className="flex gap-3 text-sm">
+              <label><input type="checkbox" checked={profile.ac} onChange={(e)=> setProfile({...profile, ac: e.target.checked})} /> Climatisation</label>
+              <label><input type="checkbox" checked={profile.overheated_home} onChange={(e)=> setProfile({...profile, overheated_home: e.target.checked})} /> Logement surchauffé</label>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={()=>{ localStorage.setItem('climasafe_profile', JSON.stringify(profile)); setEditingProfile(false); }} className="bg-blue-600 text-white px-3 py-1 rounded">Enregistrer</button>
+              <button onClick={()=>{ try{ const raw = localStorage.getItem('climasafe_profile'); if(raw) setProfile(JSON.parse(raw)); } catch(e){} setEditingProfile(false); }} className="px-3 py-1 rounded border">Annuler</button>
+            </div>
+          </div>
+        )}
+      </Card>
       <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
         <h2 className="text-xl mb-1 text-slate-900">Conditions actuelles</h2>
         <p className="text-sm text-slate-500 mb-4">{locationLabel}</p>

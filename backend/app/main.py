@@ -21,6 +21,7 @@ from app.cities import (
     resolve_zone_name as resolve_city_zone_name,
 )
 from app.services.weather import fetch_current_weather
+from app.services.user_risk import apply_personal_risk
 
 DEFAULT_CITY = get_city_config(DEFAULT_CITY_KEY)
 DEFAULT_LAT = DEFAULT_CITY.latitude
@@ -206,6 +207,13 @@ async def get_risks(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
     city: str | None = Query(None),
+    age: int | None = Query(None),
+    heart_disease: bool = Query(False),
+    diabetes: bool = Query(False),
+    pregnant: bool = Query(False),
+    activity: str | None = Query(None),
+    ac: bool = Query(False),
+    overheated_home: bool = Query(False),
 ):
     city_key = infer_city_key(lat, lng, city)
     cool_spots = with_live_distance(load_cool_spots(city_key), lat, lng)
@@ -219,13 +227,26 @@ async def get_risks(
     humidity = weather.get("humidity") or 45
     apparent_temp = weather.get("apparent_temperature") or real_temp
 
-    score = compute_risk_score(
+    base_score = compute_risk_score(
         real_temp,
         humidity,
         apparent_temp,
         hot_nearby,
         cool_nearby,
     )
+    # apply personal profile if provided
+    profile = {
+        "age": age,
+        "heart_disease": heart_disease,
+        "diabetes": diabetes,
+        "pregnant": pregnant,
+        "activity": activity,
+        "ac": ac,
+        "overheated_home": overheated_home,
+    }
+
+    personal = apply_personal_risk(base_score, profile)
+    score = personal["score"]
     level = "high" if score >= 70 else "medium" if score >= 40 else "low"
 
     nearest_cool = cool_spots[0] if cool_spots else None
@@ -252,6 +273,9 @@ async def get_risks(
     return {
         "level": level,
         "score": score,
+        "baseScore": personal.get("base_score", int(round(base_score))),
+        "personalMultiplier": personal.get("multiplier"),
+        "personalBreakdown": personal.get("breakdown"),
         "temperature": real_temp,
         "humidity": humidity,
         "apparent_temperature": apparent_temp,
