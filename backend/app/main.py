@@ -197,7 +197,10 @@ def data_sources():
                 "name": city.display_name,
                 "label": city.label,
                 "center": {"lat": city.latitude, "lng": city.longitude},
-                "datasets": sorted(city.datasets.keys()),
+                "datasets": sorted(
+                    set(city.datasets.keys()) | set(
+                        city.remote_datasets.keys())
+                ),
             }
             for city in list_cities()
         ],
@@ -228,7 +231,8 @@ async def get_risks(
 ):
     city_key = infer_city_key(lat, lng, city)
     cool_spots = with_live_distance(load_cool_spots(city_key), lat, lng)
-    heat_zones = with_live_distance(load_heat_zones(city_key), lat, lng)
+    heat_zones = with_live_distance(
+        load_heat_zones(city_key, lat, lng), lat, lng)
 
     hot_nearby = sum(1 for zone in heat_zones if zone["distance"] <= 1000)
     cool_nearby = sum(1 for spot in cool_spots if spot["distance"] <= 1000)
@@ -355,7 +359,7 @@ def delete_monitoring(monitoring_id: str):
 def cool_spots(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
-    limit: int = Query(20, ge=1, le=100),
+    limit: int = Query(1000, ge=1, le=1000),
     city: str | None = Query(None),
 ):
     city_key = infer_city_key(lat, lng, city)
@@ -367,11 +371,11 @@ def cool_spots(
 def heat_zones(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
-    limit: int = Query(20, ge=1, le=100),
+    limit: int = Query(1000, ge=1, le=1000),
     city: str | None = Query(None),
 ):
     city_key = infer_city_key(lat, lng, city)
-    zones = load_heat_zones(city_key)
+    zones = load_heat_zones(city_key, lat, lng)
     return with_live_distance(zones, lat, lng)[:limit]
 
 
