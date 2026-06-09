@@ -23,6 +23,9 @@ from app.cities import (
 from app.services.weather import fetch_current_weather
 from app.services.user_risk import apply_personal_risk
 from app.services.hydration import compute_water_need
+from app.services import monitoring as monitoring_service
+
+from pydantic import BaseModel
 
 DEFAULT_CITY = get_city_config(DEFAULT_CITY_KEY)
 DEFAULT_LAT = DEFAULT_CITY.latitude
@@ -37,6 +40,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class MonitoringCreate(BaseModel):
+    name: str
+    age: int | None = None
+    interval_hours: float
 
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -284,7 +293,11 @@ async def get_risks(
     else:
         act_for_hydration = "light"
 
-    hydration = compute_water_need(weight, real_temp, activity=act_for_hydration)
+    hydration = compute_water_need(
+        weight,
+        real_temp,
+        activity=act_for_hydration,
+    )
 
     return {
         "level": level,
@@ -304,6 +317,38 @@ async def get_risks(
         "nearestHotZone": nearest_hot_zone,
         "hydration": hydration,
     }
+
+
+@app.post("/api/monitoring")
+def create_monitoring(new_monitoring: MonitoringCreate):
+    try:
+        return monitoring_service.create_monitoring(
+            new_monitoring.name,
+            new_monitoring.age,
+            new_monitoring.interval_hours,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/api/monitoring")
+def list_monitoring():
+    return monitoring_service.list_monitoring()
+
+
+@app.post("/api/monitoring/{monitoring_id}/checkin")
+def checkin_monitoring(monitoring_id: str):
+    monitoring = monitoring_service.checkin_monitoring(monitoring_id)
+    if monitoring is None:
+        raise HTTPException(status_code=404, detail="Surveillance introuvable")
+    return monitoring
+
+
+@app.delete("/api/monitoring/{monitoring_id}")
+def delete_monitoring(monitoring_id: str):
+    if not monitoring_service.delete_monitoring(monitoring_id):
+        raise HTTPException(status_code=404, detail="Surveillance introuvable")
+    return {"status": "deleted"}
 
 
 @app.get("/api/cool-spots")

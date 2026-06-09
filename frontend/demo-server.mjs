@@ -38,12 +38,21 @@ async function proxyApi(req, res) {
   const headers = { ...req.headers };
   delete headers.host;
 
-  const upstream = await fetch(targetUrl, {
+  const init = {
     method: req.method,
     headers,
-    body: ['GET', 'HEAD'].includes(req.method || 'GET') ? undefined : req,
     redirect: 'manual',
-  });
+  };
+
+  if (!['GET', 'HEAD'].includes(req.method || 'GET')) {
+    // When forwarding the incoming request stream as the body we must set
+    // `duplex: 'half'` for undici (Node fetch) to accept a streaming body.
+    // See: https://github.com/nodejs/undici/issues/1728
+    init.body = req;
+    init.duplex = 'half';
+  }
+
+  const upstream = await fetch(targetUrl, init);
 
   const responseHeaders = new Headers(upstream.headers);
   responseHeaders.delete('content-encoding');

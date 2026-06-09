@@ -1,10 +1,11 @@
-import { Home, Map, AlertTriangle, BookOpen } from "lucide-react";
+import { Home, Map, AlertTriangle, BookOpen, ShieldCheck } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const NAV_ITEMS = [
   { path: "/",        icon: Home,          label: "Accueil" },
   { path: "/carte",   icon: Map,           label: "Carte" },
   { path: "/alerte",  icon: AlertTriangle, label: "Alertes" },
+  { path: "/surveillance", icon: ShieldCheck, label: "Surveillance" },
   { path: "/conseils",icon: BookOpen,      label: "Conseils" },
 ];
 
@@ -13,7 +14,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 w-full max-w-6xl mx-auto bg-white/95 backdrop-blur border-t border-slate-200 shadow-lg pb-[env(safe-area-inset-bottom)] md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:w-[calc(100%-2rem)] md:rounded-2xl md:border">
-      <div className="grid grid-cols-4 h-[4.75rem] md:h-[4.5rem]">
+      <div className="grid grid-cols-5 h-[4.75rem] md:h-[4.5rem]">
         {NAV_ITEMS.map(({ path, icon: Icon, label }) => (
           <Link
             key={path}

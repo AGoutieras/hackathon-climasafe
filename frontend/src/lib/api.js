@@ -1,7 +1,7 @@
 const API_BASE = import.meta.env.VITE_API_BASE || "/api";
 
-async function fetchJson(path) {
-  const response = await fetch(`${API_BASE}${path}`);
+async function fetchJson(path, init = {}) {
+  const response = await fetch(`${API_BASE}${path}`, init);
   if (!response.ok) throw new Error(`API error ${response.status}`);
   return response.json();
 }
@@ -26,4 +26,19 @@ export const api = {
   getWaterStationsCount: (city) => fetchJson(withCity("/water-stations/count", { city })),
   getAlerts: (lat, lng, city) => fetchJson(withCity("/alerts", { lat, lng, city })),
   getTips: () => fetchJson("/tips"),
+  getMonitoring: () => fetchJson("/monitoring"),
+  createMonitoring: (name, age, intervalHours) =>
+    fetchJson("/monitoring", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, age, interval_hours: intervalHours }),
+    }),
+  checkInMonitoring: (id) =>
+    fetchJson(`/monitoring/${encodeURIComponent(id)}/checkin`, {
+      method: "POST",
+    }),
+  deleteMonitoring: (id) =>
+    fetchJson(`/monitoring/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    }),
 };

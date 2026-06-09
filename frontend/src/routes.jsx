@@ -6,6 +6,7 @@ const HomeScreen = lazy(() => import("./components/HomeScreen.jsx").then((module
 const MapScreen = lazy(() => import("./components/MapScreen.jsx").then((module) => ({ default: module.MapScreen })));
 const AlertScreen = lazy(() => import("./components/AlertScreen.jsx").then((module) => ({ default: module.AlertScreen })));
 const TipsScreen = lazy(() => import("./components/TipsScreen.jsx").then((module) => ({ default: module.TipsScreen })));
+const MonitoringScreen = lazy(() => import("./components/MonitoringScreen.jsx").then((module) => ({ default: module.MonitoringScreen })));
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { index: true,         element: <HomeScreen /> },
       { path: "carte",       element: <MapScreen /> },
       { path: "alerte",      element: <AlertScreen /> },
+      { path: "surveillance",element: <MonitoringScreen /> },
       { path: "conseils",    element: <TipsScreen /> },
     ],
   },
