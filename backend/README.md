@@ -1,1 +1,1 @@
-Backend FastAPI mock pour le hackathon.
+# BACKEND_FASTAPI_MOCK_HACKATON

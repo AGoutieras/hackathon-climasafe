@@ -7,6 +7,9 @@ from functools import lru_cache
 from math import atan2, cos, radians, sin, sqrt
 from pathlib import Path
 from typing import Callable
+from urllib.error import URLError
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.request import Request, urlopen
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / "data"
@@ -33,6 +36,7 @@ class CityConfig:
     latitude: float
     longitude: float
     datasets: dict[str, str]
+    remote_datasets: dict[str, str] = field(default_factory=dict)
     transforms: dict[str, CityDatasetTransform] = field(default_factory=dict)
 
 
@@ -41,6 +45,60 @@ def _normalize_water_stations(raw: list[dict], _: CityConfig) -> list[dict]:
         {**item, "lat": item["geom"]["lat"], "lng": item["geom"]["lon"]}
         for item in raw
     ]
+
+
+def _normalize_paris_water_stations(
+    raw: list[dict],
+    city: CityConfig,
+) -> list[dict]:
+    stations = []
+    for index, item in enumerate(raw, start=1):
+        geo = item.get("geo_point_2d") or {}
+        lat = geo.get("lat")
+        lng = geo.get("lon")
+        if lat is None or lng is None:
+            continue
+
+        number = item.get("no_voirie_pair") or item.get("no_voirie_impair")
+        address_parts = []
+        if number:
+            address_parts.append(str(number))
+        if item.get("voie"):
+            address_parts.append(item["voie"])
+        if item.get("commune"):
+            address_parts.append(item["commune"])
+
+        stations.append(
+            {
+                "id": int(item.get("gid") or index),
+                "nom_fontaine": (
+                    item.get("voie")
+                    or item.get("type_objet")
+                    or f"Fontaine {index}"
+                ),
+                "nombre_robinets": 1,
+                "modele_fontaine": (
+                    item.get("modele")
+                    or item.get("type_objet")
+                    or "Fontaine"
+                ),
+                "adresse": ", ".join(address_parts) or city.display_name,
+                "date_dernier_controle": item.get("debut_ind"),
+                "etat": (
+                    "fonctionnelle"
+                    if item.get("dispo") == "OUI"
+                    else "indisponible"
+                ),
+                "hivernage": "non",
+                "complement_information": item.get("motif_ind"),
+                "lat": lat,
+                "lng": lng,
+                "geom": {"lon": lng, "lat": lat},
+                "code_insee": None,
+            }
+        )
+
+    return stations
 
 
 def _normalize_paris_heat_zones(
@@ -109,7 +167,16 @@ CITY_CONFIGS: dict[str, CityConfig] = {
         datasets={
             "heat_zones": "paris_14_15_propre.json",
         },
-        transforms={"heat_zones": _normalize_paris_heat_zones},
+        remote_datasets={
+            "water_stations": (
+                "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/"
+                "fontaines-a-boire/records?limit=100&offset=0"
+            )
+        },
+        transforms={
+            "heat_zones": _normalize_paris_heat_zones,
+            "water_stations": _normalize_paris_water_stations,
+        },
     ),
 }
 
@@ -137,13 +204,73 @@ def _load_json(filename: str):
 
 
 @lru_cache(maxsize=128)
+def _load_remote_json(url: str):
+    parts = urlsplit(url)
+    base_query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    offset = int(base_query.get("offset", 0) or 0)
+    limit = int(base_query.get("limit", 100) or 100)
+
+    records = []
+    total_count = None
+    while True:
+        query = dict(base_query)
+        query["offset"] = str(offset)
+        query["limit"] = str(limit)
+        page_url = urlunsplit(
+            (
+                parts.scheme,
+                parts.netloc,
+                parts.path,
+                urlencode(query),
+                parts.fragment,
+            )
+        )
+        request = Request(
+            page_url,
+            headers={"User-Agent": "climasafe/1.0 (+hackathon)"},
+        )
+        with urlopen(request, timeout=5) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+
+        if isinstance(payload, dict):
+            page_records = payload.get("results", [])
+            total_count = payload.get("total_count", total_count)
+        else:
+            page_records = []
+        records.extend(page_records)
+
+        if not page_records:
+            break
+
+        offset += len(page_records)
+        if total_count is not None and offset >= total_count:
+            break
+        if len(page_records) < limit:
+            break
+
+    return {"results": records}
+
+
+@lru_cache(maxsize=128)
 def load_city_dataset(city_key: str, dataset_name: str) -> list[dict]:
     city = get_city_config(city_key)
     filename = city.datasets.get(dataset_name)
     if not filename:
-        return []
+        remote_url = city.remote_datasets.get(dataset_name)
+        if not remote_url:
+            return []
+        try:
+            payload = _load_remote_json(remote_url)
+        except (URLError, TimeoutError, ValueError):
+            return []
+        raw = (
+            payload.get("results", [])
+            if isinstance(payload, dict)
+            else payload
+        )
+    else:
+        raw = _load_json(filename)
 
-    raw = _load_json(filename)
     transform = city.transforms.get(dataset_name)
     if transform:
         return transform(raw, city)

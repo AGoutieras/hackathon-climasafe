@@ -1,0 +1,1 @@
+const o={bordeaux:{key:"bordeaux",name:"Bordeaux",label:"Bordeaux Métropole",longitude:-.5792,latitude:44.8378},paris:{key:"paris",name:"Paris",label:"Paris",longitude:2.3522,latitude:48.8566}},e="paris",a=o[e]??o.paris,r="https://router.project-osrm.org/route/v1/foot";export{a as D,r as O};

@@ -21,6 +21,11 @@ from app.cities import (
     resolve_zone_name as resolve_city_zone_name,
 )
 from app.services.weather import fetch_current_weather
+from app.services.user_risk import apply_personal_risk
+from app.services.hydration import compute_water_need
+from app.services import monitoring as monitoring_service
+
+from pydantic import BaseModel
 
 DEFAULT_CITY = get_city_config(DEFAULT_CITY_KEY)
 DEFAULT_LAT = DEFAULT_CITY.latitude
@@ -35,6 +40,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class MonitoringCreate(BaseModel):
+    name: str
+    age: int | None = None
+    interval_hours: float
 
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -206,6 +217,14 @@ async def get_risks(
     lat: float = Query(DEFAULT_LAT),
     lng: float = Query(DEFAULT_LNG),
     city: str | None = Query(None),
+    age: int | None = Query(None),
+    heart_disease: bool = Query(False),
+    diabetes: bool = Query(False),
+    pregnant: bool = Query(False),
+    activity: str | None = Query(None),
+    weight: float | None = Query(None),
+    ac: bool = Query(False),
+    overheated_home: bool = Query(False),
 ):
     city_key = infer_city_key(lat, lng, city)
     cool_spots = with_live_distance(load_cool_spots(city_key), lat, lng)
@@ -219,14 +238,27 @@ async def get_risks(
     humidity = weather.get("humidity") or 45
     apparent_temp = weather.get("apparent_temperature") or real_temp
 
-    score = compute_risk_score(
+    base_score = compute_risk_score(
         real_temp,
         humidity,
         apparent_temp,
         hot_nearby,
         cool_nearby,
     )
-    level = "high" if score >= 70 else "medium" if score >= 40 else "low"
+    # apply personal profile if provided
+    profile = {
+        "age": age,
+        "heart_disease": heart_disease,
+        "diabetes": diabetes,
+        "pregnant": pregnant,
+        "activity": activity,
+        "ac": ac,
+        "overheated_home": overheated_home,
+    }
+
+    personal = apply_personal_risk(base_score, profile)
+    score = personal["userRisk"]
+    level = personal["level"]
 
     nearest_cool = cool_spots[0] if cool_spots else None
     nearest_hot = heat_zones[0] if heat_zones else None
@@ -249,9 +281,30 @@ async def get_risks(
             "risk": nearest_hot["risk"],
         }
 
+    # Hydration info computed from profile weight and current temperature
+    # map activity variants from frontend to the expected hydration categories
+    raw_activity = (profile.get("activity") or "").lower()
+    if raw_activity in ("low", "light"):
+        act_for_hydration = "light"
+    elif raw_activity in ("moderate", "medium"):
+        act_for_hydration = "moderate"
+    elif raw_activity in ("high", "very_high", "intense"):
+        act_for_hydration = "intense"
+    else:
+        act_for_hydration = "light"
+
+    hydration = compute_water_need(
+        weight,
+        real_temp,
+        activity=act_for_hydration,
+    )
+
     return {
         "level": level,
         "score": score,
+        "baseScore": personal.get("weatherRisk", int(round(base_score))),
+        "personalMultiplier": personal.get("multiplier"),
+        "personalBreakdown": personal.get("factors"),
         "temperature": real_temp,
         "humidity": humidity,
         "apparent_temperature": apparent_temp,
@@ -262,7 +315,40 @@ async def get_risks(
         "method": "lcz_plus_open_meteo",
         "nearestRefuge": nearest_refuge,
         "nearestHotZone": nearest_hot_zone,
+        "hydration": hydration,
     }
+
+
+@app.post("/api/monitoring")
+def create_monitoring(new_monitoring: MonitoringCreate):
+    try:
+        return monitoring_service.create_monitoring(
+            new_monitoring.name,
+            new_monitoring.age,
+            new_monitoring.interval_hours,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/api/monitoring")
+def list_monitoring():
+    return monitoring_service.list_monitoring()
+
+
+@app.post("/api/monitoring/{monitoring_id}/checkin")
+def checkin_monitoring(monitoring_id: str):
+    monitoring = monitoring_service.checkin_monitoring(monitoring_id)
+    if monitoring is None:
+        raise HTTPException(status_code=404, detail="Surveillance introuvable")
+    return monitoring
+
+
+@app.delete("/api/monitoring/{monitoring_id}")
+def delete_monitoring(monitoring_id: str):
+    if not monitoring_service.delete_monitoring(monitoring_id):
+        raise HTTPException(status_code=404, detail="Surveillance introuvable")
+    return {"status": "deleted"}
 
 
 @app.get("/api/cool-spots")
@@ -314,7 +400,18 @@ async def get_alerts(
     lng: float = Query(DEFAULT_LNG),
     city: str | None = Query(None),
 ):
-    risk = await get_risks(lat=lat, lng=lng, city=city)
+    risk = await get_risks(
+        lat=lat,
+        lng=lng,
+        city=city,
+        age=None,
+        heart_disease=False,
+        diabetes=False,
+        pregnant=False,
+        activity=None,
+        ac=False,
+        overheated_home=False,
+    )
     nearest_refuge = risk.get("nearestRefuge")
 
     is_active = risk["score"] >= 40
