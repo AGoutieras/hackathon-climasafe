@@ -246,8 +246,8 @@ async def get_risks(
     }
 
     personal = apply_personal_risk(base_score, profile)
-    score = personal["score"]
-    level = "high" if score >= 70 else "medium" if score >= 40 else "low"
+    score = personal["userRisk"]
+    level = personal["level"]
 
     nearest_cool = cool_spots[0] if cool_spots else None
     nearest_hot = heat_zones[0] if heat_zones else None
@@ -273,9 +273,9 @@ async def get_risks(
     return {
         "level": level,
         "score": score,
-        "baseScore": personal.get("base_score", int(round(base_score))),
+        "baseScore": personal.get("weatherRisk", int(round(base_score))),
         "personalMultiplier": personal.get("multiplier"),
-        "personalBreakdown": personal.get("breakdown"),
+        "personalBreakdown": personal.get("factors"),
         "temperature": real_temp,
         "humidity": humidity,
         "apparent_temperature": apparent_temp,
@@ -338,7 +338,18 @@ async def get_alerts(
     lng: float = Query(DEFAULT_LNG),
     city: str | None = Query(None),
 ):
-    risk = await get_risks(lat=lat, lng=lng, city=city)
+    risk = await get_risks(
+        lat=lat,
+        lng=lng,
+        city=city,
+        age=None,
+        heart_disease=False,
+        diabetes=False,
+        pregnant=False,
+        activity=None,
+        ac=False,
+        overheated_home=False,
+    )
     nearest_refuge = risk.get("nearestRefuge")
 
     is_active = risk["score"] >= 40

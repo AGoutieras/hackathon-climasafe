@@ -163,43 +163,123 @@ export function HomeScreen() {
       {/* Current conditions */}
       {/* Profile card */}
       <Card className="p-4 sm:p-5 mb-6 shadow-sm border-slate-200">
-        <h2 className="text-xl mb-1 text-slate-900">Votre profil</h2>
-        <p className="text-sm text-slate-500 mb-3">Utilisé pour personnaliser l'indice</p>
-        {profile && !editingProfile && (
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-slate-700">
-              <div>Âge: {profile.age ?? "—"}</div>
-              <div>Conditions: {profile.heart_disease || profile.diabetes || profile.pregnant ? "Oui" : "Non"}</div>
-              <div>Logement: {profile.overheated_home ? "Surchauffé" : profile.ac ? "Climatisé" : "—"}</div>
-            </div>
-            <div>
-              <button onClick={() => setEditingProfile(true)} className="text-blue-600 underline">Modifier</button>
-            </div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6 mb-4">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-900">Votre profil</h2>
+            <p className="text-sm text-slate-500">Personnalise les alertes et l'indice thermique</p>
           </div>
+          {profile && !editingProfile && (
+            <Button variant="outline" size="sm" onClick={() => setEditingProfile(true)}>
+              Modifier
+            </Button>
+          )}
+        </div>
+
+        {profile && !editingProfile && (
+          <>
+            <div className="grid gap-3 sm:grid-cols-3 mb-4">
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500 mb-2">Âge</p>
+                <p className="text-2xl font-semibold text-slate-900">{profile.age ?? "—"}</p>
+              </div>
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500 mb-2">Conditions</p>
+                <p className="text-2xl font-semibold text-slate-900">{profile.heart_disease || profile.diabetes || profile.pregnant ? "Oui" : "Non"}</p>
+              </div>
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500 mb-2">Logement</p>
+                <p className="text-2xl font-semibold text-slate-900">{profile.overheated_home ? "Surchauffé" : profile.ac ? "Climatisé" : "—"}</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
+                Activité : {profile.activity === "low" ? "Faible" : profile.activity === "moderate" ? "Modérée" : profile.activity === "high" ? "Élevée" : "Très élevée"}
+              </span>
+              {profile.heart_disease && <span className="inline-flex rounded-full bg-red-50 px-3 py-1 text-sm text-red-700">Maladie cardiaque</span>}
+              {profile.diabetes && <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700">Diabète</span>}
+              {profile.pregnant && <span className="inline-flex rounded-full bg-teal-50 px-3 py-1 text-sm text-teal-700">Grossesse</span>}
+              {profile.ac && <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-sm text-blue-700">Climatisation</span>}
+              {profile.overheated_home && <span className="inline-flex rounded-full bg-orange-50 px-3 py-1 text-sm text-orange-700">Logement surchauffé</span>}
+            </div>
+          </>
         )}
+
         {profile && editingProfile && (
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <input className="w-24 p-1 border rounded" type="number" placeholder="Âge" value={profile.age ?? ""} onChange={(e)=> setProfile({...profile, age: e.target.value ? parseInt(e.target.value) : null})} />
-              <select value={profile.activity} onChange={(e)=> setProfile({...profile, activity: e.target.value})} className="p-1 border rounded">
-                <option value="low">Activité faible</option>
-                <option value="moderate">Activité modérée</option>
-                <option value="high">Activité élevée</option>
-                <option value="very_high">Activité très élevée</option>
-              </select>
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="space-y-2 text-sm text-slate-700">
+                <span>Âge</span>
+                <input
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  type="number"
+                  placeholder="Âge"
+                  value={profile.age ?? ""}
+                  onChange={(e) => setProfile({ ...profile, age: e.target.value ? parseInt(e.target.value) : null })}
+                />
+              </label>
+              <label className="space-y-2 text-sm text-slate-700">
+                <span>Activité</span>
+                <select
+                  value={profile.activity}
+                  onChange={(e) => setProfile({ ...profile, activity: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >
+                  <option value="low">Activité faible</option>
+                  <option value="moderate">Activité modérée</option>
+                  <option value="high">Activité élevée</option>
+                  <option value="very_high">Activité très élevée</option>
+                </select>
+              </label>
             </div>
-            <div className="flex gap-3 text-sm">
-              <label><input type="checkbox" checked={profile.heart_disease} onChange={(e)=> setProfile({...profile, heart_disease: e.target.checked})} /> Maladie cardiaque</label>
-              <label><input type="checkbox" checked={profile.diabetes} onChange={(e)=> setProfile({...profile, diabetes: e.target.checked})} /> Diabète</label>
-              <label><input type="checkbox" checked={profile.pregnant} onChange={(e)=> setProfile({...profile, pregnant: e.target.checked})} /> Grossesse</label>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={profile.heart_disease}
+                  onChange={(e) => setProfile({ ...profile, heart_disease: e.target.checked })}
+                />
+                Maladie cardiaque
+              </label>
+              <label className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={profile.diabetes}
+                  onChange={(e) => setProfile({ ...profile, diabetes: e.target.checked })}
+                />
+                Diabète
+              </label>
+              <label className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={profile.pregnant}
+                  onChange={(e) => setProfile({ ...profile, pregnant: e.target.checked })}
+                />
+                Grossesse
+              </label>
+              <label className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={profile.ac}
+                  onChange={(e) => setProfile({ ...profile, ac: e.target.checked })}
+                />
+                Climatisation
+              </label>
+              <label className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={profile.overheated_home}
+                  onChange={(e) => setProfile({ ...profile, overheated_home: e.target.checked })}
+                />
+                Logement surchauffé
+              </label>
             </div>
-            <div className="flex gap-3 text-sm">
-              <label><input type="checkbox" checked={profile.ac} onChange={(e)=> setProfile({...profile, ac: e.target.checked})} /> Climatisation</label>
-              <label><input type="checkbox" checked={profile.overheated_home} onChange={(e)=> setProfile({...profile, overheated_home: e.target.checked})} /> Logement surchauffé</label>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={()=>{ localStorage.setItem('climasafe_profile', JSON.stringify(profile)); setEditingProfile(false); }} className="bg-blue-600 text-white px-3 py-1 rounded">Enregistrer</button>
-              <button onClick={()=>{ try{ const raw = localStorage.getItem('climasafe_profile'); if(raw) setProfile(JSON.parse(raw)); } catch(e){} setEditingProfile(false); }} className="px-3 py-1 rounded border">Annuler</button>
+            <div className="flex flex-wrap gap-3">
+              <Button onClick={() => { localStorage.setItem('climasafe_profile', JSON.stringify(profile)); setEditingProfile(false); }}>
+                Enregistrer
+              </Button>
+              <Button variant="outline" onClick={() => { try { const raw = localStorage.getItem('climasafe_profile'); if (raw) setProfile(JSON.parse(raw)); } catch (e) {} setEditingProfile(false); }}>
+                Annuler
+              </Button>
             </div>
           </div>
         )}
