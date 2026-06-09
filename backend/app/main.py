@@ -22,6 +22,7 @@ from app.cities import (
 )
 from app.services.weather import fetch_current_weather
 from app.services.user_risk import apply_personal_risk
+from app.services.hydration import compute_water_need
 
 DEFAULT_CITY = get_city_config(DEFAULT_CITY_KEY)
 DEFAULT_LAT = DEFAULT_CITY.latitude
@@ -212,6 +213,7 @@ async def get_risks(
     diabetes: bool = Query(False),
     pregnant: bool = Query(False),
     activity: str | None = Query(None),
+    weight: float | None = Query(None),
     ac: bool = Query(False),
     overheated_home: bool = Query(False),
 ):
@@ -270,6 +272,20 @@ async def get_risks(
             "risk": nearest_hot["risk"],
         }
 
+    # Hydration info computed from profile weight and current temperature
+    # map activity variants from frontend to the expected hydration categories
+    raw_activity = (profile.get("activity") or "").lower()
+    if raw_activity in ("low", "light"):
+        act_for_hydration = "light"
+    elif raw_activity in ("moderate", "medium"):
+        act_for_hydration = "moderate"
+    elif raw_activity in ("high", "very_high", "intense"):
+        act_for_hydration = "intense"
+    else:
+        act_for_hydration = "light"
+
+    hydration = compute_water_need(weight, real_temp, activity=act_for_hydration)
+
     return {
         "level": level,
         "score": score,
@@ -286,6 +302,7 @@ async def get_risks(
         "method": "lcz_plus_open_meteo",
         "nearestRefuge": nearest_refuge,
         "nearestHotZone": nearest_hot_zone,
+        "hydration": hydration,
     }
 
 
